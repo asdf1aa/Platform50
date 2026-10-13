@@ -1,0 +1,324 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module SpriteRender
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _RenderSprite
+                                     11 ;--------------------------------------------------------
+                                     12 ; special function registers
+                                     13 ;--------------------------------------------------------
+                                     14 	.area _HRAM
+                                     15 ;--------------------------------------------------------
+                                     16 ; ram data
+                                     17 ;--------------------------------------------------------
+                                     18 	.area _DATA
+    00000000                         19 _RenderSprite___save_10000_279:
+    00000000                         20 	.ds 1
+                                     21 ;--------------------------------------------------------
+                                     22 ; ram data
+                                     23 ;--------------------------------------------------------
+                                     24 	.area _INITIALIZED
+                                     25 ;--------------------------------------------------------
+                                     26 ; absolute external ram data
+                                     27 ;--------------------------------------------------------
+                                     28 	.area _DABS (ABS)
+                                     29 ;--------------------------------------------------------
+                                     30 ; global & static initialisations
+                                     31 ;--------------------------------------------------------
+                                     32 	.area _HOME
+                                     33 	.area _GSINIT
+                                     34 	.area _GSFINAL
+                                     35 	.area _GSINIT
+                                     36 ;--------------------------------------------------------
+                                     37 ; Home
+                                     38 ;--------------------------------------------------------
+                                     39 	.area _HOME
+                                     40 	.area _HOME
+                                     41 ;--------------------------------------------------------
+                                     42 ; code
+                                     43 ;--------------------------------------------------------
+                                     44 	.area _CODE
+                                     45 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:129: void RenderSprite(void) {
+                                     46 ;	---------------------------------
+                                     47 ; Function RenderSprite
+                                     48 ; ---------------------------------
+    00000000                         49 _RenderSprite::
+    00000000 E8 F9            [16]   50 	add	sp, #-7
+                                     51 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:131: __save = CURRENT_BANK;
+    00000002 F0r00            [12]   52 	ldh	a, (__current_bank + 0)
+    00000004 EAr00r00         [16]   53 	ld	(#_RenderSprite___save_10000_279),a
+                                     54 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:132: SWITCH_ROM(THIS->mt_sprite_bank);
+    00000007 FAr00r00         [16]   55 	ld	a, (#_THIS)
+    0000000A F8 00            [12]   56 	ldhl	sp,	#0
+    0000000C 77               [ 8]   57 	ld	(hl), a
+    0000000D FAr01r00         [16]   58 	ld	a, (#_THIS + 1)
+    00000010 F8 01            [12]   59 	ldhl	sp,	#1
+    00000012 77               [ 8]   60 	ld	(hl), a
+    00000013 D1               [12]   61 	pop	de
+    00000014 D5               [16]   62 	push	de
+    00000015 21 06 00         [12]   63 	ld	hl, #0x0006
+    00000018 19               [ 8]   64 	add	hl, de
+    00000019 4D               [ 4]   65 	ld	c, l
+    0000001A 44               [ 4]   66 	ld	b, h
+    0000001B 0A               [ 8]   67 	ld	a, (bc)
+    0000001C E0r00            [12]   68 	ldh	(__current_bank + 0), a
+    0000001E 0A               [ 8]   69 	ld	a, (bc)
+    0000001F EAr00r00         [16]   70 	ld	(#_rROMB0),a
+                                     71 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:134: __current_metasprite = THIS->mt_sprite;
+    00000022 D1               [12]   72 	pop	de
+    00000023 D5               [16]   73 	push	de
+    00000024 21 14 00         [12]   74 	ld	hl, #0x0014
+    00000027 19               [ 8]   75 	add	hl, de
+    00000028 2A               [ 8]   76 	ld	a, (hl+)
+    00000029 4F               [ 4]   77 	ld	c, a
+    0000002A 7E               [ 8]   78 	ld	a, (hl)
+    0000002B 21r00r00         [12]   79 	ld	hl, #___current_metasprite
+    0000002E 71               [ 8]   80 	ld	(hl), c
+    0000002F 23               [ 8]   81 	inc	hl
+    00000030 77               [ 8]   82 	ld	(hl), a
+                                     83 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:135: __current_base_prop = THIS->attr_add;
+    00000031 D1               [12]   84 	pop	de
+    00000032 D5               [16]   85 	push	de
+    00000033 21 0E 00         [12]   86 	ld	hl, #0x000e
+    00000036 19               [ 8]   87 	add	hl, de
+    00000037 4D               [ 4]   88 	ld	c, l
+    00000038 44               [ 4]   89 	ld	b, h
+    00000039 0A               [ 8]   90 	ld	a, (bc)
+    0000003A EAr00r00         [16]   91 	ld	(#___current_base_prop),a
+                                     92 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:137: switch(THIS->mirror) {
+    0000003D D1               [12]   93 	pop	de
+    0000003E D5               [16]   94 	push	de
+    0000003F 21 16 00         [12]   95 	ld	hl, #0x0016
+    00000042 19               [ 8]   96 	add	hl, de
+    00000043 4D               [ 4]   97 	ld	c, l
+    00000044 44               [ 4]   98 	ld	b, h
+    00000045 0A               [ 8]   99 	ld	a, (bc)
+    00000046 F8 02            [12]  100 	ldhl	sp,	#2
+    00000048 77               [ 8]  101 	ld	(hl), a
+    00000049 3E 04            [ 8]  102 	ld	a, #0x04
+    0000004B 96               [ 8]  103 	sub	a, (hl)
+    0000004C DAr6Ar01         [16]  104 	jp	C, 00106$
+                                    105 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:140: next_oam_idx += __move_metasprite(next_oam_idx, (sprite_screen_y << 8) | (uint8_t)sprite_screen_x);
+    0000004F FAr00r00         [16]  106 	ld	a, (#_sprite_screen_y)
+    00000052 F8 04            [12]  107 	ldhl	sp,	#4
+    00000054 32               [ 8]  108 	ld	(hl-), a
+    00000055 36 00            [12]  109 	ld	(hl), #0x00
+                                    110 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:144: next_oam_idx += __move_metasprite_flipy(next_oam_idx, ((sprite_screen_y + THIS->coll_h + ((LCDC_REG & LCDCF_OBJ16) ? -16 : -8)) << 8) | (uint8_t)sprite_screen_x);
+    00000057 D1               [12]  111 	pop	de
+    00000058 D5               [16]  112 	push	de
+    00000059 21 05 00         [12]  113 	ld	hl, #0x0005
+    0000005C 19               [ 8]  114 	add	hl, de
+    0000005D E5               [16]  115 	push	hl
+    0000005E 7D               [ 4]  116 	ld	a, l
+    0000005F F8 07            [12]  117 	ldhl	sp,	#7
+    00000061 77               [ 8]  118 	ld	(hl), a
+    00000062 E1               [12]  119 	pop	hl
+    00000063 7C               [ 4]  120 	ld	a, h
+    00000064 F8 06            [12]  121 	ldhl	sp,	#6
+    00000066 77               [ 8]  122 	ld	(hl), a
+                                    123 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:137: switch(THIS->mirror) {
+    00000067 F8 02            [12]  124 	ldhl	sp,	#2
+    00000069 4E               [ 8]  125 	ld	c, (hl)
+    0000006A 06 00            [ 8]  126 	ld	b, #0x00
+    0000006C 21r76r00         [12]  127 	ld	hl, #00134$
+    0000006F 09               [ 8]  128 	add	hl, bc
+    00000070 09               [ 8]  129 	add	hl, bc
+    00000071 4E               [ 8]  130 	ld	c, (hl)
+    00000072 23               [ 8]  131 	inc	hl
+    00000073 66               [ 8]  132 	ld	h, (hl)
+    00000074 69               [ 4]  133 	ld	l, c
+    00000075 E9               [ 4]  134 	jp	(hl)
+    00000076                        135 00134$:
+    00000076r80r00                  136 	.dw	00101$
+    00000078rA4r00                  137 	.dw	00102$
+    0000007ArE8r00                  138 	.dw	00103$
+    0000007Cr18r01                  139 	.dw	00105$
+    0000007Er18r01                  140 	.dw	00105$
+                                    141 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:138: case NO_MIRROR:
+    00000080                        142 00101$:
+                                    143 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:139: __current_base_tile = THIS->first_tile;
+    00000080 D1               [12]  144 	pop	de
+    00000081 D5               [16]  145 	push	de
+    00000082 21 0A 00         [12]  146 	ld	hl, #0x000a
+    00000085 19               [ 8]  147 	add	hl, de
+    00000086 4D               [ 4]  148 	ld	c, l
+    00000087 44               [ 4]  149 	ld	b, h
+    00000088 0A               [ 8]  150 	ld	a, (bc)
+    00000089 EAr00r00         [16]  151 	ld	(#___current_base_tile),a
+                                    152 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:140: next_oam_idx += __move_metasprite(next_oam_idx, (sprite_screen_y << 8) | (uint8_t)sprite_screen_x);
+    0000008C FAr00r00         [16]  153 	ld	a, (_sprite_screen_x)
+    0000008F 4F               [ 4]  154 	ld	c, a
+    00000090 F8 03            [12]  155 	ldhl	sp,	#3
+    00000092 2A               [ 8]  156 	ld	a, (hl+)
+    00000093 B1               [ 4]  157 	or	a, c
+    00000094 56               [ 8]  158 	ld	d, (hl)
+    00000095 5F               [ 4]  159 	ld	e, a
+    00000096 FAr00r00         [16]  160 	ld	a, (_next_oam_idx)
+    00000099 CDr00r00         [24]  161 	call	___move_metasprite
+    0000009C 21r00r00         [12]  162 	ld	hl, #_next_oam_idx
+    0000009F 86               [ 8]  163 	add	a, (hl)
+    000000A0 77               [ 8]  164 	ld	(hl), a
+                                    165 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:141: break;
+    000000A1 C3r6Ar01         [16]  166 	jp	00106$
+                                    167 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:142: case H_MIRROR:  
+    000000A4                        168 00102$:
+                                    169 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:143: __current_base_tile = THIS->first_tile_H;
+    000000A4 D1               [12]  170 	pop	de
+    000000A5 D5               [16]  171 	push	de
+    000000A6 21 0B 00         [12]  172 	ld	hl, #0x000b
+    000000A9 19               [ 8]  173 	add	hl, de
+    000000AA 4D               [ 4]  174 	ld	c, l
+    000000AB 44               [ 4]  175 	ld	b, h
+    000000AC 0A               [ 8]  176 	ld	a, (bc)
+    000000AD EAr00r00         [16]  177 	ld	(#___current_base_tile),a
+                                    178 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:144: next_oam_idx += __move_metasprite_flipy(next_oam_idx, ((sprite_screen_y + THIS->coll_h + ((LCDC_REG & LCDCF_OBJ16) ? -16 : -8)) << 8) | (uint8_t)sprite_screen_x);
+    000000B0 F8 05            [12]  179 	ldhl	sp,#5
+    000000B2 2A               [ 8]  180 	ld	a, (hl+)
+    000000B3 5F               [ 4]  181 	ld	e, a
+    000000B4 56               [ 8]  182 	ld	d, (hl)
+    000000B5 1A               [ 8]  183 	ld	a, (de)
+    000000B6 4F               [ 4]  184 	ld	c, a
+    000000B7 06 00            [ 8]  185 	ld	b, #0x00
+    000000B9 79               [ 4]  186 	ld	a, c
+    000000BA 21r00r00         [12]  187 	ld	hl, #_sprite_screen_y
+    000000BD 86               [ 8]  188 	add	a, (hl)
+    000000BE 23               [ 8]  189 	inc	hl
+    000000BF 4F               [ 4]  190 	ld	c, a
+    000000C0 78               [ 4]  191 	ld	a, b
+    000000C1 8E               [ 8]  192 	adc	a, (hl)
+    000000C2 47               [ 4]  193 	ld	b, a
+    000000C3 F0r00            [12]  194 	ldh	a, (_LCDC_REG + 0)
+    000000C5 CB 57            [ 8]  195 	bit	2, a
+    000000C7 3E F0            [ 8]  196 	ld	a, #0xf0
+    000000C9 20 02            [12]  197 	jr	NZ, 00110$
+    000000CB 3E F8            [ 8]  198 	ld	a, #0xf8
+    000000CD                        199 00110$:
+    000000CD 6F               [ 4]  200 	ld	l, a
+    000000CE 07               [ 4]  201 	rlca
+    000000CF 9F               [ 4]  202 	sbc	a, a
+    000000D0 67               [ 4]  203 	ld	h, a
+    000000D1 09               [ 8]  204 	add	hl, bc
+    000000D2 55               [ 4]  205 	ld	d, l
+    000000D3 1E 00            [ 8]  206 	ld	e, #0x00
+    000000D5 FAr00r00         [16]  207 	ld	a, (_sprite_screen_x)
+    000000D8 B3               [ 4]  208 	or	a, e
+    000000D9 5F               [ 4]  209 	ld	e, a
+    000000DA FAr00r00         [16]  210 	ld	a, (_next_oam_idx)
+    000000DD CDr00r00         [24]  211 	call	___move_metasprite_flipy
+    000000E0 21r00r00         [12]  212 	ld	hl, #_next_oam_idx
+    000000E3 86               [ 8]  213 	add	a, (hl)
+    000000E4 77               [ 8]  214 	ld	(hl), a
+                                    215 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:145: break;
+    000000E5 C3r6Ar01         [16]  216 	jp	00106$
+                                    217 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:146: case V_MIRROR:  
+    000000E8                        218 00103$:
+                                    219 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:147: __current_base_tile = THIS->first_tile_V;
+    000000E8 D1               [12]  220 	pop	de
+    000000E9 D5               [16]  221 	push	de
+    000000EA 21 0C 00         [12]  222 	ld	hl, #0x000c
+    000000ED 19               [ 8]  223 	add	hl, de
+    000000EE 4D               [ 4]  224 	ld	c, l
+    000000EF 44               [ 4]  225 	ld	b, h
+    000000F0 0A               [ 8]  226 	ld	a, (bc)
+    000000F1 EAr00r00         [16]  227 	ld	(#___current_base_tile),a
+                                    228 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:148: next_oam_idx += __move_metasprite_flipx(next_oam_idx, (sprite_screen_y << 8) | (uint8_t)(sprite_screen_x + THIS->coll_w - 8));
+    000000F4 FAr00r00         [16]  229 	ld	a, (_sprite_screen_x)
+    000000F7 4F               [ 4]  230 	ld	c, a
+    000000F8 D1               [12]  231 	pop	de
+    000000F9 D5               [16]  232 	push	de
+    000000FA 21 04 00         [12]  233 	ld	hl, #0x0004
+    000000FD 19               [ 8]  234 	add	hl, de
+    000000FE 5D               [ 4]  235 	ld	e, l
+    000000FF 54               [ 4]  236 	ld	d, h
+    00000100 1A               [ 8]  237 	ld	a, (de)
+    00000101 81               [ 4]  238 	add	a, c
+    00000102 C6 F8            [ 8]  239 	add	a, #0xf8
+    00000104 4F               [ 4]  240 	ld	c, a
+    00000105 F8 03            [12]  241 	ldhl	sp,	#3
+    00000107 2A               [ 8]  242 	ld	a, (hl+)
+    00000108 B1               [ 4]  243 	or	a, c
+    00000109 56               [ 8]  244 	ld	d, (hl)
+    0000010A 5F               [ 4]  245 	ld	e, a
+    0000010B FAr00r00         [16]  246 	ld	a, (_next_oam_idx)
+    0000010E CDr00r00         [24]  247 	call	___move_metasprite_flipx
+    00000111 21r00r00         [12]  248 	ld	hl, #_next_oam_idx
+    00000114 86               [ 8]  249 	add	a, (hl)
+    00000115 77               [ 8]  250 	ld	(hl), a
+                                    251 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:149: break;
+    00000116 18 52            [12]  252 	jr	00106$
+                                    253 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:151: case HV_MIRROR: 
+    00000118                        254 00105$:
+                                    255 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:152: __current_base_tile = THIS->first_tile_HV;
+    00000118 D1               [12]  256 	pop	de
+    00000119 D5               [16]  257 	push	de
+    0000011A 21 0D 00         [12]  258 	ld	hl, #0x000d
+    0000011D 19               [ 8]  259 	add	hl, de
+    0000011E 4D               [ 4]  260 	ld	c, l
+    0000011F 44               [ 4]  261 	ld	b, h
+    00000120 0A               [ 8]  262 	ld	a, (bc)
+    00000121 EAr00r00         [16]  263 	ld	(#___current_base_tile),a
+                                    264 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:153: next_oam_idx += __move_metasprite_flipxy(next_oam_idx, ((sprite_screen_y + THIS->coll_h + ((LCDC_REG & LCDCF_OBJ16) ? -16 : -8)) << 8) | (uint8_t)(sprite_screen_x + THIS->coll_w - 8));
+    00000124 F8 05            [12]  265 	ldhl	sp,#5
+    00000126 2A               [ 8]  266 	ld	a, (hl+)
+    00000127 5F               [ 4]  267 	ld	e, a
+    00000128 56               [ 8]  268 	ld	d, (hl)
+    00000129 1A               [ 8]  269 	ld	a, (de)
+    0000012A 4F               [ 4]  270 	ld	c, a
+    0000012B 06 00            [ 8]  271 	ld	b, #0x00
+    0000012D 79               [ 4]  272 	ld	a, c
+    0000012E 21r00r00         [12]  273 	ld	hl, #_sprite_screen_y
+    00000131 86               [ 8]  274 	add	a, (hl)
+    00000132 23               [ 8]  275 	inc	hl
+    00000133 4F               [ 4]  276 	ld	c, a
+    00000134 78               [ 4]  277 	ld	a, b
+    00000135 8E               [ 8]  278 	adc	a, (hl)
+    00000136 47               [ 4]  279 	ld	b, a
+    00000137 F0r00            [12]  280 	ldh	a, (_LCDC_REG + 0)
+    00000139 CB 57            [ 8]  281 	bit	2, a
+    0000013B 3E F0            [ 8]  282 	ld	a, #0xf0
+    0000013D 20 02            [12]  283 	jr	NZ, 00112$
+    0000013F 3E F8            [ 8]  284 	ld	a, #0xf8
+    00000141                        285 00112$:
+    00000141 6F               [ 4]  286 	ld	l, a
+    00000142 07               [ 4]  287 	rlca
+    00000143 9F               [ 4]  288 	sbc	a, a
+    00000144 67               [ 4]  289 	ld	h, a
+    00000145 09               [ 8]  290 	add	hl, bc
+    00000146 55               [ 4]  291 	ld	d, l
+    00000147 1E 00            [ 8]  292 	ld	e, #0x00
+    00000149 FAr00r00         [16]  293 	ld	a, (_sprite_screen_x)
+    0000014C 4F               [ 4]  294 	ld	c, a
+    0000014D FAr00r00         [16]  295 	ld	a, (_THIS)
+    00000150 6F               [ 4]  296 	ld	l, a
+    00000151 FAr01r00         [16]  297 	ld	a, (_THIS + 1)
+    00000154 67               [ 4]  298 	ld	h, a
+    00000155 23               [ 8]  299 	inc	hl
+    00000156 23               [ 8]  300 	inc	hl
+    00000157 23               [ 8]  301 	inc	hl
+    00000158 23               [ 8]  302 	inc	hl
+    00000159 7E               [ 8]  303 	ld	a, (hl)
+    0000015A 81               [ 4]  304 	add	a, c
+    0000015B C6 F8            [ 8]  305 	add	a, #0xf8
+    0000015D B3               [ 4]  306 	or	a, e
+    0000015E 5F               [ 4]  307 	ld	e, a
+    0000015F FAr00r00         [16]  308 	ld	a, (_next_oam_idx)
+    00000162 CDr00r00         [24]  309 	call	___move_metasprite_flipxy
+    00000165 21r00r00         [12]  310 	ld	hl, #_next_oam_idx
+    00000168 86               [ 8]  311 	add	a, (hl)
+    00000169 77               [ 8]  312 	ld	(hl), a
+                                    313 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:155: }
+    0000016A                        314 00106$:
+                                    315 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:156: SWITCH_ROM(__save);
+    0000016A FAr00r00         [16]  316 	ld	a, (_RenderSprite___save_10000_279)
+    0000016D E0r00            [12]  317 	ldh	(__current_bank + 0), a
+    0000016F EAr00r00         [16]  318 	ld	(#_rROMB0),a
+                                    319 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:157: }
+    00000172 E8 07            [16]  320 	add	sp, #7
+    00000174 C9               [16]  321 	ret
+                                    322 	.area _CODE
+                                    323 	.area _INITIALIZER
+                                    324 	.area _CABS (ABS)

@@ -1,0 +1,174 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module SpriteRender
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _RenderSprite
+                                     11 ;--------------------------------------------------------
+                                     12 ; special function registers
+                                     13 ;--------------------------------------------------------
+                         00000000    14 _GG_STATE	=	0x0000
+                         00000001    15 _GG_EXT_7BIT	=	0x0001
+                         00000002    16 _GG_EXT_CTL	=	0x0002
+                         00000003    17 _GG_SIO_SEND	=	0x0003
+                         00000004    18 _GG_SIO_RECV	=	0x0004
+                         00000005    19 _GG_SIO_CTL	=	0x0005
+                         00000006    20 _GG_SOUND_PAN	=	0x0006
+                         0000003E    21 _MEMORY_CTL	=	0x003e
+                         0000003F    22 _JOY_CTL	=	0x003f
+                         0000007E    23 _VCOUNTER	=	0x007e
+                         0000007F    24 _PSG	=	0x007f
+                         0000007F    25 _HCOUNTER	=	0x007f
+                         000000BE    26 _VDP_DATA	=	0x00be
+                         000000BF    27 _VDP_CMD	=	0x00bf
+                         000000BF    28 _VDP_STATUS	=	0x00bf
+                         000000DC    29 _JOY_PORT1	=	0x00dc
+                         000000DD    30 _JOY_PORT2	=	0x00dd
+                         000000F0    31 _FMADDRESS	=	0x00f0
+                         000000F1    32 _FMDATA	=	0x00f1
+                         000000F2    33 _AUDIOCTRL	=	0x00f2
+                                     34 ;--------------------------------------------------------
+                                     35 ; ram data
+                                     36 ;--------------------------------------------------------
+                                     37 	.area _DATA
+                         0000FFFC    38 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    39 _GLASSES_3D	=	0xfff8
+                         0000FFFD    40 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    41 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    42 _MAP_FRAME2	=	0xffff
+                                     43 ;--------------------------------------------------------
+                                     44 ; ram data
+                                     45 ;--------------------------------------------------------
+                                     46 	.area _INITIALIZED
+                                     47 ;--------------------------------------------------------
+                                     48 ; absolute external ram data
+                                     49 ;--------------------------------------------------------
+                                     50 	.area _DABS (ABS)
+                                     51 ;--------------------------------------------------------
+                                     52 ; global & static initialisations
+                                     53 ;--------------------------------------------------------
+                                     54 	.area _HOME
+                                     55 	.area _GSINIT
+                                     56 	.area _GSFINAL
+                                     57 	.area _GSINIT
+                                     58 ;--------------------------------------------------------
+                                     59 ; Home
+                                     60 ;--------------------------------------------------------
+                                     61 	.area _HOME
+                                     62 	.area _HOME
+                                     63 ;--------------------------------------------------------
+                                     64 ; code
+                                     65 ;--------------------------------------------------------
+                                     66 	.area _CODE
+                                     67 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:11: void RenderSprite(void) NAKED {
+                                     68 ;	---------------------------------
+                                     69 ; Function RenderSprite
+                                     70 ; ---------------------------------
+    00000000                         71 _RenderSprite::
+                                     72 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:126: __endasm;
+    00000000 3A FE FF         [13]   73 	ld	a, (_MAP_FRAME1)
+    00000003 F5               [11]   74 	push	af
+    00000004 FD 2Ar00r00      [20]   75 	ld	iy, (_THIS)
+    00000008 FD 7Er00         [19]   76 	ld	a, ___offset_Sprite__mt_sprite_bank(iy)
+    0000000B 32 FE FF         [13]   77 	ld	(_MAP_FRAME1), a
+    0000000E 3Ar00r00         [13]   78 	ld	a, (_shadow_VDP_R1)
+    00000011 E6 02            [ 7]   79 	and	#0b00000010
+    00000013 CAr1Cr00         [10]   80 	jp	z, 7$
+    00000016 01 F0 FF         [10]   81 	ld	bc, #-16
+    00000019 C3r1Fr00         [10]   82 	jp	8$
+    0000001C                         83 7$:
+    0000001C 01 F8 FF         [10]   84 	ld	bc, #-8
+    0000001F                         85 8$:
+    0000001F FD 6Er00         [19]   86 	ld	l, ___offset_Sprite__mt_sprite+0(iy)
+    00000022 FD 66r01         [19]   87 	ld	h, ___offset_Sprite__mt_sprite+1(iy)
+    00000025 22r00r00         [16]   88 	ld	(___current_metasprite), hl
+    00000028 16 00            [ 7]   89 	ld	d, #0
+    0000002A FD 5Er00         [19]   90 	ld	e, ___offset_Sprite__mirror(iy)
+    0000002D 3E 04            [ 7]   91 	ld	a, #4
+    0000002F 93               [ 4]   92 	sub	e
+    00000030 DArC9r00         [10]   93 	jp	c, 6$
+    00000033 21r3Dr00         [10]   94 	ld	hl, #0$
+    00000036 19               [11]   95 	add	hl, de
+    00000037 19               [11]   96 	add	hl, de
+    00000038 5E               [ 7]   97 	ld	e, (hl)
+    00000039 23               [ 6]   98 	inc	hl
+    0000003A 66               [ 7]   99 	ld	h, (hl)
+    0000003B 6B               [ 4]  100 	ld	l, e
+    0000003C E9               [ 4]  101 	jp	(hl)
+    0000003D                        102 0$:
+    0000003Dr47r00                  103 	.dw	1$
+    0000003Fr5Fr00                  104 	.dw	2$
+    00000041r7Dr00                  105 	.dw	3$
+    00000043r9Fr00                  106 	.dw	4$
+    00000045r9Fr00                  107 	.dw	4$
+    00000047                        108 1$:
+    00000047 FD 7Er00         [19]  109 	ld	a, ___offset_Sprite__first_tile(iy)
+    0000004A 32r00r00         [13]  110 	ld	(___current_base_tile), a
+    0000004D ED 5Br00r00      [20]  111 	ld	de, (_sprite_screen_y)
+    00000051 D5               [11]  112 	push	de
+    00000052 ED 5Br00r00      [20]  113 	ld	de, (_sprite_screen_x)
+    00000056 3Ar00r00         [13]  114 	ld	a, (_next_oam_idx)
+    00000059 CDr00r00         [17]  115 	call	___move_metasprite
+    0000005C C3rC4r00         [10]  116 	jp	5$
+    0000005F                        117 2$:
+    0000005F FD 7Er00         [19]  118 	ld	a, ___offset_Sprite__first_tile_H(iy)
+    00000062 32r00r00         [13]  119 	ld	(___current_base_tile), a
+    00000065 2Ar00r00         [16]  120 	ld	hl, (_sprite_screen_y)
+    00000068 16 00            [ 7]  121 	ld	d, #0
+    0000006A FD 5Er00         [19]  122 	ld	e, ___offset_Sprite__coll_h+0(iy)
+    0000006D 19               [11]  123 	add	hl, de
+    0000006E 09               [11]  124 	add	hl, bc
+    0000006F E5               [11]  125 	push	hl
+    00000070 ED 5Br00r00      [20]  126 	ld	de, (_sprite_screen_x)
+    00000074 3Ar00r00         [13]  127 	ld	a, (_next_oam_idx)
+    00000077 CDr00r00         [17]  128 	call	___move_metasprite_flipy
+    0000007A C3rC4r00         [10]  129 	jp	5$
+    0000007D                        130 3$:
+    0000007D FD 7Er00         [19]  131 	ld	a, ___offset_Sprite__first_tile_V(iy)
+    00000080 32r00r00         [13]  132 	ld	(___current_base_tile), a
+    00000083 ED 5Br00r00      [20]  133 	ld	de, (_sprite_screen_y)
+    00000087 D5               [11]  134 	push	de
+    00000088 2Ar00r00         [16]  135 	ld	hl, (_sprite_screen_x)
+    0000008B 16 00            [ 7]  136 	ld	d, #0
+    0000008D FD 5Er00         [19]  137 	ld	e, ___offset_Sprite__coll_w+0(iy)
+    00000090 19               [11]  138 	add	hl, de
+    00000091 11 F8 FF         [10]  139 	ld	de, #-8
+    00000094 19               [11]  140 	add	hl, de
+    00000095 EB               [ 4]  141 	ex	de, hl
+    00000096 3Ar00r00         [13]  142 	ld	a, (_next_oam_idx)
+    00000099 CDr00r00         [17]  143 	call	___move_metasprite_flipx
+    0000009C C3rC4r00         [10]  144 	jp	5$
+    0000009F                        145 4$:
+    0000009F FD 7Er00         [19]  146 	ld	a, ___offset_Sprite__first_tile_HV(iy)
+    000000A2 32r00r00         [13]  147 	ld	(___current_base_tile), a
+    000000A5 2Ar00r00         [16]  148 	ld	hl, (_sprite_screen_y)
+    000000A8 16 00            [ 7]  149 	ld	d, #0
+    000000AA FD 5Er00         [19]  150 	ld	e, ___offset_Sprite__coll_h+0(iy)
+    000000AD 19               [11]  151 	add	hl, de
+    000000AE 09               [11]  152 	add	hl, bc
+    000000AF E5               [11]  153 	push	hl
+    000000B0 2Ar00r00         [16]  154 	ld	hl, (_sprite_screen_x)
+    000000B3 16 00            [ 7]  155 	ld	d, #0
+    000000B5 FD 5Er00         [19]  156 	ld	e, ___offset_Sprite__coll_w+0(iy)
+    000000B8 19               [11]  157 	add	hl, de
+    000000B9 11 F8 FF         [10]  158 	ld	de, #-8
+    000000BC 19               [11]  159 	add	hl, de
+    000000BD EB               [ 4]  160 	ex	de, hl
+    000000BE 3Ar00r00         [13]  161 	ld	a, (_next_oam_idx)
+    000000C1 CDr00r00         [17]  162 	call	___move_metasprite_flipxy
+    000000C4                        163 5$:
+    000000C4 21r00r00         [10]  164 	ld	hl, #_next_oam_idx
+    000000C7 86               [ 7]  165 	add	(hl)
+    000000C8 77               [ 7]  166 	ld	(hl), a
+    000000C9                        167 6$:
+    000000C9 F1               [10]  168 	pop	af
+    000000CA 32 FE FF         [13]  169 	ld	(_MAP_FRAME1), a
+    000000CD C9               [10]  170 	ret
+                                    171 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteRender.c:127: }
+                                    172 	.area _CODE
+                                    173 	.area _INITIALIZER
+                                    174 	.area _CABS (ABS)

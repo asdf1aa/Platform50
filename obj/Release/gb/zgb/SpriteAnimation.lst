@@ -1,0 +1,320 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module SpriteAnimation
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _TickAnimSprite
+                                     11 	.globl _GetSpriteAnimation
+                                     12 	.globl _SetSpriteAnim
+                                     13 ;--------------------------------------------------------
+                                     14 ; special function registers
+                                     15 ;--------------------------------------------------------
+                                     16 	.area _HRAM
+                                     17 ;--------------------------------------------------------
+                                     18 ; ram data
+                                     19 ;--------------------------------------------------------
+                                     20 	.area _DATA
+                                     21 ;--------------------------------------------------------
+                                     22 ; ram data
+                                     23 ;--------------------------------------------------------
+                                     24 	.area _INITIALIZED
+                                     25 ;--------------------------------------------------------
+                                     26 ; absolute external ram data
+                                     27 ;--------------------------------------------------------
+                                     28 	.area _DABS (ABS)
+                                     29 ;--------------------------------------------------------
+                                     30 ; global & static initialisations
+                                     31 ;--------------------------------------------------------
+                                     32 	.area _HOME
+                                     33 	.area _GSINIT
+                                     34 	.area _GSFINAL
+                                     35 	.area _GSINIT
+                                     36 ;--------------------------------------------------------
+                                     37 ; Home
+                                     38 ;--------------------------------------------------------
+                                     39 	.area _HOME
+                                     40 	.area _HOME
+                                     41 ;--------------------------------------------------------
+                                     42 ; code
+                                     43 ;--------------------------------------------------------
+                                     44 	.area _CODE
+                                     45 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:6: void SetSpriteAnim(Sprite* sprite, const UINT8* data, UINT8 speed) {
+                                     46 ;	---------------------------------
+                                     47 ; Function SetSpriteAnim
+                                     48 ; ---------------------------------
+    00000000                         49 _SetSpriteAnim::
+    00000000 E8 FC            [16]   50 	add	sp, #-4
+    00000002 F8 02            [12]   51 	ldhl	sp,	#2
+    00000004 7B               [ 4]   52 	ld	a, e
+    00000005 22               [ 8]   53 	ld	(hl+), a
+                                     54 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:7: if (sprite->anim_data == data) return;
+    00000006 7A               [ 4]   55 	ld	a, d
+    00000007 32               [ 8]   56 	ld	(hl-), a
+    00000008 2A               [ 8]   57 	ld	a, (hl+)
+    00000009 5F               [ 4]   58 	ld	e, a
+    0000000A 56               [ 8]   59 	ld	d, (hl)
+    0000000B 21 0F 00         [12]   60 	ld	hl, #0x000f
+    0000000E 19               [ 8]   61 	add	hl, de
+    0000000F 33               [ 8]   62 	inc	sp
+    00000010 33               [ 8]   63 	inc	sp
+    00000011 5D               [ 4]   64 	ld	e, l
+    00000012 54               [ 4]   65 	ld	d, h
+    00000013 D5               [16]   66 	push	de
+    00000014 1A               [ 8]   67 	ld	a, (de)
+    00000015 6F               [ 4]   68 	ld	l, a
+    00000016 13               [ 8]   69 	inc	de
+    00000017 1A               [ 8]   70 	ld	a, (de)
+    00000018 67               [ 4]   71 	ld	h, a
+    00000019 7D               [ 4]   72 	ld	a, l
+    0000001A 91               [ 4]   73 	sub	a, c
+    0000001B 20 04            [12]   74 	jr	NZ, 00102$
+    0000001D 7C               [ 4]   75 	ld	a, h
+    0000001E 90               [ 4]   76 	sub	a, b
+    0000001F 28 51            [12]   77 	jr	Z, 00104$
+    00000021                         78 00102$:
+                                     79 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:9: sprite->anim_data = (UINT8* )data;
+    00000021 E1               [12]   80 	pop	hl
+    00000022 E5               [16]   81 	push	hl
+    00000023 79               [ 4]   82 	ld	a, c
+    00000024 22               [ 8]   83 	ld	(hl+), a
+    00000025 70               [ 8]   84 	ld	(hl), b
+                                     85 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:10: SetFrame(sprite, VECTOR_GET(data, 0));
+    00000026 03               [ 8]   86 	inc	bc
+    00000027 0A               [ 8]   87 	ld	a, (bc)
+    00000028 F8 01            [12]   88 	ldhl	sp,	#1
+                                     89 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sprite.h:83: sprite->mt_sprite = GetSpriteAnimation(sprite, frame);
+    0000002A 22               [ 8]   90 	ld	(hl+), a
+    0000002B 2A               [ 8]   91 	ld	a, (hl+)
+    0000002C 5F               [ 4]   92 	ld	e, a
+    0000002D 56               [ 8]   93 	ld	d, (hl)
+    0000002E 21 14 00         [12]   94 	ld	hl, #0x0014
+    00000031 19               [ 8]   95 	add	hl, de
+    00000032 5D               [ 4]   96 	ld	e, l
+    00000033 54               [ 4]   97 	ld	d, h
+    00000034 F8 01            [12]   98 	ldhl	sp,	#1
+    00000036 2A               [ 8]   99 	ld	a, (hl+)
+    00000037 4F               [ 4]  100 	ld	c, a
+    00000038 AF               [ 4]  101 	xor	a, a
+    00000039 D5               [16]  102 	push	de
+    0000003A 47               [ 4]  103 	ld	b, a
+    0000003B 2A               [ 8]  104 	ld	a, (hl+)
+    0000003C 5F               [ 4]  105 	ld	e, a
+    0000003D 56               [ 8]  106 	ld	d, (hl)
+    0000003E CDr00r00         [24]  107 	call	_GetSpriteAnimation
+    00000041 D1               [12]  108 	pop	de
+    00000042 79               [ 4]  109 	ld	a, c
+    00000043 12               [ 8]  110 	ld	(de), a
+    00000044 13               [ 8]  111 	inc	de
+    00000045 78               [ 4]  112 	ld	a, b
+    00000046 12               [ 8]  113 	ld	(de), a
+                                    114 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sprite.h:84: sprite->anim_frame = frame;
+    00000047 F8 02            [12]  115 	ldhl	sp,#2
+    00000049 2A               [ 8]  116 	ld	a, (hl+)
+    0000004A 5F               [ 4]  117 	ld	e, a
+    0000004B 56               [ 8]  118 	ld	d, (hl)
+    0000004C 21 13 00         [12]  119 	ld	hl, #0x0013
+    0000004F 19               [ 8]  120 	add	hl, de
+    00000050 4D               [ 4]  121 	ld	c, l
+    00000051 44               [ 4]  122 	ld	b, h
+    00000052 F8 01            [12]  123 	ldhl	sp,	#1
+                                    124 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:11: sprite->anim_frame = 0;
+                                    125 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:12: sprite->anim_accum_ticks = 0;
+    00000054 2A               [ 8]  126 	ld	a, (hl+)
+    00000055 02               [ 8]  127 	ld	(bc), a
+    00000056 AF               [ 4]  128 	xor	a, a
+    00000057 02               [ 8]  129 	ld	(bc), a
+    00000058 2A               [ 8]  130 	ld	a, (hl+)
+    00000059 5F               [ 4]  131 	ld	e, a
+    0000005A 56               [ 8]  132 	ld	d, (hl)
+    0000005B 21 11 00         [12]  133 	ld	hl, #0x0011
+    0000005E 19               [ 8]  134 	add	hl, de
+    0000005F 4D               [ 4]  135 	ld	c, l
+    00000060 44               [ 4]  136 	ld	b, h
+    00000061 AF               [ 4]  137 	xor	a, a
+    00000062 02               [ 8]  138 	ld	(bc), a
+                                    139 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:13: sprite->anim_speed = speed;
+    00000063 F8 02            [12]  140 	ldhl	sp,#2
+    00000065 2A               [ 8]  141 	ld	a, (hl+)
+    00000066 5F               [ 4]  142 	ld	e, a
+    00000067 56               [ 8]  143 	ld	d, (hl)
+    00000068 21 12 00         [12]  144 	ld	hl, #0x0012
+    0000006B 19               [ 8]  145 	add	hl, de
+    0000006C 4D               [ 4]  146 	ld	c, l
+    0000006D 44               [ 4]  147 	ld	b, h
+    0000006E F8 06            [12]  148 	ldhl	sp,	#6
+    00000070 7E               [ 8]  149 	ld	a, (hl)
+    00000071 02               [ 8]  150 	ld	(bc), a
+    00000072                        151 00104$:
+                                    152 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:14: }
+    00000072 E8 04            [16]  153 	add	sp, #4
+    00000074 E1               [12]  154 	pop	hl
+    00000075 33               [ 8]  155 	inc	sp
+    00000076 E9               [ 4]  156 	jp	(hl)
+                                    157 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:72: void TickAnimSprite(void) {
+                                    158 ;	---------------------------------
+                                    159 ; Function TickAnimSprite
+                                    160 ; ---------------------------------
+    00000077                        161 _TickAnimSprite::
+    00000077 3B               [ 8]  162 	dec	sp
+    00000078 3B               [ 8]  163 	dec	sp
+                                    164 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:73: if (THIS->anim_data) {
+    00000079 FAr00r00         [16]  165 	ld	a, (_THIS)
+    0000007C 4F               [ 4]  166 	ld	c, a
+    0000007D 21r01r00         [12]  167 	ld	hl, #_THIS + 1
+    00000080 46               [ 8]  168 	ld	b, (hl)
+    00000081 21 0F 00         [12]  169 	ld	hl, #0x000f
+    00000084 09               [ 8]  170 	add	hl, bc
+    00000085 5D               [ 4]  171 	ld	e, l
+    00000086 54               [ 4]  172 	ld	d, h
+    00000087 1A               [ 8]  173 	ld	a, (de)
+    00000088 F8 00            [12]  174 	ldhl	sp,	#0
+    0000008A 22               [ 8]  175 	ld	(hl+), a
+    0000008B 13               [ 8]  176 	inc	de
+    0000008C 1A               [ 8]  177 	ld	a, (de)
+    0000008D 77               [ 8]  178 	ld	(hl), a
+    0000008E F8 01            [12]  179 	ldhl	sp,	#1
+    00000090 3A               [ 8]  180 	ld	a, (hl-)
+    00000091 B6               [ 8]  181 	or	a, (hl)
+    00000092 CAr3Dr01         [16]  182 	jp	Z, 00110$
+                                    183 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:74: THIS->anim_accum_ticks += ((delta_time) ? (THIS->anim_speed << 1) : THIS->anim_speed);
+    00000095 21 11 00         [12]  184 	ld	hl, #0x0011
+    00000098 09               [ 8]  185 	add	hl, bc
+    00000099 5D               [ 4]  186 	ld	e, l
+    0000009A 54               [ 4]  187 	ld	d, h
+    0000009B 1A               [ 8]  188 	ld	a, (de)
+    0000009C F8 01            [12]  189 	ldhl	sp,	#1
+    0000009E 77               [ 8]  190 	ld	(hl), a
+    0000009F 21 12 00         [12]  191 	ld	hl, #0x0012
+    000000A2 09               [ 8]  192 	add	hl, bc
+    000000A3 4E               [ 8]  193 	ld	c, (hl)
+    000000A4 FAr00r00         [16]  194 	ld	a, (#_delta_time)
+    000000A7 B7               [ 4]  195 	or	a, a
+    000000A8 28 04            [12]  196 	jr	Z, 00112$
+    000000AA 79               [ 4]  197 	ld	a, c
+    000000AB 87               [ 4]  198 	add	a, a
+    000000AC 18 01            [12]  199 	jr	00113$
+    000000AE                        200 00112$:
+    000000AE 79               [ 4]  201 	ld	a, c
+    000000AF                        202 00113$:
+    000000AF F8 01            [12]  203 	ldhl	sp,	#1
+    000000B1 86               [ 8]  204 	add	a, (hl)
+    000000B2 12               [ 8]  205 	ld	(de), a
+                                    206 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:73: if (THIS->anim_data) {
+    000000B3 FAr00r00         [16]  207 	ld	a, (_THIS)
+    000000B6 21r01r00         [12]  208 	ld	hl, #_THIS + 1
+    000000B9 66               [ 8]  209 	ld	h, (hl)
+                                    210 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:74: THIS->anim_accum_ticks += ((delta_time) ? (THIS->anim_speed << 1) : THIS->anim_speed);
+    000000BA 6F               [ 4]  211 	ld	l, a
+    000000BB 11 11 00         [12]  212 	ld	de, #0x0011
+    000000BE 19               [ 8]  213 	add	hl, de
+    000000BF 7E               [ 8]  214 	ld	a, (hl)
+                                    215 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:75: if (THIS->anim_accum_ticks >= SPRITE_ANIM_MAX_TICKS) {
+    000000C0 FE 64            [ 8]  216 	cp	a, #0x64
+    000000C2 38 79            [12]  217 	jr	C, 00110$
+                                    218 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:76: THIS->anim_accum_ticks -= SPRITE_ANIM_MAX_TICKS;
+    000000C4 C6 9C            [ 8]  219 	add	a, #0x9c
+    000000C6 77               [ 8]  220 	ld	(hl), a
+                                    221 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:78: if (++THIS->anim_frame >= VECTOR_LEN(THIS->anim_data)) {
+    000000C7 FAr00r00         [16]  222 	ld	a, (_THIS)
+    000000CA 21r01r00         [12]  223 	ld	hl, #_THIS + 1
+    000000CD 46               [ 8]  224 	ld	b, (hl)
+    000000CE C6 13            [ 8]  225 	add	a, #0x13
+    000000D0 4F               [ 4]  226 	ld	c, a
+    000000D1 30 01            [12]  227 	jr	NC, 00149$
+    000000D3 04               [ 4]  228 	inc	b
+    000000D4                        229 00149$:
+    000000D4 0A               [ 8]  230 	ld	a, (bc)
+    000000D5 3C               [ 4]  231 	inc	a
+    000000D6 F8 01            [12]  232 	ldhl	sp,	#1
+    000000D8 77               [ 8]  233 	ld	(hl), a
+    000000D9 02               [ 8]  234 	ld	(bc), a
+                                    235 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:73: if (THIS->anim_data) {
+    000000DA FAr00r00         [16]  236 	ld	a, (_THIS)
+    000000DD 4F               [ 4]  237 	ld	c, a
+    000000DE 21r01r00         [12]  238 	ld	hl, #_THIS + 1
+    000000E1 46               [ 8]  239 	ld	b, (hl)
+                                    240 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:78: if (++THIS->anim_frame >= VECTOR_LEN(THIS->anim_data)) {
+    000000E2 21 0F 00         [12]  241 	ld	hl, #0x000f
+    000000E5 09               [ 8]  242 	add	hl, bc
+    000000E6 2A               [ 8]  243 	ld	a,	(hl+)
+    000000E7 66               [ 8]  244 	ld	h, (hl)
+    000000E8 6F               [ 4]  245 	ld	l, a
+    000000E9 5E               [ 8]  246 	ld	e, (hl)
+    000000EA F8 01            [12]  247 	ldhl	sp,	#1
+    000000EC 7E               [ 8]  248 	ld	a, (hl)
+    000000ED 93               [ 4]  249 	sub	a, e
+    000000EE 38 17            [12]  250 	jr	C, 00105$
+                                    251 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:79: if (THIS->loop_anim) {
+    000000F0 21 21 00         [12]  252 	ld	hl, #0x0021
+    000000F3 09               [ 8]  253 	add	hl, bc
+    000000F4 7E               [ 8]  254 	ld	a, (hl)
+    000000F5 0F               [ 4]  255 	rrca
+    000000F6 0F               [ 4]  256 	rrca
+    000000F7 E6 01            [ 8]  257 	and	a, #0x01
+    000000F9 5F               [ 4]  258 	ld	e, a
+                                    259 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:80: THIS->anim_frame = 0;
+    000000FA 21 13 00         [12]  260 	ld	hl, #0x0013
+    000000FD 09               [ 8]  261 	add	hl, bc
+                                    262 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:79: if (THIS->loop_anim) {
+    000000FE 7B               [ 4]  263 	ld	a, e
+    000000FF B7               [ 4]  264 	or	a, a
+    00000100 28 04            [12]  265 	jr	Z, 00102$
+                                    266 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:80: THIS->anim_frame = 0;
+    00000102 36 00            [12]  267 	ld	(hl), #0x00
+    00000104 18 01            [12]  268 	jr	00105$
+    00000106                        269 00102$:
+                                    270 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:82: --THIS->anim_frame;
+    00000106 35               [12]  271 	dec	(hl)
+    00000107                        272 00105$:
+                                    273 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:73: if (THIS->anim_data) {
+    00000107 FAr00r00         [16]  274 	ld	a, (_THIS)
+    0000010A 4F               [ 4]  275 	ld	c, a
+    0000010B 21r01r00         [12]  276 	ld	hl, #_THIS + 1
+    0000010E 46               [ 8]  277 	ld	b, (hl)
+                                    278 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:85: THIS->mt_sprite = GetSpriteAnimation(THIS, VECTOR_GET(THIS->anim_data, THIS->anim_frame));
+    0000010F 21 14 00         [12]  279 	ld	hl, #0x0014
+    00000112 09               [ 8]  280 	add	hl, bc
+    00000113 33               [ 8]  281 	inc	sp
+    00000114 33               [ 8]  282 	inc	sp
+    00000115 E5               [16]  283 	push	hl
+    00000116 21 0F 00         [12]  284 	ld	hl, #0x000f
+    00000119 09               [ 8]  285 	add	hl, bc
+    0000011A 2A               [ 8]  286 	ld	a,	(hl+)
+    0000011B 66               [ 8]  287 	ld	h, (hl)
+    0000011C 6F               [ 4]  288 	ld	l, a
+    0000011D 79               [ 4]  289 	ld	a, c
+    0000011E C6 13            [ 8]  290 	add	a, #0x13
+    00000120 4F               [ 4]  291 	ld	c, a
+    00000121 30 01            [12]  292 	jr	NC, 00150$
+    00000123 04               [ 4]  293 	inc	b
+    00000124                        294 00150$:
+    00000124 0A               [ 8]  295 	ld	a, (bc)
+    00000125 06 00            [ 8]  296 	ld	b, #0x00
+    00000127 4F               [ 4]  297 	ld	c, a
+    00000128 03               [ 8]  298 	inc	bc
+    00000129 09               [ 8]  299 	add	hl, bc
+    0000012A 4E               [ 8]  300 	ld	c, (hl)
+    0000012B AF               [ 4]  301 	xor	a, a
+    0000012C 47               [ 4]  302 	ld	b, a
+    0000012D FAr00r00         [16]  303 	ld	a, (_THIS)
+    00000130 5F               [ 4]  304 	ld	e, a
+    00000131 21r01r00         [12]  305 	ld	hl, #_THIS + 1
+    00000134 56               [ 8]  306 	ld	d, (hl)
+    00000135 CDr00r00         [24]  307 	call	_GetSpriteAnimation
+    00000138 E1               [12]  308 	pop	hl
+    00000139 E5               [16]  309 	push	hl
+    0000013A 79               [ 4]  310 	ld	a, c
+    0000013B 22               [ 8]  311 	ld	(hl+), a
+    0000013C 70               [ 8]  312 	ld	(hl), b
+    0000013D                        313 00110$:
+                                    314 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteAnimation.c:88: }
+    0000013D 33               [ 8]  315 	inc	sp
+    0000013E 33               [ 8]  316 	inc	sp
+    0000013F C9               [16]  317 	ret
+                                    318 	.area _CODE
+                                    319 	.area _INITIALIZER
+                                    320 	.area _CABS (ABS)

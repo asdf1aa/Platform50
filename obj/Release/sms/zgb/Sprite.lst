@@ -1,0 +1,299 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module Sprite
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _TickAnimSprite
+                                     11 	.globl _RenderSprite
+                                     12 	.globl _SpriteManagerRemoveSprite
+                                     13 	.globl _sprite_screen_y
+                                     14 	.globl _sprite_screen_x
+                                     15 	.globl _InitSprite
+                                     16 	.globl _DrawSprite
+                                     17 ;--------------------------------------------------------
+                                     18 ; special function registers
+                                     19 ;--------------------------------------------------------
+                         00000000    20 _GG_STATE	=	0x0000
+                         00000001    21 _GG_EXT_7BIT	=	0x0001
+                         00000002    22 _GG_EXT_CTL	=	0x0002
+                         00000003    23 _GG_SIO_SEND	=	0x0003
+                         00000004    24 _GG_SIO_RECV	=	0x0004
+                         00000005    25 _GG_SIO_CTL	=	0x0005
+                         00000006    26 _GG_SOUND_PAN	=	0x0006
+                         0000003E    27 _MEMORY_CTL	=	0x003e
+                         0000003F    28 _JOY_CTL	=	0x003f
+                         0000007E    29 _VCOUNTER	=	0x007e
+                         0000007F    30 _PSG	=	0x007f
+                         0000007F    31 _HCOUNTER	=	0x007f
+                         000000BE    32 _VDP_DATA	=	0x00be
+                         000000BF    33 _VDP_CMD	=	0x00bf
+                         000000BF    34 _VDP_STATUS	=	0x00bf
+                         000000DC    35 _JOY_PORT1	=	0x00dc
+                         000000DD    36 _JOY_PORT2	=	0x00dd
+                         000000F0    37 _FMADDRESS	=	0x00f0
+                         000000F1    38 _FMDATA	=	0x00f1
+                         000000F2    39 _AUDIOCTRL	=	0x00f2
+                                     40 ;--------------------------------------------------------
+                                     41 ; ram data
+                                     42 ;--------------------------------------------------------
+                                     43 	.area _DATA
+                         0000FFFC    44 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    45 _GLASSES_3D	=	0xfff8
+                         0000FFFD    46 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    47 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    48 _MAP_FRAME2	=	0xffff
+    00000000                         49 _sprite_screen_x::
+    00000000                         50 	.ds 2
+    00000002                         51 _sprite_screen_y::
+    00000002                         52 	.ds 2
+                                     53 ;--------------------------------------------------------
+                                     54 ; ram data
+                                     55 ;--------------------------------------------------------
+                                     56 	.area _INITIALIZED
+                                     57 ;--------------------------------------------------------
+                                     58 ; absolute external ram data
+                                     59 ;--------------------------------------------------------
+                                     60 	.area _DABS (ABS)
+                                     61 ;--------------------------------------------------------
+                                     62 ; global & static initialisations
+                                     63 ;--------------------------------------------------------
+                                     64 	.area _HOME
+                                     65 	.area _GSINIT
+                                     66 	.area _GSFINAL
+                                     67 	.area _GSINIT
+                                     68 ;--------------------------------------------------------
+                                     69 ; Home
+                                     70 ;--------------------------------------------------------
+                                     71 	.area _HOME
+                                     72 	.area _HOME
+                                     73 ;--------------------------------------------------------
+                                     74 ; code
+                                     75 ;--------------------------------------------------------
+                                     76 	.area _CODE
+                                     77 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:20: void InitSprite(Sprite* sprite, UINT8 sprite_type) NAKED {
+                                     78 ;	---------------------------------
+                                     79 ; Function InitSprite
+                                     80 ; ---------------------------------
+    00000000                         81 _InitSprite::
+                                     82 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:119: __endasm;
+                                     83 	.ez80
+    00000000 D1               [ 3]   84 	pop	de
+    00000001 3B               [ 1]   85 	dec	sp
+    00000002 EB               [ 1]   86 	ex	de, hl ; de: sprite
+    00000003 E3               [ 5]   87 	ex	(sp), hl
+    00000004 4C               [ 1]   88 	ld	c, h
+    00000005 06 00            [ 2]   89 	ld	b, #0 ; bc: sprite_type
+    00000007 FD 6B            [ 2]   90 	ld	iyl, e
+    00000009 FD 62            [ 2]   91 	ld	iyh, d ; iy: sprite
+    0000000B 21r00r00         [ 3]   92 	ld	hl, #_spriteDatas
+    0000000E 09               [ 1]   93 	add	hl, bc
+    0000000F 09               [ 1]   94 	add	hl, bc
+    00000010 5E               [ 2]   95 	ld	e, (hl)
+    00000011 23               [ 1]   96 	inc	hl
+    00000012 56               [ 2]   97 	ld	d, (hl) ; de: mt_sprite_info
+    00000013 FD 73r00         [ 4]   98 	ld	___offset_Sprite__mt_sprite_info+0(iy), e
+    00000016 FD 72r01         [ 4]   99 	ld	___offset_Sprite__mt_sprite_info+1(iy), d
+    00000019 D5               [ 3]  100 	push	de
+    0000001A DD E3            [ 6]  101 	ex	(sp), ix ; ix: mt_sprite_info
+    0000001C 21r00r00         [ 3]  102 	ld	hl, #_spriteDataBanks
+    0000001F 09               [ 1]  103 	add	hl, bc
+    00000020 7E               [ 2]  104 	ld	a, (hl)
+    00000021 FD 77r00         [ 4]  105 	ld	___offset_Sprite__mt_sprite_bank(iy), a
+    00000024 21r00r00         [ 3]  106 	ld	hl, #_spriteFlips
+    00000027 09               [ 1]  107 	add	hl, bc
+    00000028 7E               [ 2]  108 	ld	a, (hl)
+    00000029 FD 77r00         [ 4]  109 	ld	___offset_Sprite__flips(iy), a
+    0000002C 21r00r00         [ 3]  110 	ld	hl, #_spriteIdxs
+    0000002F 09               [ 1]  111 	add	hl, bc
+    00000030 7E               [ 2]  112 	ld	a, (hl)
+    00000031 FD 77r00         [ 4]  113 	ld	___offset_Sprite__first_tile(iy), a
+    00000034 21r00r00         [ 3]  114 	ld	hl, #_spriteIdxsH
+    00000037 09               [ 1]  115 	add	hl, bc
+    00000038 7E               [ 2]  116 	ld	a, (hl)
+    00000039 FD 77r00         [ 4]  117 	ld	___offset_Sprite__first_tile_H(iy), a
+    0000003C 21r00r00         [ 3]  118 	ld	hl, #_spriteIdxsV
+    0000003F 09               [ 1]  119 	add	hl, bc
+    00000040 7E               [ 2]  120 	ld	a, (hl)
+    00000041 FD 77r00         [ 4]  121 	ld	___offset_Sprite__first_tile_V(iy), a
+    00000044 21r00r00         [ 3]  122 	ld	hl, #_spriteIdxsHV
+    00000047 09               [ 1]  123 	add	hl, bc
+    00000048 7E               [ 2]  124 	ld	a, (hl)
+    00000049 FD 77r00         [ 4]  125 	ld	___offset_Sprite__first_tile_HV(iy), a
+    0000004C FD 36r00 00      [ 5]  126 	ld	___offset_Sprite__anim_data+0(iy), #0
+    00000050 FD 36r01 00      [ 5]  127 	ld	___offset_Sprite__anim_data+1(iy), #0
+    00000054 FD 36r00 21      [ 5]  128 	ld	___offset_Sprite__anim_speed(iy), #33
+    00000058 FD E5            [ 4]  129 	push	iy
+    0000005A 21 00 00         [ 3]  130 	ld	hl, #0
+    0000005D FD 5D            [ 2]  131 	ld	e, iyl
+    0000005F FD 54            [ 2]  132 	ld	d, iyh
+    00000061 EB               [ 1]  133 	ex	de, hl
+    00000062 CDr00r00         [ 5]  134 	call	_GetSpriteAnimation
+    00000065 FD E1            [ 4]  135 	pop	iy
+    00000067 FD 73r00         [ 4]  136 	ld	___offset_Sprite__mt_sprite+0(iy), e
+    0000006A FD 72r01         [ 4]  137 	ld	___offset_Sprite__mt_sprite+1(iy), d
+    0000006D FD 36r00 00      [ 5]  138 	ld	___offset_Sprite__anim_frame(iy), #0
+    00000071 FD 36r00 00      [ 5]  139 	ld	___offset_Sprite__ctx+0(iy), #0
+    00000075 FD 36r01 00      [ 5]  140 	ld	___offset_Sprite__ctx+1(iy), #0
+    00000079 FD 36r00 00      [ 5]  141 	ld	___offset_Sprite__x+0(iy), #0
+    0000007D FD 36r01 00      [ 5]  142 	ld	___offset_Sprite__x+1(iy), #0
+    00000081 FD 36r00 00      [ 5]  143 	ld	___offset_Sprite__y+0(iy), #0
+    00000085 FD 36r01 00      [ 5]  144 	ld	___offset_Sprite__y+1(iy), #0
+    00000089 FD 36r00 01      [ 5]  145 	ld	___offset_Sprite__coll_group(iy), #0x01
+    0000008D FD 36r00 80      [ 5]  146 	ld	___offset_Sprite__coll_group_down(iy), #0x080
+    00000091 FD 36r00 05      [ 5]  147 	ld	___offset_Sprite__flags(iy), #0b00000101
+    00000095 3A FE FF         [ 4]  148 	ld	a, (_MAP_FRAME1)
+    00000098 5F               [ 1]  149 	ld	e, a
+    00000099 FD 7Er00         [ 4]  150 	ld	a, ___offset_Sprite__mt_sprite_bank(iy)
+    0000009C 32 FE FF         [ 4]  151 	ld	(_MAP_FRAME1), a
+    0000009F DD 7Er00         [ 4]  152 	ld	a, ___offset_MetaSpriteInfo__width(ix)
+    000000A2 FD 77r00         [ 4]  153 	ld	___offset_Sprite__coll_w(iy), a
+    000000A5 DD 7Er00         [ 4]  154 	ld	a, ___offset_MetaSpriteInfo__height(ix)
+    000000A8 FD 77r00         [ 4]  155 	ld	___offset_Sprite__coll_h(iy), a
+    000000AB 7B               [ 1]  156 	ld	a, e
+    000000AC 32 FE FF         [ 4]  157 	ld	(_MAP_FRAME1), a
+    000000AF DD E1            [ 4]  158 	pop	ix
+    000000B1 C9               [ 5]  159 	ret
+                                    160 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:120: }
+                                    161 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:169: void DrawSprite(void) {
+                                    162 ;	---------------------------------
+                                    163 ; Function DrawSprite
+                                    164 ; ---------------------------------
+    000000B2                        165 _DrawSprite::
+                                    166 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:171: sprite_screen_x = THIS->x - scroll_x;
+    000000B2 2Ar00r00         [ 5]  167 	ld	hl, (_THIS)
+    000000B5 4E               [ 2]  168 	ld	c, (hl)
+    000000B6 23               [ 1]  169 	inc	hl
+    000000B7 46               [ 2]  170 	ld	b, (hl)
+    000000B8 ED 5Br00r00      [ 6]  171 	ld	de, (_scroll_x)
+    000000BC 21r00r00         [ 3]  172 	ld	hl, #_sprite_screen_x
+    000000BF 79               [ 1]  173 	ld	a, c
+    000000C0 93               [ 1]  174 	sub	a, e
+    000000C1 77               [ 2]  175 	ld	(hl), a
+    000000C2 23               [ 1]  176 	inc	hl
+    000000C3 78               [ 1]  177 	ld	a, b
+    000000C4 9A               [ 1]  178 	sbc	a, d
+    000000C5 77               [ 2]  179 	ld	(hl), a
+                                    180 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:172: sprite_screen_y = THIS->y - scroll_y;
+    000000C6 2Ar00r00         [ 5]  181 	ld	hl, (_THIS)
+    000000C9 23               [ 1]  182 	inc	hl
+    000000CA 23               [ 1]  183 	inc	hl
+    000000CB 4E               [ 2]  184 	ld	c, (hl)
+    000000CC 23               [ 1]  185 	inc	hl
+    000000CD 46               [ 2]  186 	ld	b, (hl)
+    000000CE ED 5Br00r00      [ 6]  187 	ld	de, (_scroll_y)
+    000000D2 21r02r00         [ 3]  188 	ld	hl, #_sprite_screen_y
+    000000D5 79               [ 1]  189 	ld	a, c
+    000000D6 93               [ 1]  190 	sub	a, e
+    000000D7 77               [ 2]  191 	ld	(hl), a
+    000000D8 23               [ 1]  192 	inc	hl
+    000000D9 78               [ 1]  193 	ld	a, b
+    000000DA 9A               [ 1]  194 	sbc	a, d
+    000000DB 77               [ 2]  195 	ld	(hl), a
+                                    196 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:175: TickAnimSprite();
+    000000DC CDr00r00         [ 5]  197 	call	_TickAnimSprite
+                                    198 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:172: sprite_screen_y = THIS->y - scroll_y;
+    000000DF FD 2Ar00r00      [ 6]  199 	ld	iy, (_THIS)
+                                    200 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:178: if (THIS->visible) {
+    000000E3 FD E5            [ 4]  201 	push	iy
+    000000E5 C1               [ 3]  202 	pop	bc
+    000000E6 21 21 00         [ 3]  203 	ld	hl, #33
+    000000E9 09               [ 1]  204 	add	hl, bc
+    000000EA 7E               [ 2]  205 	ld	a, (hl)
+    000000EB E6 01            [ 2]  206 	and	a, #0x01
+    000000ED 28 35            [ 3]  207 	jr	Z, 00105$
+                                    208 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:181: ((UINT16)(sprite_screen_x + MAXIMUM_SPRITES_SIZE) < (UINT16)(DEVICE_SCREEN_PX_WIDTH + (MAXIMUM_SPRITES_SIZE << 1))) &&
+    000000EF 2Ar00r00         [ 5]  209 	ld	hl, (_sprite_screen_x)
+    000000F2 11 20 00         [ 3]  210 	ld	de, #0x0020
+    000000F5 19               [ 1]  211 	add	hl, de
+    000000F6 11 40 01         [ 3]  212 	ld	de, #0x0140
+    000000F9 BF               [ 1]  213 	cp	a, a
+    000000FA ED 52            [ 2]  214 	sbc	hl, de
+    000000FC 30 26            [ 3]  215 	jr	NC, 00105$
+                                    216 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:182: ((UINT16)(sprite_screen_y + MAXIMUM_SPRITES_SIZE) < (UINT16)(DEVICE_SCREEN_PX_HEIGHT + (MAXIMUM_SPRITES_SIZE << 1)))
+    000000FE 2Ar02r00         [ 5]  217 	ld	hl, (_sprite_screen_y)
+    00000101 11 20 00         [ 3]  218 	ld	de, #0x0020
+    00000104 19               [ 1]  219 	add	hl, de
+    00000105 7C               [ 1]  220 	ld	a, h
+    00000106 D6 01            [ 2]  221 	sub	a, #0x01
+    00000108 30 1A            [ 3]  222 	jr	NC, 00105$
+                                    223 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:185: sprite_screen_x += (DEVICE_SPRITE_PX_OFFSET_X + SCREEN_SPR_OFFSET_X);
+    0000010A 21r00r00         [ 3]  224 	ld	hl, #_sprite_screen_x
+    0000010D 7E               [ 2]  225 	ld	a, (hl)
+    0000010E C6 08            [ 2]  226 	add	a, #0x08
+    00000110 77               [ 2]  227 	ld	(hl), a
+    00000111 30 02            [ 3]  228 	jr	NC, 00148$
+    00000113 23               [ 1]  229 	inc	hl
+    00000114 34               [ 4]  230 	inc	(hl)
+    00000115                        231 00148$:
+                                    232 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:186: sprite_screen_y += DEVICE_SPRITE_PX_OFFSET_Y;
+    00000115 21r02r00         [ 3]  233 	ld	hl, #_sprite_screen_y
+    00000118 7E               [ 2]  234 	ld	a, (hl)
+    00000119 C6 FF            [ 2]  235 	add	a, #0xff
+    0000011B 77               [ 2]  236 	ld	(hl), a
+    0000011C 23               [ 1]  237 	inc	hl
+    0000011D 7E               [ 2]  238 	ld	a, (hl)
+    0000011E CE FF            [ 2]  239 	adc	a, #0xff
+    00000120 77               [ 2]  240 	ld	(hl), a
+                                    241 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:189: return RenderSprite();
+    00000121 C3r00r00         [ 4]  242 	jp  _RenderSprite
+    00000124                        243 00105$:
+                                    244 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:193: if (THIS->persistent) return;
+    00000124 FD E5            [ 4]  245 	push	iy
+    00000126 C1               [ 3]  246 	pop	bc
+    00000127 21 21 00         [ 3]  247 	ld	hl, #33
+    0000012A 09               [ 1]  248 	add	hl, bc
+    0000012B 7E               [ 2]  249 	ld	a, (hl)
+    0000012C 0F               [ 1]  250 	rrca
+    0000012D E6 01            [ 2]  251 	and	a, #0x01
+    0000012F C0               [ 6]  252 	ret	NZ
+                                    253 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:197: ((UINT16)(sprite_screen_x + THIS->lim_x + 16u) > (UINT16)((THIS->lim_x << 1) + (DEVICE_SCREEN_PX_WIDTH + (16u << 1)))) || 
+    00000130 FD E5            [ 4]  254 	push	iy
+    00000132 C1               [ 3]  255 	pop	bc
+    00000133 21 19 00         [ 3]  256 	ld	hl, #25
+    00000136 09               [ 1]  257 	add	hl, bc
+    00000137 4E               [ 2]  258 	ld	c, (hl)
+    00000138 23               [ 1]  259 	inc	hl
+    00000139 46               [ 2]  260 	ld	b, (hl)
+    0000013A 2Ar00r00         [ 5]  261 	ld	hl, (_sprite_screen_x)
+    0000013D 09               [ 1]  262 	add	hl, bc
+    0000013E EB               [ 1]  263 	ex	de, hl
+    0000013F 21 10 00         [ 3]  264 	ld	hl, #0x0010
+    00000142 19               [ 1]  265 	add	hl, de
+    00000143 EB               [ 1]  266 	ex	de, hl
+    00000144 69               [ 1]  267 	ld	l, c
+    00000145 60               [ 1]  268 	ld	h, b
+    00000146 29               [ 1]  269 	add	hl, hl
+    00000147 01 20 01         [ 3]  270 	ld	bc, #0x0120
+    0000014A 09               [ 1]  271 	add	hl, bc
+    0000014B AF               [ 1]  272 	xor	a, a
+    0000014C ED 52            [ 2]  273 	sbc	hl, de
+    0000014E 38 1B            [ 3]  274 	jr	C, 00108$
+                                    275 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:198: ((UINT16)(sprite_screen_y + THIS->lim_y + 16u) > (UINT16)((THIS->lim_y << 1) + (DEVICE_SCREEN_PX_HEIGHT + (16u << 1))))
+    00000150 FD 4E 1B         [ 4]  276 	ld	c, 27 (iy)
+    00000153 FD 46 1C         [ 4]  277 	ld	b, 28 (iy)
+    00000156 2Ar02r00         [ 5]  278 	ld	hl, (_sprite_screen_y)
+    00000159 09               [ 1]  279 	add	hl, bc
+    0000015A EB               [ 1]  280 	ex	de, hl
+    0000015B 21 10 00         [ 3]  281 	ld	hl, #0x0010
+    0000015E 19               [ 1]  282 	add	hl, de
+    0000015F EB               [ 1]  283 	ex	de, hl
+    00000160 69               [ 1]  284 	ld	l, c
+    00000161 60               [ 1]  285 	ld	h, b
+    00000162 29               [ 1]  286 	add	hl, hl
+    00000163 01 E0 00         [ 3]  287 	ld	bc, #0x00e0
+    00000166 09               [ 1]  288 	add	hl, bc
+    00000167 AF               [ 1]  289 	xor	a, a
+    00000168 ED 52            [ 2]  290 	sbc	hl, de
+    0000016A D0               [ 6]  291 	ret	NC
+    0000016B                        292 00108$:
+                                    293 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:200: SpriteManagerRemoveSprite(THIS);
+    0000016B 2Ar00r00         [ 5]  294 	ld	hl, (_THIS)
+                                    295 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Sprite.c:202: }
+    0000016E C3r00r00         [ 4]  296 	jp	_SpriteManagerRemoveSprite
+                                    297 	.area _CODE
+                                    298 	.area _INITIALIZER
+                                    299 	.area _CABS (ABS)

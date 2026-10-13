@@ -1,0 +1,395 @@
+ASxxxx Linker V03.00/V05.40 + sdld,  page 1.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+.  .ABS.               00000000    00000000 =           0. bytes (ABS,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     00000000  .__.ABS.  |    00000000  ___offset |    00000000  ___offset
+     00000000  ___offset |    00000000  ___offset |    00000000  l__BASE  
+     00000000  l__BSEG   |    00000000  l__BSS    |    00000000  l__CABS  
+     00000000  l__CODE_0 |    00000000  l__DABS   |    00000000  l__FLIP_T
+     00000000  l__HEADER |    00000000  l__HEAP   |    00000000  l__HEAP_E
+     00000000  l__LIT    |    00000000  s__CABS   |    00000000  s__DABS  
+     00000000  s__FLIP_T |    00000000  s__FLIP_T |    00000000  s__HEADER
+     00000000  s__HEADER |    00000000  s__HEADER |    00000000  s__HEADER
+     00000000  s__HEADER |    00000000  s__HEADER |    00000000  s__HEADER
+     00000000  s__HEADER |    00000001  ___bank_S |    00000001  ___bank_S
+     00000001  ___bank_f |    00000001  ___bank_m |    00000001  ___bank_p
+     00000001  ___bank_t |    00000001  ___offset |    00000001  ___offset
+     00000001  b_FadeIn  |    00000001  b_FadeOut |    00000001  b_InitSpr
+     00000001  b_InitSta |    00000001  b_SetDefa |    00000001  l__GSFINA
+     00000001  l__HEADER |    00000002  ___offset |    00000002  ___offset
+     00000002  ___offset |    00000003  ___offset |    00000003  ___offset
+     00000003  l__HEADER |    00000003  l__HEADER |    00000004  ___offset
+     00000004  ___offset |    00000004  ___offset |    00000005  ___offset
+     00000005  ___offset |    00000006  ___offset |    00000006  ___offset
+     00000006  ___offset |    00000006  ___offset |    00000006  l__HEADER
+     00000007  ___offset |    00000008  ___offset |    00000008  ___offset
+     00000009  ___offset |    00000009  ___offset |    00000009  ___offset
+     00000009  l__HEADER |    00000009  l__HEADER |    0000000A  ___offset
+     0000000B  ___offset |    0000000B  ___offset |    0000000C  ___offset
+     0000000C  ___offset |    0000000D  ___offset |    0000000E  ___offset
+     0000000F  ___offset |    00000011  ___offset |    00000012  ___offset
+     00000013  ___offset |    00000014  ___offset |    00000014  l__GSINIT
+     00000016  ___offset |    00000017  ___offset |    00000019  ___offset
+     0000001B  ___offset |    0000001D  ___offset |    0000001E  ___offset
+     0000001F  ___offset |    00000021  ___offset |    00000022  ___offset
+     00000023  ___offset |    00000024  ___offset |    0000005E  l__INITIA
+     0000005E  l__INITIA |    00000071  l__HEADER |    00000100  l__FLIP_T
+     00000100  s__CODE   |    000006F3  l__HOME   |    00000736  l__DATA  
+     00000DEA  l__CODE_1 |    0000237C  l__CODE   |    0000247C  s__HOME  
+     00002B6F  s__BASE   |    00002B6F  s__CODE_0 |    00002B6F  s__INITIA
+     00002B6F  s__LIT    |    00002BCD  s__GSINIT |    00002BE1  s__GSFINA
+     0000C000  _shadow_O |    0000C0C0  s__DATA   |    0000C7F6  s__INITIA
+     0000C854  s__BSEG   |    0000C854  s__BSS    |    0000C854  s__HEAP  
+     0000C854  s__HEAP_E |    0000DEA0  .STACK    |    0000DEA0  _font_rec
+     0000DF00  _mirror_O |    00014000  s__CODE_1
+ASxxxx Linker V03.00/V05.40 + sdld,  page 2.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_CODE                  00000100    0000237C =        9084. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     00000100  _GetTileR |    00000134  _Translat |    0000065C  _SetState
+     00000664  _main     |    00000813  _ScrollSe |    00000906  _UpdateMa
+     00000967  _LoadMap  |    00000B85  _ScrollSe |    00000C33  _ScrollIn
+     00000C91  _ScrollCo |    00000C9F  _ScrollIn |    00000CB1  _ScrollIn
+     00000CC8  _ScrollRe |    00000CE2  _ScrollIn |    00000CFD  _ScrollSc
+     00000D72  _InitScro |    00000D9C  _ScrollUp |    00000E42  _ScrollUp
+     00000E95  _ScrollUp |    00000F6E  _ScrollUp |    00001025  _ScrollUp
+     00001078  _ScrollUp |    00001165  _RefreshS |    000011E0  _MoveScro
+     00001347  _GetScrol |    00001376  _GetMapSi |    000013CA  _SwapOAMs
+     00001428  _ClearOAM |    00001437  _InitOAMs |    00001452  _SpriteMa
+     0000153D  _SpriteMa |    000017FA  _SpriteMa |    00001924  _SpriteMa
+     00001943  _SpriteMa |    0000194F  _SpriteMa |    00001A3F  _SpriteMa
+     00001AA4  _SpriteMa |    00001B67  __mulint  |    00001B69  __mul16  
+     00001B7E  _BufferEx |    00001B94  _BufferRo |    00001BA4  _VectorRe
+     00001BD4  ___sdcc_c |    00001BE5  _InitSpri |    00001C97  _DrawSpri
+     00001E0B  _set_spri |    00001E8F  _SetSprit |    00001EEC  _TickAnim
+     00001F45  ___sdcc_c |    00001F46  _memset   |    00001F5B  ___memcpy
+     00001F5B  _memcpy   |    00001FA1  _InitWind |    00001FA2  _ClampScr
+     00002025  _sfx_soun |    0000203E  _UPDATE_T |    00002125  ___sdcc_b
+     00002138  _RenderSp |    00002206  ___sdcc_c |    00002208  ___move_m
+     00002285  __moducha |    0000228C  __moduint |    00002291  _GetSprit
+     000022BB  __divucha |    000022BD  __divu8   |    000022C0  __divu16 
+     000022C0  __divuint |    000022EF  ___move_m |    00002372  ___move_m
+     000023F5  ___move_m
+ASxxxx Linker V03.00/V05.40 + sdld,  page 3.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_HEADER0               00000000    00000006 =           6. bytes (ABS,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+ASxxxx Linker V03.00/V05.40 + sdld,  page 4.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_HEADER1               00000000    00000009 =           9. bytes (ABS,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     00000010  _WRITE_VD
+ASxxxx Linker V03.00/V05.40 + sdld,  page 5.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_HEADER2               00000000    00000009 =           9. bytes (ABS,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     00000020  _WRITE_VD
+ASxxxx Linker V03.00/V05.40 + sdld,  page 6.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_HEADER3               00000000    00000001 =           1. bytes (ABS,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     00000030  .call_hl 
+ASxxxx Linker V03.00/V05.40 + sdld,  page 7.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_HEADER4               00000000    00000003 =           3. bytes (ABS,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+ASxxxx Linker V03.00/V05.40 + sdld,  page 8.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_HEADER5               00000000    00000003 =           3. bytes (ABS,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+ASxxxx Linker V03.00/V05.40 + sdld,  page 9.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_HEADER6               00000000    00000071 =         113. bytes (ABS,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     00000080  .init    
+ASxxxx Linker V03.00/V05.40 + sdld,  page 10.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_HOME                  0000247C    000006F3 =        1779. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     000024AB  .CRT_DEFA |    000024CB  .memset_s |    000024D4  .memcpy_s
+     000024DA  .wait_vbl |    000024DA  _vsync    |    000024DA  _wait_vbl
+     000024EC  _StateDes |    000024ED  _INT_ISR  |    00002579  .remove_L
+     00002579  _remove_L |    0000257C  .add_LCD  |    0000257C  _add_LCD 
+     00002580  _add_VBL  |    00002582  .add_VBL  |    00002585  .add_int 
+     00002591  _remove_V |    00002593  .remove_V |    00002596  .remove_i
+     000025B2  _add_JOY  |    000025B2  _add_SIO  |    000025B2  _remove_J
+     000025B2  _remove_S |    000025B3  _MUSIC_is |    00002619  ___PlayMu
+     0000265D  _NMI_ISR  |    0000265F  _SetPalet |    0000271F  .OUTI128 
+     0000279F  .OUTI64   |    000027DF  .OUTI32   |    000027FF  .OUTI16  
+     0000281F  .OUTI_END |    00002820  _set_tile |    0000287E  _set_vram
+     00002899  _set_spri |    00002899  _set_spri |    0000289C  _set_bkg_
+     0000289C  _set_bkg_ |    0000289C  _set_nati |    000028D0  _joypad_i
+     000028F6  _joypad_e |    00002925  _sfx_play |    00002967  _VBL_isr 
+     000029AB  .set_tile |    000029B6  .set_tile |    00002A45  _set_pale
+     00002A69  _set_pale |    00002A9C  _SyncVBla |    00002AB7  .coords_t
+     00002B25  _get_bkg_ |    00002B2D  _set_spri |    00002B30  _set_nati
+ASxxxx Linker V03.00/V05.40 + sdld,  page 11.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_INITIALIZER           00002B6F    0000005E =          94. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+ASxxxx Linker V03.00/V05.40 + sdld,  page 12.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_GSINIT                00002BCD    00000014 =          20. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     00002BCD  .gsinit  
+ASxxxx Linker V03.00/V05.40 + sdld,  page 13.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_GSFINAL               00002BE1    00000001 =           1. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+ASxxxx Linker V03.00/V05.40 + sdld,  page 14.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_DATA                  0000C0C0    00000736 =        1846. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     0000C0C0  __BIOS    |    0000C0C1  __SYSTEM  |    0000C0C2  _stateBan
+     0000C0C3  _startFun |    0000C0C5  _updateFu |    0000C0C7  _destroyF
+     0000C0C9  _spriteBa |    0000C0CA  _spriteDa |    0000C0CB  _spriteSt
+     0000C0CD  _spriteUp |    0000C0CF  _spriteDe |    0000C0D1  _spriteDa
+     0000C0D3  _spriteFl |    0000C0D4  _spriteId |    0000C0D5  _spriteId
+     0000C0D6  _spriteId |    0000C0D7  _spriteId |    0000C0D8  _spritePa
+     0000C0E4  _delta_ti |    0000C0E5  _current_ |    0000C0E8  _scroll_w
+     0000C0EA  _scroll_h |    0000C0EC  _scroll_t |    0000C0EE  _scroll_t
+     0000C0F0  _scroll_c |    0000C1F0  _scroll_t |    0000C2F0  _scroll_b
+     0000C2F1  _pending_ |    0000C2F3  _pending_ |    0000C2F5  _pending_
+     0000C2F6  _pending_ |    0000C2F8  _pending_ |    0000C2FA  _pending_
+     0000C2FB  _hud_map_ |    0000C2FD  _tiles_ba |    0000C2FE  _tiles_0 
+     0000C300  _scroll_p |    0000C302  _scroll_c |    0000C304  _map_buff
+     0000C332  _dest_ptr |    0000C334  _dest_cpt |    0000C343  _ZGB_Fadi
+     0000C363  _ZGB_Fadi |    0000C3C6  _music_sk |    0000C3C7  _compensa
+     0000C3CB  _sprite_m |    0000C73B  _sprite_m |    0000C763  _sprite_m
+     0000C777  _sprite_m |    0000C78C  _sprite_m |    0000C78D  _last_spr
+     0000C78F  _last_spr |    0000C797  _THIS_IDX |    0000C79D  _joypads 
+     0000C7A2  _old_joyp |    0000C7A7  _sprite_s |    0000C7A9  _sprite_s
+     0000C7EB  _sfx_fram |    0000C7F3  ___curren |    0000C7F5  ___curren
+ASxxxx Linker V03.00/V05.40 + sdld,  page 15.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_INITIALIZED           0000C7F6    0000005E =          94. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     0000C7F6  _shadow_V |    0000C7F7  _shadow_V |    0000C7F8  _shadow_V
+     0000C7F9  _shadow_V |    0000C7FA  _shadow_V |    0000C7FB  _shadow_V
+     0000C7FC  _shadow_V |    0000C7FD  _shadow_V |    0000C7FD  _shadow_V
+     0000C7FE  _shadow_V |    0000C7FE  _shadow_V |    0000C7FF  _shadow_V
+     0000C7FF  _shadow_V |    0000C800  _shadow_V |    0000C801  .shadow_V
+     0000C801  .sys_time |    0000C801  _sys_time |    0000C803  .vbl_done
+     0000C803  __vbl_don |    0000C804  .vdp_shif |    0000C804  _VDP_ATTR
+     0000C805  __shadow_ |    0000C806  __shadow_ |    0000C807  __sprites
+     0000C808  .mode     |    0000C809  _next_sta |    0000C80A  _collsion
+     0000C80C  __is_SGB  |    0000C80D  _state_ru |    0000C80E  _fade_mod
+     0000C80F  _vbl_coun |    0000C810  _scroll_t |    0000C811  _scroll_b
+     0000C812  _scroll_m |    0000C814  _scroll_c |    0000C816  _scroll_x
+     0000C818  _scroll_y |    0000C81A  _scroll_x |    0000C81C  _scroll_y
+     0000C81E  _scroll_t |    0000C820  _scroll_o |    0000C821  _scroll_o
+     0000C822  _scroll_h |    0000C824  _clamp_en |    0000C825  _pending_
+     0000C827  _pending_ |    0000C829  _pending_ |    0000C82B  _pending_
+     0000C82D  _last_til |    0000C82E  _next_oam |    0000C82F  _oam     
+     0000C831  _oam0     |    0000C833  _oam1     |    0000C835  .TIM_DISP
+     0000C841  _music_pa |    0000C842  _music_mu |    0000C843  _sfx_prio
+     0000C844  _last_mus |    0000C846  _last_mus |    0000C847  _stop_mus
+     0000C848  _last_bg_ |    0000C849  _sprite_m |    0000C84B  _sprite_t
+     0000C84D  _enable_f |    0000C84E  _THIS     |    0000C850  _sfx_play
+     0000C851  _sfx_play |    0000C853  ___render
+ASxxxx Linker V03.00/V05.40 + sdld,  page 16.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_CODE_1                00014000    00000DEA =        3562. bytes (REL,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     00014000  ___func_f |    00014000  _font_pal |    00014020  _font_tab
+     000140A0  _font_til |    00014680  _font_fon |    00014688  _font    
+     00014690  ___func_m |    00014690  _map_map  |    00014960  _map     
+     0001496E  ___func_p |    0001496E  _player_p |    0001498E  _player_t
+     00014A0E  _player_m |    00014A17  _player_m |    00014A19  _player  
+     00014A24  _InitStat |    00014A60  _InitSpri |    00014AD2  ___func_t
+     00014AD2  _tiles_pa |    00014AF2  _tiles_ti |    00014B32  _tiles_ti
+     00014B34  _tiles    |    00014B3C  _Start_Sp |    00014B3D  _Update_S
+     00014B80  _Destroy_ |    00014B81  _Start_St |    00014BA1  _Update_S
+     00014BA2  _UpdateCo |    00014C56  _FadeStep |    00014D11  _FadeIn  
+     00014D5F  _FadeOut  |    00014D99  _SetDefau |    00014DCA  _default_
+ASxxxx Linker V03.00/V05.40 + sdld,  page 17.
+Hexadecimal  [32-Bits]
+
+Area                       Addr        Size        Decimal Bytes (Attributes)
+--------------------       ----        ----        ------- ----- ------------
+_FLIP_TABLE0           00000000    00000100 =         256. bytes (ABS,CON)
+
+        Value  Global            Value  Global            Value  Global    
+        -----  ------            -----  ------            -----  ------    
+     00003F00  _flip_rec
+ASxxxx Linker V03.00/V05.40 + sdld,  page 18.
+
+Files Linked                              [ module(s) ]
+
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/crt0.o
+                                          [ Runtime ]
+../obj/Release/gg/ZGBMain.rel             [ ZGBMain ]
+../obj/Release/gg/res/font.png.rel        [ font_png ]
+../obj/Release/gg/res/map.png.rel         [ map_png ]
+../obj/Release/gg/res/sprites/player.png.rel
+                                          [ player_png ]
+../obj/Release/gg/ZGBMain_Init.rel        [ ZGBMain_Init ]
+../obj/Release/gg/res/tiles.png.rel       [ tiles_png ]
+../obj/Release/gg/SpritePlayer.rel        [ SpritePlayer ]
+../obj/Release/gg/StateGame.rel           [ StateGame ]
+
+
+Libraries Linked                          [ object file ]
+
+../obj/Release/gg/zgb/zgb.lib             [ SpriteTranslateSprite.o ]
+../obj/Release/gg/zgb/zgb.lib             [ main.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Scroll.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Fade.o ]
+../obj/Release/gg/zgb/zgb.lib             [ OAMManager.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ sms_int.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Music.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ nmi.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Palette.o ]
+../obj/Release/gg/zgb/zgb.lib             [ SpriteManager.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ outi.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ set_tile_map.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/z80/z80.lib
+                                          [ mul.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Keys.o ]
+../obj/Release/gg/zgb/zgb.lib             [ vram_utils.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Vector.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ sms_set_native_data.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/z80/z80.lib
+                                          [ __sdcc_critical.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ pad_ex.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Sprite.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Flip.o ]
+../obj/Release/gg/zgb/zgb.lib             [ SpriteAnimation.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/z80/z80.lib
+                                          [ __sdcc_call_hl.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Offsets.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/z80/z80.lib
+                                          [ memset.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/z80/z80.lib
+                                          [ memcpy.o ]
+../obj/Release/gg/zgb/zgb.lib             [ Window.o ]
+../obj/Release/gg/zgb/zgb.lib             [ DefScrollLimits.o ]
+../obj/Release/gg/zgb/zgb.lib             [ sfxplayer.o ]
+../obj/Release/gg/zgb/zgb.lib             [ ScrollUpdateTile.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ ___sdcc_bcall_ehl.o ]
+../obj/Release/gg/zgb/zgb.lib             [ DefVBlankHandler.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ set_tile_map_xy.o ]
+../obj/Release/gg/zgb/zgb.lib             [ SpriteRender.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/z80/z80.lib
+                                          [ __sdcc_call_iy.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ palette.o ]
+../obj/Release/gg/zgb/zgb.lib             [ DefVSync.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ coords_to_address.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ sms_metasprites.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/z80/z80.lib
+                                          [ modunsigned.o ]
+../obj/Release/gg/zgb/zgb.lib             [ sms_set_native_tiles_flip.o ]
+../obj/Release/gg/zgb/zgb.lib             [ flip_table.o ]
+../obj/Release/gg/zgb/zgb.lib             [ DefAnimHandler.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/z80/z80.lib
+                                          [ divunsigned.o ]
+C:\Users\karas\OneDrive\Documents\GitHub\gbdk\lib/gg/gg.lib
+                                          [ sms_metasprites_flip.o ]
+
+ASxxxx Linker V03.00/V05.40 + sdld,  page 19.
+
+User Base Address Definitions
+
+_DATA=0xC0C0
+_CODE=0x0100
+ASxxxx Linker V03.00/V05.40 + sdld,  page 20.
+
+User Global Definitions
+
+.STACK=0xDEA0
+_mirror_OAM=0xDF00
+_font_recode_table=0xDEA0
+_shadow_OAM=0xC000
+
+

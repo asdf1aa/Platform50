@@ -1,0 +1,47 @@
+XL4
+H B areas 7 global symbols
+M SpriteEnemyH
+S _TranslateSprite Ref00000000
+S ___bank_SpriteEnemyH Def00000001
+S _THIS Ref00000000
+S .__.ABS. Def00000000
+A _CODE size 0 flags 0 addr 0
+A _HRAM size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _CODE_1 size 44 flags 0 addr 0
+S _Start_SpriteEnemyH Def00000000
+S _Update_SpriteEnemyH Def0000001D
+S _Destroy_SpriteEnemyH Def00000043
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
+T 00 00 00 00
+R 00 00 08 00
+T 00 00 00 00 FA 00 00 21 01 00 66 6F 11 21 00 19
+R 00 00 08 00 02 05 02 00 02 08 02 00
+T 0C 00 00 00 CB CE FA 00 00 21 01 00 66 6F 11
+R 00 00 08 00 02 07 02 00 02 0A 02 00
+T 17 00 00 00 24 00 19 36 01 C9
+R 00 00 08 00
+T 1D 00 00 00
+R 00 00 08 00
+T 1D 00 00 00 FA 00 00 21 01 00 46 C6 24 4F 30 01
+R 00 00 08 00 02 05 02 00 02 08 02 00
+T 29 00 00 00 04
+R 00 00 08 00
+T 2A 00 00 00
+R 00 00 08 00
+T 2A 00 00 00 0A C5 26 00 E5 33 21 00 00 5E 23 56
+R 00 00 08 00 02 0B 02 00
+T 36 00 00 00 CD 00 00 C1 B7 C8 0A 5F AF 93 5F 02
+R 00 00 08 00 02 05 00 00
+T 42 00 00 00 C9
+R 00 00 08 00
+T 43 00 00 00
+R 00 00 08 00
+T 43 00 00 00 C9
+R 00 00 08 00

@@ -1,0 +1,351 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module PSGlib
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _PSGMuteMask
+                                     11 	.globl _PSGStatus
+                                     12 	.globl _PSGStart
+                                     13 	.globl _PSGLoopFlag
+                                     14 	.globl ___offset_shadow_reg_t__volume
+                                     15 	.globl ___offset_shadow_reg_t__data
+                                     16 	.globl ___offset_shadow_reg_t__tone
+                                     17 	.globl _PSGPlay
+                                     18 	.globl _PSGRetriggerChannels
+                                     19 	.globl _PSGCutChannels
+                                     20 	.globl _PSGFrame
+                                     21 ;--------------------------------------------------------
+                                     22 ; special function registers
+                                     23 ;--------------------------------------------------------
+                         00000000    24 _GG_STATE	=	0x0000
+                         00000001    25 _GG_EXT_7BIT	=	0x0001
+                         00000002    26 _GG_EXT_CTL	=	0x0002
+                         00000003    27 _GG_SIO_SEND	=	0x0003
+                         00000004    28 _GG_SIO_RECV	=	0x0004
+                         00000005    29 _GG_SIO_CTL	=	0x0005
+                         00000006    30 _GG_SOUND_PAN	=	0x0006
+                         0000003E    31 _MEMORY_CTL	=	0x003e
+                         0000003F    32 _JOY_CTL	=	0x003f
+                         0000007E    33 _VCOUNTER	=	0x007e
+                         0000007F    34 _PSG	=	0x007f
+                         0000007F    35 _HCOUNTER	=	0x007f
+                         000000BE    36 _VDP_DATA	=	0x00be
+                         000000BF    37 _VDP_CMD	=	0x00bf
+                         000000BF    38 _VDP_STATUS	=	0x00bf
+                         000000DC    39 _JOY_PORT1	=	0x00dc
+                         000000DD    40 _JOY_PORT2	=	0x00dd
+                         000000F0    41 _FMADDRESS	=	0x00f0
+                         000000F1    42 _FMDATA	=	0x00f1
+                         000000F2    43 _AUDIOCTRL	=	0x00f2
+                                     44 ;--------------------------------------------------------
+                                     45 ; ram data
+                                     46 ;--------------------------------------------------------
+                                     47 	.area _DATA
+                         0000FFFC    48 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    49 _GLASSES_3D	=	0xfff8
+                         0000FFFD    50 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    51 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    52 _MAP_FRAME2	=	0xffff
+    00000000                         53 _PSGLoopFlag::
+    00000000                         54 	.ds 1
+    00000001                         55 _PSGStart::
+    00000001                         56 	.ds 2
+    00000003                         57 _PSGPointer:
+    00000003                         58 	.ds 2
+    00000005                         59 _PSGLoopPoint:
+    00000005                         60 	.ds 2
+    00000007                         61 _PSGSkipFrames:
+    00000007                         62 	.ds 1
+    00000008                         63 _PSGLastChannel:
+    00000008                         64 	.ds 1
+    00000009                         65 _PSGShadow:
+    00000009                         66 	.ds 12
+    00000015                         67 _PSGSubLen:
+    00000015                         68 	.ds 1
+                                     69 ;--------------------------------------------------------
+                                     70 ; ram data
+                                     71 ;--------------------------------------------------------
+                                     72 	.area _INITIALIZED
+    00000000                         73 _PSGStatus::
+    00000000                         74 	.ds 1
+    00000001                         75 _PSGMuteMask::
+    00000001                         76 	.ds 1
+    00000002                         77 _PSGSubRetAddr:
+    00000002                         78 	.ds 2
+                                     79 ;--------------------------------------------------------
+                                     80 ; absolute external ram data
+                                     81 ;--------------------------------------------------------
+                                     82 	.area _DABS (ABS)
+                                     83 ;--------------------------------------------------------
+                                     84 ; global & static initialisations
+                                     85 ;--------------------------------------------------------
+                                     86 	.area _HOME
+                                     87 	.area _GSINIT
+                                     88 	.area _GSFINAL
+                                     89 	.area _GSINIT
+                                     90 ;--------------------------------------------------------
+                                     91 ; Home
+                                     92 ;--------------------------------------------------------
+                                     93 	.area _HOME
+                                     94 	.area _HOME
+                                     95 ;--------------------------------------------------------
+                                     96 ; code
+                                     97 ;--------------------------------------------------------
+                                     98 	.area _CODE
+                                     99 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:45: void PSGPlay (void *song, uint8_t loop) {
+                                    100 ;	---------------------------------
+                                    101 ; Function PSGPlay
+                                    102 ; ---------------------------------
+    00000000                        103 _PSGPlay::
+                                    104 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:48: PSGLoopFlag = loop;
+    00000000 E5               [ 3]  105 	push	hl
+    00000001 21 04 00         [ 3]  106 	ld	hl, #4
+    00000004 39               [ 1]  107 	add	hl, sp
+    00000005 7E               [ 2]  108 	ld	a, (hl)
+    00000006 32r00r00         [ 4]  109 	ld	(_PSGLoopFlag+0), a
+    00000009 E1               [ 3]  110 	pop	hl
+                                    111 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:49: PSGStart = song;                    // store the beginning point of music
+    0000000A 22r01r00         [ 7]  112 	ld	(_PSGStart), hl
+                                    113 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:50: PSGPointer = song;                  // set music pointer to the beginning
+    0000000D 22r03r00         [ 7]  114 	ld	(_PSGPointer), hl
+                                    115 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:51: PSGLoopPoint = song;                // loop pointer points to the beginning
+    00000010 22r05r00         [ 7]  116 	ld	(_PSGLoopPoint), hl
+                                    117 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:53: PSGSkipFrames = 0;                  // reset the skip frames
+                                    118 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:54: PSGSubLen = 0;                      // reset the substring len (for compression)
+    00000013 AF               [ 1]  119 	xor	a, a
+    00000014 32r07r00         [ 4]  120 	ld	(_PSGSkipFrames+0), a
+    00000017 32r15r00         [ 4]  121 	ld	(_PSGSubLen+0), a
+                                    122 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:55: PSGLastChannel = 0;                 // latch channel 0
+    0000001A AF               [ 1]  123 	xor	a, a
+    0000001B 32r08r00         [ 4]  124 	ld	(_PSGLastChannel+0), a
+                                    125 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:57: PSGShadow[PSG_CH0 >> 5].volume = PSG_LATCH | PSG_CH0 | PSG_VOLUME | 0x0f;
+    0000001E 21r0Br00         [ 3]  126 	ld	hl, #_PSGShadow + 2
+    00000021 36 9F            [ 3]  127 	ld	(hl), #0x9f
+                                    128 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:58: PSGShadow[PSG_CH1 >> 5].volume = PSG_LATCH | PSG_CH1 | PSG_VOLUME | 0x0f;
+    00000023 21r0Er00         [ 3]  129 	ld	hl, #_PSGShadow + 5
+    00000026 36 BF            [ 3]  130 	ld	(hl), #0xbf
+                                    131 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:59: PSGShadow[PSG_CH2 >> 5].volume = PSG_LATCH | PSG_CH2 | PSG_VOLUME | 0x0f;
+    00000028 21r11r00         [ 3]  132 	ld	hl, #_PSGShadow + 8
+    0000002B 36 DF            [ 3]  133 	ld	(hl), #0xdf
+                                    134 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:60: PSGShadow[PSG_CH3 >> 5].volume = PSG_LATCH | PSG_CH3 | PSG_VOLUME | 0x0f;
+    0000002D 21r14r00         [ 3]  135 	ld	hl, #_PSGShadow + 11
+    00000030 36 FF            [ 3]  136 	ld	(hl), #0xff
+                                    137 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:62: PSGStatus = PSG_PLAYING;            // start playback
+    00000032 FD 21r00r00      [ 4]  138 	ld	iy, #_PSGStatus
+    00000036 FD 36 00 01      [ 5]  139 	ld	0 (iy), #0x01
+                                    140 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:63: }
+    0000003A E1               [ 3]  141 	pop	hl
+    0000003B 33               [ 1]  142 	inc	sp
+    0000003C E9               [ 3]  143 	jp	(hl)
+                         00000000   144 ___offset_shadow_reg_t__tone	=	0x0000
+                         00000001   145 ___offset_shadow_reg_t__data	=	0x0001
+                         00000002   146 ___offset_shadow_reg_t__volume	=	0x0002
+                                    147 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:65: void PSGRetriggerChannels(uint8_t mask) NAKED {
+                                    148 ;	---------------------------------
+                                    149 ; Function PSGRetriggerChannels
+                                    150 ; ---------------------------------
+    0000003D                        151 _PSGRetriggerChannels::
+                                    152 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:86: __endasm;
+    0000003D E6 0F            [ 2]  153 	and	#(0b00000001 | 0b00000010 | 0b00000100 | 0b00001000)
+    0000003F C8               [ 6]  154 	ret	z ; if nothing to retrigger then return
+    00000040 0E 7F            [ 2]  155 	ld	c, #_PSG ; c points to the PSG port
+    00000042 21r09r00         [ 3]  156 	ld	hl, #_PSGShadow ; hl points to shadow regs copy
+    00000045 11 03 00         [ 3]  157 	ld	de, #3
+    00000048                        158 0$:
+    00000048 CB 3F            [ 2]  159 	srl	a ; check bits one by one
+    0000004A D2r57r00         [ 4]  160 	jp	nc, 1$ ; if zero then advance to next channel
+    0000004D ED A3            [ 5]  161 	outi	; write tone to PSG
+    0000004F ED A3            [ 5]  162 	outi	; write data to PSG
+    00000051 ED A3            [ 5]  163 	outi	; write volume to PSG
+    00000053 B7               [ 1]  164 	or	a ; check if anything else to retrigger
+    00000054 C8               [ 6]  165 	ret	z ; return if done
+    00000055 18 F1            [ 3]  166 	jr	0$ ; loop
+    00000057                        167 1$:
+    00000057 19               [ 1]  168 	add	hl, de ; advance pointer to the next channel
+    00000058 18 EE            [ 3]  169 	jr	0$ ; loop
+                                    170 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:87: }
+                                    171 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:89: void PSGCutChannels(uint8_t mask) NAKED {
+                                    172 ;	---------------------------------
+                                    173 ; Function PSGCutChannels
+                                    174 ; ---------------------------------
+    0000005A                        175 _PSGCutChannels::
+                                    176 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:111: __endasm;
+    0000005A E6 0F            [ 2]  177 	and	#(0b00000001 | 0b00000010 | 0b00000100 | 0b00001000)
+    0000005C C8               [ 6]  178 	ret	z ; if nothing to retrigger then return
+    0000005D 0E 7F            [ 2]  179 	ld	c, #_PSG ; c points to the PSG port
+    0000005F 21r6Fr00         [ 3]  180 	ld	hl, #2$ ; hl points to the muting data
+    00000062                        181 0$:
+    00000062 CB 3F            [ 2]  182 	srl	a
+    00000064 30 06            [ 3]  183 	jr	nc, 1$
+    00000066 ED A3            [ 5]  184 	outi
+    00000068 B7               [ 1]  185 	or	a
+    00000069 C8               [ 6]  186 	ret	z
+    0000006A 18 F6            [ 3]  187 	jr	0$
+    0000006C                        188 1$:
+    0000006C 23               [ 1]  189 	inc	hl
+    0000006D 18 F3            [ 3]  190 	jr	0$
+    0000006F                        191 2$:
+                                    192 	.irp	ch,0b00000000,0b00100000,0b01000000,0b01100000
+                                    193 	.db	#(0b10000000 | ch | 0b00010000 | 0x0f)
+                                    194 	.endm
+    0000006F 9F                       1 	.db	#(0b10000000 | 0b00000000 | 0b00010000 | 0x0f)
+    00000070 BF                       1 	.db	#(0b10000000 | 0b00100000 | 0b00010000 | 0x0f)
+    00000071 DF                       1 	.db	#(0b10000000 | 0b01000000 | 0b00010000 | 0x0f)
+    00000072 FF                       1 	.db	#(0b10000000 | 0b01100000 | 0b00010000 | 0x0f)
+                                    195 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:112: }
+                                    196 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:114: void PSGFrame (void) NAKED {
+                                    197 ;	---------------------------------
+                                    198 ; Function PSGFrame
+                                    199 ; ---------------------------------
+    00000073                        200 _PSGFrame::
+                                    201 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:274: __endasm;
+                                    202 	.ez80
+    00000073 3Ar00r00         [ 4]  203 	ld	a, (_PSGStatus) ; check if we have got to play a tune
+    00000076 B7               [ 1]  204 	or	a
+    00000077 C8               [ 6]  205 	ret	z
+    00000078 AF               [ 1]  206 	xor	a
+    00000079 21r07r00         [ 3]  207 	ld	hl, #_PSGSkipFrames
+    0000007C B6               [ 2]  208 	or	(hl)
+    0000007D CAr82r00         [ 4]  209 	jp	z, 0$
+    00000080 35               [ 4]  210 	dec	(hl)
+    00000081 C9               [ 5]  211 	ret
+    00000082                        212 0$:
+    00000082 ED 5Br03r00      [ 6]  213 	ld	de, (_PSGPointer) ; read current address
+    00000086                        214 11$:
+    00000086 1A               [ 2]  215 	ld	a, (de)
+    00000087 47               [ 1]  216 	ld	b, a ; load PSG byte (in B)
+    00000088 13               [ 1]  217 	inc	de ; point to next byte
+    00000089 3Ar15r00         [ 4]  218 	ld	a, (_PSGSubLen) ; read substring len
+    0000008C B7               [ 1]  219 	or	a
+    0000008D 28 0A            [ 3]  220 	jr	z, 1$ ; check if it is 0 (we are not in a substring)
+    0000008F 3D               [ 1]  221 	dec	a ; decrease len
+    00000090 32r15r00         [ 4]  222 	ld	(_PSGSubLen), a ; save len
+    00000093 20 04            [ 3]  223 	jr	nz, 1$
+    00000095 ED 5Br02r00      [ 6]  224 	ld	de, (_PSGSubRetAddr) ; substring is over, retrieve return address
+    00000099                        225 1$:
+    00000099 78               [ 1]  226 	ld	a, b ; copy PSG byte into A
+    0000009A FE 80            [ 2]  227 	cp	#0b10000000 ; is it a latch?
+    0000009C DArAAr00         [ 4]  228 	jp	c, 7$ ; if < $80 then it is NOT a latch
+                                    229 ;	--- latch --------------------
+    0000009F 07               [ 1]  230 	rlca
+    000000A0 07               [ 1]  231 	rlca
+    000000A1 07               [ 1]  232 	rlca
+    000000A2 E6 03            [ 2]  233 	and	#0x03
+    000000A4 32r08r00         [ 4]  234 	ld	(_PSGLastChannel), a ; store last latched channel
+    000000A7 C3rAEr00         [ 4]  235 	jp	12$ ; save to shadow copy
+                                    236 ;	--- no latch -----------------
+    000000AA                        237 7$:
+    000000AA FE 40            [ 2]  238 	cp	#0x40
+    000000AC 38 60            [ 3]  239 	jr	c, 8$ ; if < $40 then it is a command
+                                    240 ;	--- save shadow registers -----
+    000000AE                        241 12$:
+    000000AE FD 21r09r00      [ 4]  242 	ld	iy, #_PSGShadow
+    000000B2 3Ar08r00         [ 4]  243 	ld	a, (_PSGLastChannel)
+    000000B5 4F               [ 1]  244 	ld	c, a
+    000000B6 87               [ 1]  245 	add	a
+    000000B7 81               [ 1]  246 	add	c
+    000000B8 FD 85            [ 2]  247 	add	iyl
+    000000BA FD 6F            [ 2]  248 	ld	iyl, a
+    000000BC FD 8C            [ 2]  249 	adc	iyh
+    000000BE FD 95            [ 2]  250 	sub	iyl
+    000000C0 FD 67            [ 2]  251 	ld	iyh, a
+    000000C2 CB 60            [ 2]  252 	bit	4, b
+    000000C4 CArCDr00         [ 4]  253 	jp	z, 14$
+    000000C7 FD 70r00         [ 4]  254 	ld	___offset_shadow_reg_t__volume(iy), b
+    000000CA C3rF2r00         [ 4]  255 	jp	17$
+    000000CD                        256 14$:
+    000000CD 3Ar08r00         [ 4]  257 	ld	a, (_PSGLastChannel)
+    000000D0 FE 03            [ 2]  258 	cp	#(0b01100000 >> 5)
+    000000D2 CArE6r00         [ 4]  259 	jp	z, 16$ ; special case for the noise
+    000000D5 CB 78            [ 2]  260 	bit	7, b
+    000000D7 CArE0r00         [ 4]  261 	jp	z, 13$
+    000000DA FD 70r00         [ 4]  262 	ld	___offset_shadow_reg_t__tone(iy), b
+    000000DD C3rF2r00         [ 4]  263 	jp	17$
+    000000E0                        264 13$:
+    000000E0 FD 70r00         [ 4]  265 	ld	___offset_shadow_reg_t__data(iy), b
+    000000E3 C3rF2r00         [ 4]  266 	jp	17$
+    000000E6                        267 16$:
+    000000E6 78               [ 1]  268 	ld	a, b
+    000000E7 E6 07            [ 2]  269 	and	#0b00000111
+    000000E9 F6 E0            [ 2]  270 	or	#(0b10000000 | 0b01100000)
+    000000EB 47               [ 1]  271 	ld	b, a
+    000000EC FD 70r00         [ 4]  272 	ld	___offset_shadow_reg_t__tone(iy), b
+    000000EF FD 70r00         [ 4]  273 	ld	___offset_shadow_reg_t__data(iy), b
+                                    274 ;	--- check mute and write -------
+    000000F2                        275 17$:
+    000000F2 3Ar08r00         [ 4]  276 	ld	a, (_PSGLastChannel)
+    000000F5 21r0Ar01         [ 3]  277 	ld	hl, #15$ ; point to the mute bits array
+    000000F8 85               [ 1]  278 	add	l
+    000000F9 6F               [ 1]  279 	ld	l, a
+    000000FA 8C               [ 1]  280 	adc	h
+    000000FB 95               [ 1]  281 	sub	l
+    000000FC 67               [ 1]  282 	ld	h, a
+    000000FD 3Ar01r00         [ 4]  283 	ld	a, (_PSGMuteMask)
+    00000100 A6               [ 2]  284 	and	(hl)
+    00000101 C2r86r00         [ 4]  285 	jp	nz, 11$ ; dont write to PSG if muted
+    00000104 78               [ 1]  286 	ld	a, b
+    00000105 D3 7F            [ 3]  287 	out	(_PSG), a ; write to PSG
+    00000107 C3r86r00         [ 4]  288 	jp	11$ ; loop
+    0000010A                        289 15$:
+    0000010A 01 02 04 08            290 	.db	0b00000001, 0b00000010, 0b00000100, 0b00001000
+                                    291 ;	--- commands -------------------
+    0000010E                        292 8$:
+    0000010E FE 38            [ 2]  293 	cp	#0x38
+    00000110 28 07            [ 3]  294 	jr	z, 4$ ; no additional frames
+    00000112 38 0A            [ 3]  295 	jr	c, 5$ ; other commands?
+    00000114 E6 07            [ 2]  296 	and	#0x07 ; take only the last 3 bits for skip frames
+    00000116 32r07r00         [ 4]  297 	ld	(_PSGSkipFrames), a ; we got additional frames
+    00000119                        298 4$:
+    00000119 ED 53r03r00      [ 6]  299 	ld	(_PSGPointer),de ; save current address
+    0000011D C9               [ 5]  300 	ret	; frame done
+    0000011E                        301 5$:
+    0000011E FE 08            [ 2]  302 	cp	#0x08
+    00000120 30 22            [ 3]  303 	jr	nc, 10$
+    00000122 FE 00            [ 2]  304 	cp	#0x00
+    00000124 28 0A            [ 3]  305 	jr	z, 9$
+    00000126 FE 01            [ 2]  306 	cp	#0x01
+    00000128 C0               [ 6]  307 	ret	nz
+                                    308 ;	--- set loop point -------------
+    00000129 ED 53r05r00      [ 6]  309 	ld	(_PSGLoopPoint), de
+    0000012D C3r86r00         [ 4]  310 	jp	11$
+                                    311 ;	--- set loop -------------------
+    00000130                        312 9$:
+    00000130 3Ar00r00         [ 4]  313 	ld	a, (_PSGLoopFlag) ; looping requested?
+    00000133 B7               [ 1]  314 	or	a
+    00000134 C2r3Dr01         [ 4]  315 	jp	nz, 6$ ; No - stop
+    00000137 3E 00            [ 2]  316 	ld	a, #0
+    00000139 32r00r00         [ 4]  317 	ld	(_PSGStatus), a
+    0000013C C9               [ 5]  318 	ret
+    0000013D                        319 6$:
+    0000013D ED 5Br05r00      [ 6]  320 	ld	de, (_PSGLoopPoint)
+    00000141 C3r86r00         [ 4]  321 	jp	11$
+                                    322 ;	--- substring ------------------
+    00000144                        323 10$:
+    00000144 D6 04            [ 2]  324 	sub	#(0x08 - 4) ; len is value - $08 + 4
+    00000146 32r15r00         [ 4]  325 	ld	(_PSGSubLen), a ; save len
+    00000149 1A               [ 2]  326 	ld	a, (de) ; load substring address (offset)
+    0000014A 4F               [ 1]  327 	ld	c, a
+    0000014B 13               [ 1]  328 	inc	de
+    0000014C 1A               [ 2]  329 	ld	a, (de)
+    0000014D 47               [ 1]  330 	ld	b, a
+    0000014E 13               [ 1]  331 	inc	de
+    0000014F ED 53r02r00      [ 6]  332 	ld	(_PSGSubRetAddr), de ; save return address
+    00000153 2Ar01r00         [ 5]  333 	ld	hl, (_PSGStart)
+    00000156 09               [ 1]  334 	add	hl, bc ; make substring current
+    00000157 54               [ 1]  335 	ld	d, h
+    00000158 5D               [ 1]  336 	ld	e, l
+    00000159 C3r86r00         [ 4]  337 	jp	11$
+                                    338 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/gg/PSGlib.c:275: }
+                                    339 	.area _CODE
+                                    340 	.area _INITIALIZER
+    00000000                        341 __xinit__PSGStatus:
+    00000000 00                     342 	.db #0x00	; 0
+    00000001                        343 __xinit__PSGMuteMask:
+    00000001 00                     344 	.db #0x00	; 0
+    00000002                        345 __xinit__PSGSubRetAddr:
+    00000002 00 00                  346 	.dw #0x0000
+                                    347 	.area _CABS (ABS)

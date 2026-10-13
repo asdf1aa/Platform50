@@ -1,0 +1,54 @@
+XL4
+H B areas 8 global symbols
+M flag_png
+S .__.ABS. Def00000000
+S ___bank_flag Def00000001
+A _CODE size 0 flags 0 addr 0
+A _HRAM size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _CODE_1 size 61 flags 0 addr 0
+S ___func_flag Def00000000
+S _flag_metasprite0 Def00000048
+S _flag_metasprites Def00000054
+S _flag_tiles Def00000008
+S _flag Def00000056
+S _flag_palettes Def00000000
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
+T 00 00 00 00
+R 00 00 08 00
+T 00 00 00 00
+R 00 00 08 00
+T 00 00 00 00 00 00 93 2B ED 1A 84 18
+R 00 00 08 00
+T 08 00 00 00
+R 00 00 08 00
+T 08 00 00 00 80 00 00 00 00 00 01 01 01 01 01 01
+R 00 00 08 00
+T 14 00 00 00 01 01 01 01 01 01 01 01 01 01 01 01
+R 00 00 08 00
+T 20 00 00 00 09 09 0F 0F 00 00 80 00 01 00 00 00
+R 00 00 08 00
+T 2C 00 00 00 00 00 00 C0 00 F0 00 F8 00 F8 00 F0
+R 00 00 08 00
+T 38 00 00 00 00 C0 00 00 00 00 00 00 20 20 E0 E0
+R 00 00 08 00
+T 44 00 00 00 00 00 01 00
+R 00 00 08 00
+T 48 00 00 00
+R 00 00 08 00
+T 48 00 00 00 00 00 00 00 00 08 02 00 80 00 00 00
+R 00 00 08 00
+T 54 00 00 00
+R 00 00 08 00
+T 54 00 00 00 48 00
+R 00 00 08 00 00 04 08 00
+T 56 00 00 00
+R 00 00 08 00
+T 56 00 00 00 10 10 04 08 00 01 00 00 01 54 00
+R 00 00 08 00 00 07 08 00 00 0A 08 00 00 0D 08 00

@@ -1,0 +1,40 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy)                  Page 1
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =   00002710 L
+    .__.ABS.                                                    =   00000000 G
+    .__.CPU.                                                    =   00000000 L
+    .__.H$L.                                                    =   00000000 L
+  0 _SpriteManagerFlushRemove                                       00000000 GR
+  2 _SpriteManagerFlushRemove___save_10000_279                      00000000 R
+  2 _SpriteManagerFlushRemove_current_10000_279                     00000001 R
+  2 _SpriteManagerFlushRemove_sprite_idx_10000_279                  00000002 R
+    _THIS                                                           ******** GX
+    _THIS_IDX                                                       ******** GX
+    __current_bank                                                  ******** GX
+    _rROMB0                                                         ******** GX
+    _spriteBanks                                                    ******** GX
+    _spriteDestroyFuncs                                             ******** GX
+    _sprite_manager_purge                                           ******** GX
+    _sprite_manager_sprites                                         ******** GX
+    _sprite_manager_sprites_pool                                    ******** GX
+    _sprite_manager_updatables                                      ******** GX
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy)                  Page 2
+Hexadecimal [32-Bits]
+
+Area Table
+
+   0 _CODE                                      size       D3   flags    0
+   1 _HRAM                                      size        0   flags    0
+   2 _DATA                                      size        3   flags    0
+   3 _INITIALIZED                               size        0   flags    0
+   4 _DABS                                      size        0   flags    8
+   5 _HOME                                      size        0   flags    0
+   6 _GSINIT                                    size        0   flags    0
+   7 _GSFINAL                                   size        0   flags    0
+   8 _INITIALIZER                               size        0   flags    0
+   9 _CABS                                      size        0   flags    8
+

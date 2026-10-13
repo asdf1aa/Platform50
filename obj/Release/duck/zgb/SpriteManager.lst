@@ -1,0 +1,1251 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module SpriteManager
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _set_sprite_native_data_wrap
+                                     11 	.globl _RefreshScroll
+                                     12 	.globl _DrawSprite
+                                     13 	.globl _InitSprite
+                                     14 	.globl _ClearOAMs
+                                     15 	.globl _BufferExchange
+                                     16 	.globl _BufferRotate
+                                     17 	.globl _memset
+                                     18 	.globl _THIS
+                                     19 	.globl _enable_flickering
+                                     20 	.globl _sprite_tile_allocator_top
+                                     21 	.globl _sprite_manager_sprites_pool
+                                     22 	.globl _THIS_IDX
+                                     23 	.globl _last_sprite_pal_loaded
+                                     24 	.globl _last_sprite_loaded
+                                     25 	.globl _sprite_manager_purge
+                                     26 	.globl _sprite_manager_updatables
+                                     27 	.globl _sprite_manager_sprites_poolSTACK
+                                     28 	.globl _sprite_manager_sprites
+                                     29 	.globl _sprite_manager_sprites_mem
+                                     30 	.globl _SpriteManagerReset
+                                     31 	.globl _SpriteManagerLoad
+                                     32 	.globl _SpriteManagerAddEx
+                                     33 	.globl _SpriteManagerRemove
+                                     34 	.globl _SpriteManagerRemoveSprite
+                                     35 	.globl _SpriteManagerUpdate
+                                     36 	.globl _SpriteManagerRenderOnly
+                                     37 	.globl _SpriteManagerRenderPurge
+                                     38 ;--------------------------------------------------------
+                                     39 ; special function registers
+                                     40 ;--------------------------------------------------------
+                                     41 	.area _HRAM
+                                     42 ;--------------------------------------------------------
+                                     43 ; ram data
+                                     44 ;--------------------------------------------------------
+                                     45 	.area _DATA
+    00000000                         46 _sprite_manager_sprites_mem::
+    00000000                         47 	.ds 880
+    00000370                         48 _sprite_manager_sprites::
+    00000370                         49 	.ds 40
+    00000398                         50 _sprite_manager_sprites_poolSTACK::
+    00000398                         51 	.ds 20
+    000003AC                         52 _sprite_manager_updatables::
+    000003AC                         53 	.ds 21
+    000003C1                         54 _sprite_manager_purge::
+    000003C1                         55 	.ds 1
+    000003C2                         56 _last_sprite_loaded::
+    000003C2                         57 	.ds 2
+    000003C4                         58 _last_sprite_pal_loaded::
+    000003C4                         59 	.ds 1
+    000003C5                         60 _SpriteManagerAddEx_sprite_10000_296:
+    000003C5                         61 	.ds 2
+    000003C7                         62 _SpriteManagerAddEx_cached_sprite_10000_296:
+    000003C7                         63 	.ds 2
+    000003C9                         64 _SpriteManagerAddEx_sprite_idx_10000_296:
+    000003C9                         65 	.ds 1
+    000003CA                         66 _SpriteManagerAddEx_cached_sprite_idx_10000_296:
+    000003CA                         67 	.ds 1
+    000003CB                         68 _SpriteManagerAddEx___save_10000_296:
+    000003CB                         69 	.ds 1
+    000003CC                         70 _THIS_IDX::
+    000003CC                         71 	.ds 1
+    000003CD                         72 _SpriteManagerUpdate___save_10000_304:
+    000003CD                         73 	.ds 1
+    000003CE                         74 _SpriteManagerRenderOnly___save_10000_318:
+    000003CE                         75 	.ds 1
+    000003CF                         76 _SpriteManagerRenderPurge___save_10000_322:
+    000003CF                         77 	.ds 1
+    000003D0                         78 _SpriteManagerRenderPurge_current_10000_322:
+    000003D0                         79 	.ds 1
+    000003D1                         80 _SpriteManagerRenderPurge_sprite_idx_10000_322:
+    000003D1                         81 	.ds 1
+                                     82 ;--------------------------------------------------------
+                                     83 ; ram data
+                                     84 ;--------------------------------------------------------
+                                     85 	.area _INITIALIZED
+    00000000                         86 _sprite_manager_sprites_pool::
+    00000000                         87 	.ds 2
+    00000002                         88 _sprite_tile_allocator_top::
+    00000002                         89 	.ds 2
+    00000004                         90 _enable_flickering::
+    00000004                         91 	.ds 1
+    00000005                         92 _THIS::
+    00000005                         93 	.ds 2
+                                     94 ;--------------------------------------------------------
+                                     95 ; absolute external ram data
+                                     96 ;--------------------------------------------------------
+                                     97 	.area _DABS (ABS)
+                                     98 ;--------------------------------------------------------
+                                     99 ; global & static initialisations
+                                    100 ;--------------------------------------------------------
+                                    101 	.area _HOME
+                                    102 	.area _GSINIT
+                                    103 	.area _GSFINAL
+                                    104 	.area _GSINIT
+                                    105 ;--------------------------------------------------------
+                                    106 ; Home
+                                    107 ;--------------------------------------------------------
+                                    108 	.area _HOME
+                                    109 	.area _HOME
+                                    110 ;--------------------------------------------------------
+                                    111 ; code
+                                    112 ;--------------------------------------------------------
+                                    113 	.area _CODE
+                                    114 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:34: void SpriteManagerReset(void) {
+                                    115 ;	---------------------------------
+                                    116 ; Function SpriteManagerReset
+                                    117 ; ---------------------------------
+    00000000                        118 _SpriteManagerReset::
+    00000000 3B               [ 8]  119 	dec	sp
+                                    120 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:35: last_sprite_loaded = sprite_tile_allocator_top;
+    00000001 FAr02r00         [16]  121 	ld	a, (#_sprite_tile_allocator_top)
+    00000004 EArC2r03         [16]  122 	ld	(#_last_sprite_loaded),a
+    00000007 FAr03r00         [16]  123 	ld	a, (#_sprite_tile_allocator_top + 1)
+    0000000A EArC3r03         [16]  124 	ld	(#_last_sprite_loaded + 1),a
+                                    125 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:36: last_sprite_pal_loaded = 0;
+    0000000D AF               [ 4]  126 	xor	a, a
+    0000000E EArC4r03         [16]  127 	ld	(#_last_sprite_pal_loaded),a
+                                    128 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:38: UINT8 __save = CURRENT_BANK;
+    00000011 F0r00            [12]  129 	ldh	a, (__current_bank + 0)
+    00000013 4F               [ 4]  130 	ld	c, a
+                                    131 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:40: for(UINT8 i = 0u; i != VECTOR_LEN(sprite_manager_updatables); ++ i) {
+    00000014 06 00            [ 8]  132 	ld	b, #0x00
+    00000016                        133 00104$:
+    00000016 FArACr03         [16]  134 	ld	a, (#_sprite_manager_updatables + 0)
+    00000019 90               [ 4]  135 	sub	a, b
+    0000001A 28 58            [12]  136 	jr	Z, 00101$
+                                    137 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:41: THIS = sprite_manager_sprites[VECTOR_GET(sprite_manager_updatables, i)];
+    0000001C 04               [ 4]  138 	inc	b
+    0000001D 3ErAC            [ 8]  139 	ld	a, #<(_sprite_manager_updatables)
+    0000001F 80               [ 4]  140 	add	a, b
+    00000020 6F               [ 4]  141 	ld	l, a
+    00000021 3Es03            [ 8]  142 	ld	a, #>(_sprite_manager_updatables)
+    00000023 CE 00            [ 8]  143 	adc	a, #0x00
+    00000025 67               [ 4]  144 	ld	h, a
+    00000026 6E               [ 8]  145 	ld	l, (hl)
+    00000027 AF               [ 4]  146 	xor	a, a
+    00000028 67               [ 4]  147 	ld	h, a
+    00000029 29               [ 8]  148 	add	hl, hl
+    0000002A 11r70r03         [12]  149 	ld	de, #_sprite_manager_sprites
+    0000002D 19               [ 8]  150 	add	hl, de
+    0000002E 5D               [ 4]  151 	ld	e, l
+    0000002F 54               [ 4]  152 	ld	d, h
+    00000030 1A               [ 8]  153 	ld	a, (de)
+    00000031 21r05r00         [12]  154 	ld	hl, #_THIS
+    00000034 22               [ 8]  155 	ld	(hl+), a
+    00000035 13               [ 8]  156 	inc	de
+    00000036 1A               [ 8]  157 	ld	a, (de)
+    00000037 77               [ 8]  158 	ld	(hl), a
+                                    159 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:42: SWITCH_ROM(spriteBanks[THIS->type]);
+    00000038 FAr05r00         [16]  160 	ld	a, (_THIS)
+    0000003B 21r06r00         [12]  161 	ld	hl, #_THIS + 1
+    0000003E 56               [ 8]  162 	ld	d, (hl)
+    0000003F C6 1D            [ 8]  163 	add	a, #0x1d
+    00000041 5F               [ 4]  164 	ld	e, a
+    00000042 30 01            [12]  165 	jr	NC, 00141$
+    00000044 14               [ 4]  166 	inc	d
+    00000045                        167 00141$:
+    00000045 1A               [ 8]  168 	ld	a, (de)
+    00000046 C6r00            [ 8]  169 	add	a, #<(_spriteBanks)
+    00000048 6F               [ 4]  170 	ld	l, a
+    00000049 3E 00            [ 8]  171 	ld	a, #0x00
+    0000004B CEs00            [ 8]  172 	adc	a, #>(_spriteBanks)
+    0000004D 67               [ 4]  173 	ld	h, a
+    0000004E 7E               [ 8]  174 	ld	a, (hl)
+    0000004F E0r00            [12]  175 	ldh	(__current_bank + 0), a
+    00000051 1A               [ 8]  176 	ld	a, (de)
+    00000052 C6r00            [ 8]  177 	add	a, #<(_spriteBanks)
+    00000054 6F               [ 4]  178 	ld	l, a
+    00000055 3E 00            [ 8]  179 	ld	a, #0x00
+    00000057 CEs00            [ 8]  180 	adc	a, #>(_spriteBanks)
+    00000059 67               [ 4]  181 	ld	h, a
+    0000005A 7E               [ 8]  182 	ld	a, (hl)
+    0000005B EAr00r00         [16]  183 	ld	(#_rROMB0),a
+                                    184 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:43: spriteDestroyFuncs[THIS->type]();
+    0000005E 1A               [ 8]  185 	ld	a, (de)
+    0000005F 26 00            [ 8]  186 	ld	h, #0x00
+    00000061 6F               [ 4]  187 	ld	l, a
+    00000062 29               [ 8]  188 	add	hl, hl
+    00000063 11r00r00         [12]  189 	ld	de, #_spriteDestroyFuncs
+    00000066 19               [ 8]  190 	add	hl, de
+    00000067 2A               [ 8]  191 	ld	a,	(hl+)
+    00000068 66               [ 8]  192 	ld	h, (hl)
+    00000069 6F               [ 4]  193 	ld	l, a
+    0000006A C5               [16]  194 	push	bc
+    0000006B 01r71r00         [12]  195 	ld	bc, #00142$
+    0000006E C5               [16]  196 	push	bc
+    0000006F E5               [16]  197 	push	hl
+    00000070 C9               [16]  198 	ret
+    00000071                        199 00142$:
+    00000071 C1               [12]  200 	pop	bc
+                                    201 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:40: for(UINT8 i = 0u; i != VECTOR_LEN(sprite_manager_updatables); ++ i) {
+    00000072 18 A2            [12]  202 	jr	00104$
+    00000074                        203 00101$:
+                                    204 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:45: SWITCH_ROM(__save);
+    00000074 79               [ 4]  205 	ld	a, c
+    00000075 E0r00            [12]  206 	ldh	(__current_bank + 0), a
+    00000077 21r00r00         [12]  207 	ld	hl, #_rROMB0
+    0000007A 71               [ 8]  208 	ld	(hl), c
+                                    209 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:48: StackClear(sprite_manager_sprites_pool);
+    0000007B 21r00r00         [12]  210 	ld	hl, #_sprite_manager_sprites_pool
+    0000007E 36r97            [12]  211 	ld	(hl), #<((_sprite_manager_sprites_poolSTACK - 1))
+    00000080 23               [ 8]  212 	inc	hl
+    00000081 36s03            [12]  213 	ld	(hl), #>((_sprite_manager_sprites_poolSTACK - 1))
+                                    214 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:49: for(UINT8 i = 0; i != N_SPRITE_MANAGER_SPRITES; ++i) {
+    00000083 F8 00            [12]  215 	ldhl	sp,	#0
+    00000085 36 00            [12]  216 	ld	(hl), #0x00
+    00000087                        217 00107$:
+    00000087 F8 00            [12]  218 	ldhl	sp,	#0
+    00000089 7E               [ 8]  219 	ld	a, (hl)
+    0000008A D6 14            [ 8]  220 	sub	a, #0x14
+    0000008C 28 3D            [12]  221 	jr	Z, 00102$
+                                    222 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:50: sprite_manager_sprites[i] = &sprite_manager_sprites_mem[i];
+    0000008E F8 00            [12]  223 	ldhl	sp,	#0
+    00000090 4E               [ 8]  224 	ld	c, (hl)
+    00000091 06 00            [ 8]  225 	ld	b, #0x00
+    00000093 CB 21            [ 8]  226 	sla	c
+    00000095 CB 10            [ 8]  227 	rl	b
+    00000097 21r70r03         [12]  228 	ld	hl, #_sprite_manager_sprites
+    0000009A 09               [ 8]  229 	add	hl, bc
+    0000009B 4D               [ 4]  230 	ld	c, l
+    0000009C 44               [ 4]  231 	ld	b, h
+    0000009D F8 00            [12]  232 	ldhl	sp,	#0
+    0000009F 5E               [ 8]  233 	ld	e, (hl)
+    000000A0 16 00            [ 8]  234 	ld	d, #0x00
+    000000A2 6B               [ 4]  235 	ld	l, e
+    000000A3 62               [ 4]  236 	ld	h, d
+    000000A4 29               [ 8]  237 	add	hl, hl
+    000000A5 29               [ 8]  238 	add	hl, hl
+    000000A6 19               [ 8]  239 	add	hl, de
+    000000A7 29               [ 8]  240 	add	hl, hl
+    000000A8 19               [ 8]  241 	add	hl, de
+    000000A9 29               [ 8]  242 	add	hl, hl
+    000000AA 29               [ 8]  243 	add	hl, hl
+    000000AB 11r00r00         [12]  244 	ld	de, #_sprite_manager_sprites_mem
+    000000AE 19               [ 8]  245 	add	hl, de
+    000000AF 7D               [ 4]  246 	ld	a, l
+    000000B0 02               [ 8]  247 	ld	(bc), a
+    000000B1 03               [ 8]  248 	inc	bc
+    000000B2 7C               [ 4]  249 	ld	a, h
+    000000B3 02               [ 8]  250 	ld	(bc), a
+                                    251 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:51: StackPush(sprite_manager_sprites_pool, i);
+    000000B4 21r00r00         [12]  252 	ld	hl, #_sprite_manager_sprites_pool
+    000000B7 34               [12]  253 	inc	(hl)
+    000000B8 20 02            [12]  254 	jr	NZ, 00145$
+    000000BA 23               [ 8]  255 	inc	hl
+    000000BB 34               [12]  256 	inc	(hl)
+    000000BC                        257 00145$:
+    000000BC FAr00r00         [16]  258 	ld	a, (_sprite_manager_sprites_pool)
+    000000BF 4F               [ 4]  259 	ld	c, a
+    000000C0 21r01r00         [12]  260 	ld	hl, #_sprite_manager_sprites_pool + 1
+    000000C3 46               [ 8]  261 	ld	b, (hl)
+    000000C4 F8 00            [12]  262 	ldhl	sp,	#0
+    000000C6 7E               [ 8]  263 	ld	a, (hl)
+    000000C7 02               [ 8]  264 	ld	(bc), a
+                                    265 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:49: for(UINT8 i = 0; i != N_SPRITE_MANAGER_SPRITES; ++i) {
+    000000C8 34               [12]  266 	inc	(hl)
+    000000C9 18 BC            [12]  267 	jr	00107$
+    000000CB                        268 00102$:
+                                    269 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:53: ClearOAMs();
+    000000CB CDr00r00         [24]  270 	call	_ClearOAMs
+                                    271 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:55: memset(spriteIdxs,   (UINT8)SPRITE_TILE_ALLOC_BOTTOM, SPRITES_ARRAY_LEN);
+    000000CE 11 01 00         [12]  272 	ld	de, #0x0001
+    000000D1 D5               [16]  273 	push	de
+    000000D2 AF               [ 4]  274 	xor	a, a
+    000000D3 F5               [16]  275 	push	af
+    000000D4 11r00r00         [12]  276 	ld	de, #_spriteIdxs
+    000000D7 D5               [16]  277 	push	de
+    000000D8 CDr00r00         [24]  278 	call	_memset
+    000000DB E8 06            [16]  279 	add	sp, #6
+                                    280 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:56: memset(spriteIdxsH,  (UINT8)SPRITE_TILE_ALLOC_BOTTOM, SPRITES_ARRAY_LEN);
+    000000DD 11 01 00         [12]  281 	ld	de, #0x0001
+    000000E0 D5               [16]  282 	push	de
+    000000E1 AF               [ 4]  283 	xor	a, a
+    000000E2 F5               [16]  284 	push	af
+    000000E3 11r00r00         [12]  285 	ld	de, #_spriteIdxsH
+    000000E6 D5               [16]  286 	push	de
+    000000E7 CDr00r00         [24]  287 	call	_memset
+    000000EA E8 06            [16]  288 	add	sp, #6
+                                    289 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:57: memset(spriteIdxsV,  (UINT8)SPRITE_TILE_ALLOC_BOTTOM, SPRITES_ARRAY_LEN);
+    000000EC 11 01 00         [12]  290 	ld	de, #0x0001
+    000000EF D5               [16]  291 	push	de
+    000000F0 AF               [ 4]  292 	xor	a, a
+    000000F1 F5               [16]  293 	push	af
+    000000F2 11r00r00         [12]  294 	ld	de, #_spriteIdxsV
+    000000F5 D5               [16]  295 	push	de
+    000000F6 CDr00r00         [24]  296 	call	_memset
+    000000F9 E8 06            [16]  297 	add	sp, #6
+                                    298 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:58: memset(spriteIdxsHV, (UINT8)SPRITE_TILE_ALLOC_BOTTOM, SPRITES_ARRAY_LEN);
+    000000FB 11 01 00         [12]  299 	ld	de, #0x0001
+    000000FE D5               [16]  300 	push	de
+    000000FF AF               [ 4]  301 	xor	a, a
+    00000100 F5               [16]  302 	push	af
+    00000101 11r00r00         [12]  303 	ld	de, #_spriteIdxsHV
+    00000104 D5               [16]  304 	push	de
+    00000105 CDr00r00         [24]  305 	call	_memset
+    00000108 E8 06            [16]  306 	add	sp, #6
+                                    307 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:61: VECTOR_CLEAR(sprite_manager_updatables);
+    0000010A 21rACr03         [12]  308 	ld	hl, #_sprite_manager_updatables
+    0000010D 36 00            [12]  309 	ld	(hl), #0x00
+                                    310 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:62: sprite_manager_purge = FALSE;
+    0000010F AF               [ 4]  311 	xor	a, a
+    00000110 EArC1r03         [16]  312 	ld	(#_sprite_manager_purge),a
+                                    313 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:63: }
+    00000113 33               [ 8]  314 	inc	sp
+    00000114 C9               [16]  315 	ret
+                                    316 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:69: UINT8 SpriteManagerLoad(UINT8 sprite_type) {
+                                    317 ;	---------------------------------
+                                    318 ; Function SpriteManagerLoad
+                                    319 ; ---------------------------------
+    00000115                        320 _SpriteManagerLoad::
+    00000115 E8 F9            [16]  321 	add	sp, #-7
+    00000117 F8 06            [12]  322 	ldhl	sp,	#6
+    00000119 77               [ 8]  323 	ld	(hl), a
+                                    324 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:71: if (((INT8)spriteIdxs[sprite_type]) >= last_sprite_loaded)
+    0000011A 11r00r00         [12]  325 	ld	de, #_spriteIdxs
+    0000011D 6E               [ 8]  326 	ld	l, (hl)
+    0000011E 26 00            [ 8]  327 	ld	h, #0x00
+    00000120 19               [ 8]  328 	add	hl, de
+    00000121 33               [ 8]  329 	inc	sp
+    00000122 33               [ 8]  330 	inc	sp
+    00000123 5D               [ 4]  331 	ld	e, l
+    00000124 54               [ 4]  332 	ld	d, h
+    00000125 D5               [16]  333 	push	de
+    00000126 1A               [ 8]  334 	ld	a, (de)
+    00000127 4F               [ 4]  335 	ld	c, a
+    00000128 07               [ 4]  336 	rlca
+    00000129 9F               [ 4]  337 	sbc	a, a
+    0000012A 47               [ 4]  338 	ld	b, a
+    0000012B 21rC2r03         [12]  339 	ld	hl, #_last_sprite_loaded
+    0000012E 79               [ 4]  340 	ld	a, c
+    0000012F 96               [ 8]  341 	sub	a, (hl)
+    00000130 23               [ 8]  342 	inc	hl
+    00000131 78               [ 4]  343 	ld	a, b
+    00000132 9E               [ 8]  344 	sbc	a, (hl)
+    00000133 78               [ 4]  345 	ld	a, b
+    00000134 57               [ 4]  346 	ld	d, a
+    00000135 5E               [ 8]  347 	ld	e, (hl)
+    00000136 CB 7B            [ 8]  348 	bit	7, e
+    00000138 28 07            [12]  349 	jr	Z, 00130$
+    0000013A CB 7A            [ 8]  350 	bit	7, d
+    0000013C 20 08            [12]  351 	jr	NZ, 00131$
+    0000013E BF               [ 4]  352 	cp	a, a
+    0000013F 18 05            [12]  353 	jr	00131$
+    00000141                        354 00130$:
+    00000141 CB 7A            [ 8]  355 	bit	7, d
+    00000143 28 01            [12]  356 	jr	Z, 00131$
+    00000145 37               [ 4]  357 	scf
+    00000146                        358 00131$:
+    00000146 38 05            [12]  359 	jr	C, 00102$
+                                    360 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:72: return TRUE;
+    00000148 3E 01            [ 8]  361 	ld	a, #0x01
+    0000014A C3r01r02         [16]  362 	jp	00107$
+    0000014D                        363 00102$:
+                                    364 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:74: UINT8 __save = CURRENT_BANK;
+    0000014D F0r00            [12]  365 	ldh	a, (__current_bank + 0)
+    0000014F F8 02            [12]  366 	ldhl	sp,	#2
+    00000151 77               [ 8]  367 	ld	(hl), a
+                                    368 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:75: SWITCH_ROM(spriteDataBanks[sprite_type]);
+    00000152 01r00r00         [12]  369 	ld	bc, #_spriteDataBanks+0
+    00000155 F8 06            [12]  370 	ldhl	sp,	#6
+    00000157 6E               [ 8]  371 	ld	l, (hl)
+    00000158 26 00            [ 8]  372 	ld	h, #0x00
+    0000015A 09               [ 8]  373 	add	hl, bc
+    0000015B 4D               [ 4]  374 	ld	c, l
+    0000015C 44               [ 4]  375 	ld	b, h
+    0000015D 0A               [ 8]  376 	ld	a, (bc)
+    0000015E E0r00            [12]  377 	ldh	(__current_bank + 0), a
+    00000160 EAr00r00         [16]  378 	ld	(#_rROMB0),a
+                                    379 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:77: const struct MetaSpriteInfo* data = spriteDatas[sprite_type];
+    00000163 01r00r00         [12]  380 	ld	bc, #_spriteDatas+0
+    00000166 F8 06            [12]  381 	ldhl	sp,	#6
+    00000168 5E               [ 8]  382 	ld	e, (hl)
+    00000169 AF               [ 4]  383 	xor	a, a
+    0000016A 6B               [ 4]  384 	ld	l, e
+    0000016B 67               [ 4]  385 	ld	h, a
+    0000016C 29               [ 8]  386 	add	hl, hl
+    0000016D 09               [ 8]  387 	add	hl, bc
+    0000016E 5D               [ 4]  388 	ld	e, l
+    0000016F 54               [ 4]  389 	ld	d, h
+    00000170 1A               [ 8]  390 	ld	a, (de)
+    00000171 F8 03            [12]  391 	ldhl	sp,	#3
+    00000173 22               [ 8]  392 	ld	(hl+), a
+    00000174 13               [ 8]  393 	inc	de
+    00000175 1A               [ 8]  394 	ld	a, (de)
+    00000176 77               [ 8]  395 	ld	(hl), a
+                                    396 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:78: UINT8 n_tiles = data->num_tiles;
+    00000177 F8 03            [12]  397 	ldhl	sp,	#3
+    00000179 2A               [ 8]  398 	ld	a, (hl+)
+    0000017A 4F               [ 4]  399 	ld	c, a
+    0000017B 2A               [ 8]  400 	ld	a, (hl+)
+    0000017C 47               [ 4]  401 	ld	b, a
+    0000017D 03               [ 8]  402 	inc	bc
+    0000017E 03               [ 8]  403 	inc	bc
+    0000017F 0A               [ 8]  404 	ld	a, (bc)
+    00000180 77               [ 8]  405 	ld	(hl), a
+                                    406 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:81: if ((last_sprite_loaded - n_tiles) < SPRITE_TILE_ALLOC_BOTTOM) {
+    00000181 4E               [ 8]  407 	ld	c, (hl)
+    00000182 06 00            [ 8]  408 	ld	b, #0x00
+    00000184 21rC2r03         [12]  409 	ld	hl, #_last_sprite_loaded
+    00000187 2A               [ 8]  410 	ld	a, (hl+)
+    00000188 91               [ 4]  411 	sub	a, c
+    00000189 4F               [ 4]  412 	ld	c, a
+    0000018A 7E               [ 8]  413 	ld	a, (hl)
+    0000018B 98               [ 4]  414 	sbc	a, b
+    0000018C 47               [ 4]  415 	ld	b, a
+    0000018D 79               [ 4]  416 	ld	a, c
+    0000018E D6 80            [ 8]  417 	sub	a, #0x80
+    00000190 78               [ 4]  418 	ld	a, b
+    00000191 17               [ 4]  419 	rla
+    00000192 3F               [ 4]  420 	ccf
+    00000193 1F               [ 4]  421 	rra
+    00000194 DE 7F            [ 8]  422 	sbc	a, #0x7f
+    00000196 30 0C            [12]  423 	jr	NC, 00104$
+                                    424 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:82: SWITCH_ROM(__save);
+    00000198 F8 02            [12]  425 	ldhl	sp,	#2
+    0000019A 7E               [ 8]  426 	ld	a, (hl)
+    0000019B E0r00            [12]  427 	ldh	(__current_bank + 0), a
+    0000019D 7E               [ 8]  428 	ld	a, (hl)
+    0000019E EAr00r00         [16]  429 	ld	(#_rROMB0),a
+                                    430 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:83: return FALSE;
+    000001A1 AF               [ 4]  431 	xor	a, a
+    000001A2 18 5D            [12]  432 	jr	00107$
+    000001A4                        433 00104$:
+                                    434 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:87: last_sprite_loaded -= n_tiles;
+    000001A4 21rC2r03         [12]  435 	ld	hl, #_last_sprite_loaded
+    000001A7 79               [ 4]  436 	ld	a, c
+    000001A8 22               [ 8]  437 	ld	(hl+), a
+                                    438 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:89: spriteIdxs[sprite_type] = last_sprite_loaded;
+    000001A9 78               [ 4]  439 	ld	a, b
+    000001AA 32               [ 8]  440 	ld	(hl-), a
+    000001AB 7E               [ 8]  441 	ld	a, (hl)
+    000001AC E1               [12]  442 	pop	hl
+    000001AD E5               [16]  443 	push	hl
+    000001AE 77               [ 8]  444 	ld	(hl), a
+                                    445 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:90: spriteIdxsH[sprite_type] = last_sprite_loaded;
+    000001AF 01r00r00         [12]  446 	ld	bc, #_spriteIdxsH+0
+    000001B2 F8 06            [12]  447 	ldhl	sp,	#6
+    000001B4 6E               [ 8]  448 	ld	l, (hl)
+    000001B5 26 00            [ 8]  449 	ld	h, #0x00
+    000001B7 09               [ 8]  450 	add	hl, bc
+    000001B8 4D               [ 4]  451 	ld	c, l
+    000001B9 44               [ 4]  452 	ld	b, h
+    000001BA FArC2r03         [16]  453 	ld	a, (_last_sprite_loaded)
+    000001BD 02               [ 8]  454 	ld	(bc), a
+                                    455 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:91: spriteIdxsV[sprite_type] = last_sprite_loaded;
+    000001BE 01r00r00         [12]  456 	ld	bc, #_spriteIdxsV+0
+    000001C1 F8 06            [12]  457 	ldhl	sp,	#6
+    000001C3 6E               [ 8]  458 	ld	l, (hl)
+    000001C4 26 00            [ 8]  459 	ld	h, #0x00
+    000001C6 09               [ 8]  460 	add	hl, bc
+    000001C7 4D               [ 4]  461 	ld	c, l
+    000001C8 44               [ 4]  462 	ld	b, h
+    000001C9 FArC2r03         [16]  463 	ld	a, (_last_sprite_loaded)
+    000001CC 02               [ 8]  464 	ld	(bc), a
+                                    465 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:92: spriteIdxsHV[sprite_type] = last_sprite_loaded;
+    000001CD 01r00r00         [12]  466 	ld	bc, #_spriteIdxsHV+0
+    000001D0 F8 06            [12]  467 	ldhl	sp,	#6
+    000001D2 6E               [ 8]  468 	ld	l, (hl)
+    000001D3 26 00            [ 8]  469 	ld	h, #0x00
+    000001D5 09               [ 8]  470 	add	hl, bc
+    000001D6 4D               [ 4]  471 	ld	c, l
+    000001D7 44               [ 4]  472 	ld	b, h
+    000001D8 FArC2r03         [16]  473 	ld	a, (_last_sprite_loaded)
+    000001DB 02               [ 8]  474 	ld	(bc), a
+                                    475 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:94: if (n_tiles) {
+    000001DC F8 05            [12]  476 	ldhl	sp,	#5
+    000001DE 7E               [ 8]  477 	ld	a, (hl)
+    000001DF B7               [ 4]  478 	or	a, a
+    000001E0 28 14            [12]  479 	jr	Z, 00106$
+                                    480 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:97: set_sprite_native_data_wrap(last_sprite_loaded, n_tiles, data->data);
+    000001E2 2B               [ 8]  481 	dec	hl
+    000001E3 3A               [ 8]  482 	ld	a, (hl-)
+    000001E4 6E               [ 8]  483 	ld	l, (hl)
+    000001E5 67               [ 4]  484 	ld	h, a
+    000001E6 23               [ 8]  485 	inc	hl
+    000001E7 23               [ 8]  486 	inc	hl
+    000001E8 23               [ 8]  487 	inc	hl
+    000001E9 2A               [ 8]  488 	ld	a, (hl+)
+    000001EA 4F               [ 4]  489 	ld	c, a
+    000001EB 46               [ 8]  490 	ld	b, (hl)
+    000001EC FArC2r03         [16]  491 	ld	a, (_last_sprite_loaded)
+    000001EF C5               [16]  492 	push	bc
+    000001F0 F8 07            [12]  493 	ldhl	sp,	#7
+    000001F2 5E               [ 8]  494 	ld	e, (hl)
+    000001F3 CDr00r00         [24]  495 	call	_set_sprite_native_data_wrap
+    000001F6                        496 00106$:
+                                    497 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:160: SWITCH_ROM(__save);
+    000001F6 F8 02            [12]  498 	ldhl	sp,	#2
+    000001F8 7E               [ 8]  499 	ld	a, (hl)
+    000001F9 E0r00            [12]  500 	ldh	(__current_bank + 0), a
+    000001FB 7E               [ 8]  501 	ld	a, (hl)
+    000001FC EAr00r00         [16]  502 	ld	(#_rROMB0),a
+                                    503 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:162: return TRUE;
+    000001FF 3E 01            [ 8]  504 	ld	a, #0x01
+    00000201                        505 00107$:
+                                    506 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:163: }
+    00000201 E8 07            [16]  507 	add	sp, #7
+    00000203 C9               [16]  508 	ret
+                                    509 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:165: Sprite* SpriteManagerAddEx(UINT8 sprite_type, UINT16 x, UINT16 y, void* data) {
+                                    510 ;	---------------------------------
+                                    511 ; Function SpriteManagerAddEx
+                                    512 ; ---------------------------------
+    00000204                        513 _SpriteManagerAddEx::
+    00000204 3B               [ 8]  514 	dec	sp
+    00000205 3B               [ 8]  515 	dec	sp
+    00000206 4F               [ 4]  516 	ld	c, a
+    00000207 33               [ 8]  517 	inc	sp
+    00000208 33               [ 8]  518 	inc	sp
+    00000209 D5               [16]  519 	push	de
+                                    520 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:170: if (VECTOR_LEN(sprite_manager_updatables) > (N_SPRITE_MANAGER_SPRITES - 1)) return NULL;
+    0000020A FArACr03         [16]  521 	ld	a, (#_sprite_manager_updatables + 0)
+    0000020D FE 14            [ 8]  522 	cp	a, #0x14
+    0000020F 38 06            [12]  523 	jr	C, 00102$
+    00000211 01 00 00         [12]  524 	ld	bc, #0x0000
+    00000214 C3r73r03         [16]  525 	jp	00105$
+    00000217                        526 00102$:
+                                    527 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:172: if (!SpriteManagerLoad(sprite_type)) return NULL;
+    00000217 C5               [16]  528 	push	bc
+    00000218 79               [ 4]  529 	ld	a, c
+    00000219 CDr15r01         [24]  530 	call	_SpriteManagerLoad
+    0000021C C1               [12]  531 	pop	bc
+    0000021D B7               [ 4]  532 	or	a, a
+    0000021E 20 06            [12]  533 	jr	NZ, 00104$
+    00000220 01 00 00         [12]  534 	ld	bc, #0x0000
+    00000223 C3r73r03         [16]  535 	jp	00105$
+    00000226                        536 00104$:
+                                    537 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:174: sprite_idx = StackPop(sprite_manager_sprites_pool);
+    00000226 FAr00r00         [16]  538 	ld	a, (_sprite_manager_sprites_pool)
+    00000229 21r01r00         [12]  539 	ld	hl, #_sprite_manager_sprites_pool + 1
+    0000022C 66               [ 8]  540 	ld	h, (hl)
+    0000022D 6F               [ 4]  541 	ld	l, a
+    0000022E 7E               [ 8]  542 	ld	a, (hl)
+    0000022F EArC9r03         [16]  543 	ld	(#_SpriteManagerAddEx_sprite_idx_10000_296),a
+    00000232 21r00r00         [12]  544 	ld	hl, #_sprite_manager_sprites_pool
+    00000235 2A               [ 8]  545 	ld	a, (hl+)
+    00000236 5F               [ 4]  546 	ld	e, a
+    00000237 3A               [ 8]  547 	ld	a, (hl-)
+    00000238 57               [ 4]  548 	ld	d, a
+    00000239 1B               [ 8]  549 	dec	de
+    0000023A 7B               [ 4]  550 	ld	a, e
+    0000023B 22               [ 8]  551 	ld	(hl+), a
+    0000023C 72               [ 8]  552 	ld	(hl), d
+                                    553 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:175: sprite = sprite_manager_sprites[sprite_idx];
+    0000023D 11r70r03         [12]  554 	ld	de, #_sprite_manager_sprites+0
+    00000240 FArC9r03         [16]  555 	ld	a, (_SpriteManagerAddEx_sprite_idx_10000_296)
+    00000243 26 00            [ 8]  556 	ld	h, #0x00
+    00000245 6F               [ 4]  557 	ld	l, a
+    00000246 29               [ 8]  558 	add	hl, hl
+    00000247 19               [ 8]  559 	add	hl, de
+    00000248 5D               [ 4]  560 	ld	e, l
+    00000249 54               [ 4]  561 	ld	d, h
+    0000024A 1A               [ 8]  562 	ld	a, (de)
+    0000024B 21rC5r03         [12]  563 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296
+    0000024E 22               [ 8]  564 	ld	(hl+), a
+    0000024F 13               [ 8]  565 	inc	de
+    00000250 1A               [ 8]  566 	ld	a, (de)
+    00000251 77               [ 8]  567 	ld	(hl), a
+                                    568 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:176: sprite->type = sprite_type;
+    00000252 FArC5r03         [16]  569 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    00000255 21rC6r03         [12]  570 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    00000258 66               [ 8]  571 	ld	h, (hl)
+    00000259 6F               [ 4]  572 	ld	l, a
+    0000025A 11 1D 00         [12]  573 	ld	de, #0x001d
+    0000025D 19               [ 8]  574 	add	hl, de
+    0000025E 71               [ 8]  575 	ld	(hl), c
+                                    576 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:177: sprite->marked_for_removal = FALSE;
+    0000025F FArC5r03         [16]  577 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    00000262 21rC6r03         [12]  578 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    00000265 66               [ 8]  579 	ld	h, (hl)
+    00000266 6F               [ 4]  580 	ld	l, a
+    00000267 11 1E 00         [12]  581 	ld	de, #0x001e
+    0000026A 19               [ 8]  582 	add	hl, de
+    0000026B 36 00            [12]  583 	ld	(hl), #0x00
+                                    584 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:178: sprite->lim_x = SPRITE_LIMIT_X;
+    0000026D FArC5r03         [16]  585 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    00000270 21rC6r03         [12]  586 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    00000273 66               [ 8]  587 	ld	h, (hl)
+    00000274 6F               [ 4]  588 	ld	l, a
+    00000275 11 19 00         [12]  589 	ld	de, #0x0019
+    00000278 19               [ 8]  590 	add	hl, de
+    00000279 3E 20            [ 8]  591 	ld	a, #0x20
+    0000027B 22               [ 8]  592 	ld	(hl+), a
+    0000027C 36 00            [12]  593 	ld	(hl), #0x00
+                                    594 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:179: sprite->lim_y = SPRITE_LIMIT_Y;
+    0000027E FArC5r03         [16]  595 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    00000281 21rC6r03         [12]  596 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    00000284 66               [ 8]  597 	ld	h, (hl)
+    00000285 6F               [ 4]  598 	ld	l, a
+    00000286 11 1B 00         [12]  599 	ld	de, #0x001b
+    00000289 19               [ 8]  600 	add	hl, de
+    0000028A 3E 20            [ 8]  601 	ld	a, #0x20
+    0000028C 22               [ 8]  602 	ld	(hl+), a
+    0000028D 36 00            [12]  603 	ld	(hl), #0x00
+                                    604 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:180: sprite->mirror = NO_MIRROR;
+    0000028F FArC5r03         [16]  605 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    00000292 21rC6r03         [12]  606 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    00000295 66               [ 8]  607 	ld	h, (hl)
+    00000296 6F               [ 4]  608 	ld	l, a
+    00000297 11 16 00         [12]  609 	ld	de, #0x0016
+    0000029A 19               [ 8]  610 	add	hl, de
+    0000029B 36 00            [12]  611 	ld	(hl), #0x00
+                                    612 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:182: VectorAdd(sprite_manager_updatables, sprite_idx);
+    0000029D FArACr03         [16]  613 	ld	a, (#_sprite_manager_updatables + 0)
+    000002A0 3C               [ 4]  614 	inc	a
+    000002A1 EArACr03         [16]  615 	ld	(#_sprite_manager_updatables),a
+    000002A4 6F               [ 4]  616 	ld	l, a
+    000002A5 26 00            [ 8]  617 	ld	h, #0x00
+    000002A7 11rACr03         [12]  618 	ld	de, #_sprite_manager_updatables
+    000002AA 19               [ 8]  619 	add	hl, de
+    000002AB FArC9r03         [16]  620 	ld	a, (_SpriteManagerAddEx_sprite_idx_10000_296)
+    000002AE 77               [ 8]  621 	ld	(hl), a
+                                    622 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:184: InitSprite(sprite, sprite_type);
+    000002AF 79               [ 4]  623 	ld	a, c
+    000002B0 21rC5r03         [12]  624 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296
+    000002B3 5E               [ 8]  625 	ld	e, (hl)
+    000002B4 23               [ 8]  626 	inc	hl
+    000002B5 56               [ 8]  627 	ld	d, (hl)
+    000002B6 CDr00r00         [24]  628 	call	_InitSprite
+                                    629 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:185: sprite->x = x;
+    000002B9 FArC5r03         [16]  630 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    000002BC 4F               [ 4]  631 	ld	c, a
+    000002BD 21rC6r03         [12]  632 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    000002C0 46               [ 8]  633 	ld	b, (hl)
+    000002C1 F8 00            [12]  634 	ldhl	sp,	#0
+    000002C3 2A               [ 8]  635 	ld	a, (hl+)
+    000002C4 02               [ 8]  636 	ld	(bc), a
+    000002C5 03               [ 8]  637 	inc	bc
+    000002C6 7E               [ 8]  638 	ld	a, (hl)
+    000002C7 02               [ 8]  639 	ld	(bc), a
+                                    640 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:186: sprite->y = y;
+    000002C8 FArC5r03         [16]  641 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    000002CB 21rC6r03         [12]  642 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    000002CE 46               [ 8]  643 	ld	b, (hl)
+    000002CF 4F               [ 4]  644 	ld	c, a
+    000002D0 03               [ 8]  645 	inc	bc
+    000002D1 03               [ 8]  646 	inc	bc
+    000002D2 F8 04            [12]  647 	ldhl	sp,	#4
+    000002D4 2A               [ 8]  648 	ld	a, (hl+)
+    000002D5 02               [ 8]  649 	ld	(bc), a
+    000002D6 03               [ 8]  650 	inc	bc
+    000002D7 7E               [ 8]  651 	ld	a, (hl)
+    000002D8 02               [ 8]  652 	ld	(bc), a
+                                    653 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:187: sprite->unique_id = (UINT16)data;
+    000002D9 FArC5r03         [16]  654 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    000002DC 21rC6r03         [12]  655 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    000002DF 46               [ 8]  656 	ld	b, (hl)
+    000002E0 C6 1F            [ 8]  657 	add	a, #0x1f
+    000002E2 4F               [ 4]  658 	ld	c, a
+    000002E3 30 01            [12]  659 	jr	NC, 00121$
+    000002E5 04               [ 4]  660 	inc	b
+    000002E6                        661 00121$:
+    000002E6 F8 06            [12]  662 	ldhl	sp,	#6
+    000002E8 2A               [ 8]  663 	ld	a, (hl+)
+    000002E9 5F               [ 4]  664 	ld	e, a
+    000002EA 56               [ 8]  665 	ld	d, (hl)
+    000002EB 7B               [ 4]  666 	ld	a, e
+    000002EC 02               [ 8]  667 	ld	(bc), a
+    000002ED 03               [ 8]  668 	inc	bc
+    000002EE 7A               [ 4]  669 	ld	a, d
+    000002EF 02               [ 8]  670 	ld	(bc), a
+                                    671 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:190: cached_sprite = THIS;
+    000002F0 FAr05r00         [16]  672 	ld	a, (#_THIS)
+    000002F3 EArC7r03         [16]  673 	ld	(#_SpriteManagerAddEx_cached_sprite_10000_296),a
+    000002F6 FAr06r00         [16]  674 	ld	a, (#_THIS + 1)
+    000002F9 EArC8r03         [16]  675 	ld	(#_SpriteManagerAddEx_cached_sprite_10000_296 + 1),a
+                                    676 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:191: cached_sprite_idx = THIS_IDX;
+    000002FC FArCCr03         [16]  677 	ld	a, (#_THIS_IDX)
+    000002FF EArCAr03         [16]  678 	ld	(#_SpriteManagerAddEx_cached_sprite_idx_10000_296),a
+                                    679 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:192: THIS = sprite;
+    00000302 FArC5r03         [16]  680 	ld	a, (#_SpriteManagerAddEx_sprite_10000_296)
+    00000305 EAr05r00         [16]  681 	ld	(#_THIS),a
+    00000308 FArC6r03         [16]  682 	ld	a, (#_SpriteManagerAddEx_sprite_10000_296 + 1)
+    0000030B EAr06r00         [16]  683 	ld	(#_THIS + 1),a
+                                    684 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:193: THIS_IDX = VECTOR_LEN(sprite_manager_updatables) - 1;
+    0000030E FArACr03         [16]  685 	ld	a, (#_sprite_manager_updatables + 0)
+    00000311 3D               [ 4]  686 	dec	a
+    00000312 EArCCr03         [16]  687 	ld	(#_THIS_IDX),a
+                                    688 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:195: __save = CURRENT_BANK;
+    00000315 F0r00            [12]  689 	ldh	a, (__current_bank + 0)
+    00000317 EArCBr03         [16]  690 	ld	(#_SpriteManagerAddEx___save_10000_296),a
+                                    691 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:196: SWITCH_ROM(spriteBanks[sprite->type]);
+    0000031A 01r00r00         [12]  692 	ld	bc, #_spriteBanks+0
+                                    693 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:176: sprite->type = sprite_type;
+    0000031D FArC5r03         [16]  694 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    00000320 21rC6r03         [12]  695 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    00000323 56               [ 8]  696 	ld	d, (hl)
+                                    697 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:196: SWITCH_ROM(spriteBanks[sprite->type]);
+    00000324 C6 1D            [ 8]  698 	add	a, #0x1d
+    00000326 5F               [ 4]  699 	ld	e, a
+    00000327 30 01            [12]  700 	jr	NC, 00122$
+    00000329 14               [ 4]  701 	inc	d
+    0000032A                        702 00122$:
+    0000032A 1A               [ 8]  703 	ld	a, (de)
+    0000032B 6F               [ 4]  704 	ld	l, a
+    0000032C 26 00            [ 8]  705 	ld	h, #0x00
+    0000032E 09               [ 8]  706 	add	hl, bc
+    0000032F 7E               [ 8]  707 	ld	a, (hl)
+    00000330 E0r00            [12]  708 	ldh	(__current_bank + 0), a
+    00000332 1A               [ 8]  709 	ld	a, (de)
+    00000333 6F               [ 4]  710 	ld	l, a
+    00000334 26 00            [ 8]  711 	ld	h, #0x00
+    00000336 09               [ 8]  712 	add	hl, bc
+    00000337 7E               [ 8]  713 	ld	a, (hl)
+    00000338 EAr00r00         [16]  714 	ld	(#_rROMB0),a
+                                    715 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:197: spriteStartFuncs[sprite->type](data);
+    0000033B 01r00r00         [12]  716 	ld	bc, #_spriteStartFuncs+0
+    0000033E 1A               [ 8]  717 	ld	a, (de)
+    0000033F 26 00            [ 8]  718 	ld	h, #0x00
+    00000341 6F               [ 4]  719 	ld	l, a
+    00000342 29               [ 8]  720 	add	hl, hl
+    00000343 09               [ 8]  721 	add	hl, bc
+    00000344 4E               [ 8]  722 	ld	c, (hl)
+    00000345 23               [ 8]  723 	inc	hl
+    00000346 46               [ 8]  724 	ld	b, (hl)
+    00000347 F8 06            [12]  725 	ldhl	sp,	#6
+    00000349 5E               [ 8]  726 	ld	e, (hl)
+    0000034A 23               [ 8]  727 	inc	hl
+    0000034B 56               [ 8]  728 	ld	d, (hl)
+    0000034C 69               [ 4]  729 	ld	l, c
+    0000034D 60               [ 4]  730 	ld	h, b
+    0000034E CDr00r00         [24]  731 	call	___sdcc_call_hl
+                                    732 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:198: SWITCH_ROM(__save);
+    00000351 FArCBr03         [16]  733 	ld	a, (_SpriteManagerAddEx___save_10000_296)
+    00000354 E0r00            [12]  734 	ldh	(__current_bank + 0), a
+    00000356 EAr00r00         [16]  735 	ld	(#_rROMB0),a
+                                    736 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:201: THIS = cached_sprite;
+    00000359 FArC7r03         [16]  737 	ld	a, (#_SpriteManagerAddEx_cached_sprite_10000_296)
+    0000035C EAr05r00         [16]  738 	ld	(#_THIS),a
+    0000035F FArC8r03         [16]  739 	ld	a, (#_SpriteManagerAddEx_cached_sprite_10000_296 + 1)
+    00000362 EAr06r00         [16]  740 	ld	(#_THIS + 1),a
+                                    741 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:202: THIS_IDX = cached_sprite_idx;
+    00000365 FArCAr03         [16]  742 	ld	a, (#_SpriteManagerAddEx_cached_sprite_idx_10000_296)
+    00000368 EArCCr03         [16]  743 	ld	(#_THIS_IDX),a
+                                    744 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:203: return sprite;
+    0000036B FArC5r03         [16]  745 	ld	a, (_SpriteManagerAddEx_sprite_10000_296)
+    0000036E 4F               [ 4]  746 	ld	c, a
+    0000036F 21rC6r03         [12]  747 	ld	hl, #_SpriteManagerAddEx_sprite_10000_296 + 1
+    00000372 46               [ 8]  748 	ld	b, (hl)
+    00000373                        749 00105$:
+                                    750 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:204: }
+    00000373 33               [ 8]  751 	inc	sp
+    00000374 33               [ 8]  752 	inc	sp
+    00000375 E1               [12]  753 	pop	hl
+    00000376 E8 04            [16]  754 	add	sp, #4
+    00000378 E9               [ 4]  755 	jp	(hl)
+                                    756 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:206: void SpriteManagerRemove(UINT8 idx) {
+                                    757 ;	---------------------------------
+                                    758 ; Function SpriteManagerRemove
+                                    759 ; ---------------------------------
+    00000379                        760 _SpriteManagerRemove::
+    00000379 5F               [ 4]  761 	ld	e, a
+                                    762 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:207: sprite_manager_sprites[VECTOR_GET(sprite_manager_updatables, idx)]->marked_for_removal = TRUE;
+    0000037A 01r70r03         [12]  763 	ld	bc, #_sprite_manager_sprites+0
+    0000037D 1C               [ 4]  764 	inc	e
+    0000037E 6B               [ 4]  765 	ld	l, e
+    0000037F 26 00            [ 8]  766 	ld	h, #0x00
+    00000381 11rACr03         [12]  767 	ld	de, #_sprite_manager_updatables
+    00000384 19               [ 8]  768 	add	hl, de
+    00000385 6E               [ 8]  769 	ld	l, (hl)
+    00000386 AF               [ 4]  770 	xor	a, a
+    00000387 67               [ 4]  771 	ld	h, a
+    00000388 29               [ 8]  772 	add	hl, hl
+    00000389 09               [ 8]  773 	add	hl, bc
+    0000038A 2A               [ 8]  774 	ld	a, (hl+)
+    0000038B 4F               [ 4]  775 	ld	c, a
+    0000038C 46               [ 8]  776 	ld	b, (hl)
+    0000038D 21 1E 00         [12]  777 	ld	hl, #0x001e
+    00000390 09               [ 8]  778 	add	hl, bc
+    00000391 36 01            [12]  779 	ld	(hl), #0x01
+                                    780 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:208: sprite_manager_purge = TRUE;
+    00000393 21rC1r03         [12]  781 	ld	hl, #_sprite_manager_purge
+    00000396 36 01            [12]  782 	ld	(hl), #0x01
+                                    783 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:209: }
+    00000398 C9               [16]  784 	ret
+                                    785 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:211: void SpriteManagerRemoveSprite(Sprite* sprite) {
+                                    786 ;	---------------------------------
+                                    787 ; Function SpriteManagerRemoveSprite
+                                    788 ; ---------------------------------
+    00000399                        789 _SpriteManagerRemoveSprite::
+                                    790 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:212: sprite->marked_for_removal = TRUE; 
+    00000399 21 1E 00         [12]  791 	ld	hl, #0x001e
+    0000039C 19               [ 8]  792 	add	hl, de
+    0000039D 36 01            [12]  793 	ld	(hl), #0x01
+                                    794 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:213: sprite_manager_purge = TRUE;
+    0000039F 21rC1r03         [12]  795 	ld	hl, #_sprite_manager_purge
+    000003A2 36 01            [12]  796 	ld	(hl), #0x01
+                                    797 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:214: }
+    000003A4 C9               [16]  798 	ret
+                                    799 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:220: void SpriteManagerUpdate(void) {
+                                    800 ;	---------------------------------
+                                    801 ; Function SpriteManagerUpdate
+                                    802 ; ---------------------------------
+    000003A5                        803 _SpriteManagerUpdate::
+    000003A5 E8 FC            [16]  804 	add	sp, #-4
+                                    805 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:223: __save = CURRENT_BANK;
+    000003A7 F0r00            [12]  806 	ldh	a, (__current_bank + 0)
+    000003A9 EArCDr03         [16]  807 	ld	(#_SpriteManagerUpdate___save_10000_304),a
+                                    808 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:225: SPRITEMANAGER_ITERATE(THIS_IDX, THIS)  {
+    000003AC AF               [ 4]  809 	xor	a, a
+    000003AD EArCCr03         [16]  810 	ld	(#_THIS_IDX),a
+    000003B0 21rADr03         [12]  811 	ld	hl, #(_sprite_manager_updatables + 1)
+    000003B3 6E               [ 8]  812 	ld	l, (hl)
+    000003B4 AF               [ 4]  813 	xor	a, a
+    000003B5 67               [ 4]  814 	ld	h, a
+    000003B6 29               [ 8]  815 	add	hl, hl
+    000003B7 11r70r03         [12]  816 	ld	de, #_sprite_manager_sprites
+    000003BA 19               [ 8]  817 	add	hl, de
+    000003BB 5D               [ 4]  818 	ld	e, l
+    000003BC 54               [ 4]  819 	ld	d, h
+    000003BD 1A               [ 8]  820 	ld	a, (de)
+    000003BE 21r05r00         [12]  821 	ld	hl, #_THIS
+    000003C1 22               [ 8]  822 	ld	(hl+), a
+    000003C2 13               [ 8]  823 	inc	de
+    000003C3 1A               [ 8]  824 	ld	a, (de)
+    000003C4 77               [ 8]  825 	ld	(hl), a
+    000003C5                        826 00116$:
+    000003C5 FArACr03         [16]  827 	ld	a, (#_sprite_manager_updatables + 0)
+                                    828 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:236: BufferExchange(sprite_manager_updatables + 1, THIS_IDX);
+                                    829 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:225: SPRITEMANAGER_ITERATE(THIS_IDX, THIS)  {
+    000003C8 21rCCr03         [12]  830 	ld	hl, #_THIS_IDX
+    000003CB 96               [ 8]  831 	sub	a, (hl)
+    000003CC CAr91r04         [16]  832 	jp	Z, 00109$
+                                    833 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:227: if (THIS->marked_for_removal) continue;
+    000003CF FAr05r00         [16]  834 	ld	a, (#_THIS)
+    000003D2 F8 01            [12]  835 	ldhl	sp,	#1
+    000003D4 77               [ 8]  836 	ld	(hl), a
+    000003D5 FAr06r00         [16]  837 	ld	a, (#_THIS + 1)
+    000003D8 F8 02            [12]  838 	ldhl	sp,	#2
+    000003DA 32               [ 8]  839 	ld	(hl-), a
+    000003DB 2A               [ 8]  840 	ld	a, (hl+)
+    000003DC 5F               [ 4]  841 	ld	e, a
+    000003DD 56               [ 8]  842 	ld	d, (hl)
+    000003DE 21 1E 00         [12]  843 	ld	hl, #0x001e
+    000003E1 19               [ 8]  844 	add	hl, de
+    000003E2 4D               [ 4]  845 	ld	c, l
+    000003E3 44               [ 4]  846 	ld	b, h
+    000003E4 0A               [ 8]  847 	ld	a, (bc)
+    000003E5 F8 03            [12]  848 	ldhl	sp,	#3
+    000003E7 77               [ 8]  849 	ld	(hl), a
+    000003E8 7E               [ 8]  850 	ld	a, (hl)
+    000003E9 B7               [ 4]  851 	or	a, a
+    000003EA C2r6Fr04         [16]  852 	jp	NZ, 00108$
+                                    853 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:229: SWITCH_ROM(spriteBanks[THIS->type]);
+    000003ED 2B               [ 8]  854 	dec	hl
+    000003EE 2B               [ 8]  855 	dec	hl
+    000003EF 2A               [ 8]  856 	ld	a, (hl+)
+    000003F0 5F               [ 4]  857 	ld	e, a
+    000003F1 56               [ 8]  858 	ld	d, (hl)
+    000003F2 21 1D 00         [12]  859 	ld	hl, #0x001d
+    000003F5 19               [ 8]  860 	add	hl, de
+    000003F6 4D               [ 4]  861 	ld	c, l
+    000003F7 44               [ 4]  862 	ld	b, h
+    000003F8 0A               [ 8]  863 	ld	a, (bc)
+    000003F9 6F               [ 4]  864 	ld	l, a
+    000003FA 26 00            [ 8]  865 	ld	h, #0x00
+    000003FC 11r00r00         [12]  866 	ld	de, #_spriteBanks
+    000003FF 19               [ 8]  867 	add	hl, de
+    00000400 7E               [ 8]  868 	ld	a, (hl)
+    00000401 E0r00            [12]  869 	ldh	(__current_bank + 0), a
+    00000403 0A               [ 8]  870 	ld	a, (bc)
+    00000404 6F               [ 4]  871 	ld	l, a
+    00000405 26 00            [ 8]  872 	ld	h, #0x00
+    00000407 11r00r00         [12]  873 	ld	de, #_spriteBanks
+    0000040A 19               [ 8]  874 	add	hl, de
+    0000040B 7E               [ 8]  875 	ld	a, (hl)
+    0000040C EAr00r00         [16]  876 	ld	(#_rROMB0),a
+                                    877 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:231: spriteUpdateFuncs[THIS->type]();
+    0000040F 0A               [ 8]  878 	ld	a, (bc)
+    00000410 F8 03            [12]  879 	ldhl	sp,	#3
+    00000412 77               [ 8]  880 	ld	(hl), a
+    00000413 3A               [ 8]  881 	ld	a, (hl-)
+    00000414 22               [ 8]  882 	ld	(hl+), a
+    00000415 AF               [ 4]  883 	xor	a, a
+    00000416 32               [ 8]  884 	ld	(hl-), a
+    00000417 3A               [ 8]  885 	ld	a, (hl-)
+    00000418 2B               [ 8]  886 	dec	hl
+    00000419 22               [ 8]  887 	ld	(hl+), a
+    0000041A AF               [ 4]  888 	xor	a, a
+    0000041B 32               [ 8]  889 	ld	(hl-), a
+    0000041C CB 26            [16]  890 	sla	(hl)
+    0000041E 23               [ 8]  891 	inc	hl
+    0000041F CB 16            [16]  892 	rl	(hl)
+    00000421 D1               [12]  893 	pop	de
+    00000422 D5               [16]  894 	push	de
+    00000423 21r00r00         [12]  895 	ld	hl, #_spriteUpdateFuncs
+    00000426 19               [ 8]  896 	add	hl, de
+    00000427 E5               [16]  897 	push	hl
+    00000428 7D               [ 4]  898 	ld	a, l
+    00000429 F8 04            [12]  899 	ldhl	sp,	#4
+    0000042B 77               [ 8]  900 	ld	(hl), a
+    0000042C E1               [12]  901 	pop	hl
+    0000042D 7C               [ 4]  902 	ld	a, h
+    0000042E F8 03            [12]  903 	ldhl	sp,	#3
+    00000430 32               [ 8]  904 	ld	(hl-), a
+    00000431 2A               [ 8]  905 	ld	a, (hl+)
+    00000432 5F               [ 4]  906 	ld	e, a
+    00000433 3A               [ 8]  907 	ld	a, (hl-)
+    00000434 57               [ 4]  908 	ld	d, a
+    00000435 1A               [ 8]  909 	ld	a, (de)
+    00000436 22               [ 8]  910 	ld	(hl+), a
+    00000437 13               [ 8]  911 	inc	de
+    00000438 1A               [ 8]  912 	ld	a, (de)
+    00000439 77               [ 8]  913 	ld	(hl), a
+    0000043A F8 02            [12]  914 	ldhl	sp,	#2
+    0000043C 2A               [ 8]  915 	ld	a, (hl+)
+    0000043D 66               [ 8]  916 	ld	h, (hl)
+    0000043E 6F               [ 4]  917 	ld	l, a
+    0000043F CDr00r00         [24]  918 	call	___sdcc_call_hl
+                                    919 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:233: if (THIS == scroll_target) {
+    00000442 FAr05r00         [16]  920 	ld	a, (#_THIS)
+    00000445 21r00r00         [12]  921 	ld	hl, #_scroll_target
+    00000448 96               [ 8]  922 	sub	a, (hl)
+    00000449 20 24            [12]  923 	jr	NZ, 00108$
+    0000044B FAr06r00         [16]  924 	ld	a, (#_THIS + 1)
+    0000044E 21r01r00         [12]  925 	ld	hl, #_scroll_target + 1
+    00000451 96               [ 8]  926 	sub	a, (hl)
+    00000452 20 1B            [12]  927 	jr	NZ, 00108$
+                                    928 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:234: RefreshScroll();
+    00000454 CDr00r00         [24]  929 	call	_RefreshScroll
+                                    930 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:235: if ((THIS_IDX) && (enable_flickering)) {
+    00000457 FArCCr03         [16]  931 	ld	a, (#_THIS_IDX)
+    0000045A B7               [ 4]  932 	or	a, a
+    0000045B 28 12            [12]  933 	jr	Z, 00108$
+    0000045D FAr04r00         [16]  934 	ld	a, (#_enable_flickering)
+    00000460 B7               [ 4]  935 	or	a, a
+    00000461 28 0C            [12]  936 	jr	Z, 00108$
+                                    937 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:236: BufferExchange(sprite_manager_updatables + 1, THIS_IDX);
+    00000463 FArCCr03         [16]  938 	ld	a, (_THIS_IDX)
+    00000466 06 00            [ 8]  939 	ld	b, #0x00
+    00000468 4F               [ 4]  940 	ld	c, a
+    00000469 11rADr03         [12]  941 	ld	de, #(_sprite_manager_updatables + 1)
+    0000046C CDr00r00         [24]  942 	call	_BufferExchange
+    0000046F                        943 00108$:
+                                    944 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:225: SPRITEMANAGER_ITERATE(THIS_IDX, THIS)  {
+    0000046F 21rCCr03         [12]  945 	ld	hl, #_THIS_IDX
+    00000472 34               [12]  946 	inc	(hl)
+    00000473 7E               [ 8]  947 	ld	a, (hl)
+    00000474 3C               [ 4]  948 	inc	a
+    00000475 6F               [ 4]  949 	ld	l, a
+    00000476 26 00            [ 8]  950 	ld	h, #0x00
+    00000478 11rACr03         [12]  951 	ld	de, #_sprite_manager_updatables
+    0000047B 19               [ 8]  952 	add	hl, de
+    0000047C 6E               [ 8]  953 	ld	l, (hl)
+    0000047D AF               [ 4]  954 	xor	a, a
+    0000047E 67               [ 4]  955 	ld	h, a
+    0000047F 29               [ 8]  956 	add	hl, hl
+    00000480 11r70r03         [12]  957 	ld	de, #_sprite_manager_sprites
+    00000483 19               [ 8]  958 	add	hl, de
+    00000484 5D               [ 4]  959 	ld	e, l
+    00000485 54               [ 4]  960 	ld	d, h
+    00000486 1A               [ 8]  961 	ld	a, (de)
+    00000487 21r05r00         [12]  962 	ld	hl, #_THIS
+    0000048A 22               [ 8]  963 	ld	(hl+), a
+    0000048B 13               [ 8]  964 	inc	de
+    0000048C 1A               [ 8]  965 	ld	a, (de)
+    0000048D 77               [ 8]  966 	ld	(hl), a
+    0000048E C3rC5r03         [16]  967 	jp	00116$
+    00000491                        968 00109$:
+                                    969 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:241: SWITCH_ROM(__save);
+    00000491 FArCDr03         [16]  970 	ld	a, (_SpriteManagerUpdate___save_10000_304)
+    00000494 E0r00            [12]  971 	ldh	(__current_bank + 0), a
+    00000496 EAr00r00         [16]  972 	ld	(#_rROMB0),a
+                                    973 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:243: if (enable_flickering) {
+    00000499 FAr04r00         [16]  974 	ld	a, (#_enable_flickering)
+    0000049C B7               [ 4]  975 	or	a, a
+    0000049D 28 1E            [12]  976 	jr	Z, 00117$
+                                    977 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:225: SPRITEMANAGER_ITERATE(THIS_IDX, THIS)  {
+    0000049F 21rACr03         [12]  978 	ld	hl, #_sprite_manager_updatables
+    000004A2 4E               [ 8]  979 	ld	c, (hl)
+                                    980 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:244: if (scroll_target) {
+    000004A3 21r01r00         [12]  981 	ld	hl, #_scroll_target + 1
+    000004A6 3A               [ 8]  982 	ld	a, (hl-)
+    000004A7 B6               [ 8]  983 	or	a, (hl)
+    000004A8 28 0B            [12]  984 	jr	Z, 00111$
+                                    985 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:245: BufferRotate(sprite_manager_updatables + 2, VECTOR_LEN(sprite_manager_updatables) - 1);
+    000004AA AF               [ 4]  986 	xor	a, a
+    000004AB 47               [ 4]  987 	ld	b, a
+    000004AC 0B               [ 8]  988 	dec	bc
+    000004AD 11rAEr03         [12]  989 	ld	de, #(_sprite_manager_updatables + 2)
+    000004B0 CDr00r00         [24]  990 	call	_BufferRotate
+    000004B3 18 08            [12]  991 	jr	00117$
+    000004B5                        992 00111$:
+                                    993 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:247: BufferRotate(sprite_manager_updatables + 1, VECTOR_LEN(sprite_manager_updatables));
+    000004B5 AF               [ 4]  994 	xor	a, a
+    000004B6 47               [ 4]  995 	ld	b, a
+    000004B7 11rADr03         [12]  996 	ld	de, #(_sprite_manager_updatables + 1)
+    000004BA CDr00r00         [24]  997 	call	_BufferRotate
+    000004BD                        998 00117$:
+                                    999 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:250: }
+    000004BD E8 04            [16] 1000 	add	sp, #4
+    000004BF C9               [16] 1001 	ret
+                                   1002 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:252: void SpriteManagerRenderOnly(void) {
+                                   1003 ;	---------------------------------
+                                   1004 ; Function SpriteManagerRenderOnly
+                                   1005 ; ---------------------------------
+    000004C0                       1006 _SpriteManagerRenderOnly::
+                                   1007 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:254: __save = CURRENT_BANK;
+    000004C0 F0r00            [12] 1008 	ldh	a, (__current_bank + 0)
+    000004C2 EArCEr03         [16] 1009 	ld	(#_SpriteManagerRenderOnly___save_10000_318),a
+                                   1010 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:256: SPRITEMANAGER_ITERATE(THIS_IDX, THIS) {
+    000004C5 AF               [ 4] 1011 	xor	a, a
+    000004C6 EArCCr03         [16] 1012 	ld	(#_THIS_IDX),a
+    000004C9 21rADr03         [12] 1013 	ld	hl, #_sprite_manager_updatables + 1
+    000004CC 6E               [ 8] 1014 	ld	l, (hl)
+    000004CD AF               [ 4] 1015 	xor	a, a
+    000004CE 67               [ 4] 1016 	ld	h, a
+    000004CF 29               [ 8] 1017 	add	hl, hl
+    000004D0 11r70r03         [12] 1018 	ld	de, #_sprite_manager_sprites
+    000004D3 19               [ 8] 1019 	add	hl, de
+    000004D4 5D               [ 4] 1020 	ld	e, l
+    000004D5 54               [ 4] 1021 	ld	d, h
+    000004D6 1A               [ 8] 1022 	ld	a, (de)
+    000004D7 21r05r00         [12] 1023 	ld	hl, #_THIS
+    000004DA 22               [ 8] 1024 	ld	(hl+), a
+    000004DB 13               [ 8] 1025 	inc	de
+    000004DC 1A               [ 8] 1026 	ld	a, (de)
+    000004DD 77               [ 8] 1027 	ld	(hl), a
+    000004DE 01r00r00         [12] 1028 	ld	bc, #_spriteBanks+0
+    000004E1                       1029 00103$:
+    000004E1 FArACr03         [16] 1030 	ld	a, (#_sprite_manager_updatables + 0)
+    000004E4 21rCCr03         [12] 1031 	ld	hl, #_THIS_IDX
+    000004E7 96               [ 8] 1032 	sub	a, (hl)
+    000004E8 28 44            [12] 1033 	jr	Z, 00101$
+                                   1034 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:258: SWITCH_ROM(spriteBanks[THIS->type]);
+    000004EA FAr05r00         [16] 1035 	ld	a, (_THIS)
+    000004ED 21r06r00         [12] 1036 	ld	hl, #_THIS + 1
+    000004F0 56               [ 8] 1037 	ld	d, (hl)
+    000004F1 C6 1D            [ 8] 1038 	add	a, #0x1d
+    000004F3 5F               [ 4] 1039 	ld	e, a
+    000004F4 30 01            [12] 1040 	jr	NC, 00122$
+    000004F6 14               [ 4] 1041 	inc	d
+    000004F7                       1042 00122$:
+    000004F7 1A               [ 8] 1043 	ld	a, (de)
+    000004F8 6F               [ 4] 1044 	ld	l, a
+    000004F9 26 00            [ 8] 1045 	ld	h, #0x00
+    000004FB 09               [ 8] 1046 	add	hl, bc
+    000004FC 7E               [ 8] 1047 	ld	a, (hl)
+    000004FD E0r00            [12] 1048 	ldh	(__current_bank + 0), a
+    000004FF 1A               [ 8] 1049 	ld	a, (de)
+    00000500 6F               [ 4] 1050 	ld	l, a
+    00000501 26 00            [ 8] 1051 	ld	h, #0x00
+    00000503 09               [ 8] 1052 	add	hl, bc
+    00000504 7E               [ 8] 1053 	ld	a, (hl)
+    00000505 EAr00r00         [16] 1054 	ld	(#_rROMB0),a
+                                   1055 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:260: DrawSprite();
+    00000508 C5               [16] 1056 	push	bc
+    00000509 CDr00r00         [24] 1057 	call	_DrawSprite
+    0000050C C1               [12] 1058 	pop	bc
+                                   1059 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:256: SPRITEMANAGER_ITERATE(THIS_IDX, THIS) {
+    0000050D 21rCCr03         [12] 1060 	ld	hl, #_THIS_IDX
+    00000510 34               [12] 1061 	inc	(hl)
+    00000511 7E               [ 8] 1062 	ld	a, (hl)
+    00000512 3C               [ 4] 1063 	inc	a
+    00000513 6F               [ 4] 1064 	ld	l, a
+    00000514 26 00            [ 8] 1065 	ld	h, #0x00
+    00000516 11rACr03         [12] 1066 	ld	de, #_sprite_manager_updatables
+    00000519 19               [ 8] 1067 	add	hl, de
+    0000051A 6E               [ 8] 1068 	ld	l, (hl)
+    0000051B 26 00            [ 8] 1069 	ld	h, #0x00
+    0000051D 29               [ 8] 1070 	add	hl, hl
+    0000051E 11r70r03         [12] 1071 	ld	de, #_sprite_manager_sprites
+    00000521 19               [ 8] 1072 	add	hl, de
+    00000522 5D               [ 4] 1073 	ld	e, l
+    00000523 54               [ 4] 1074 	ld	d, h
+    00000524 1A               [ 8] 1075 	ld	a, (de)
+    00000525 21r05r00         [12] 1076 	ld	hl, #_THIS
+    00000528 22               [ 8] 1077 	ld	(hl+), a
+    00000529 13               [ 8] 1078 	inc	de
+    0000052A 1A               [ 8] 1079 	ld	a, (de)
+    0000052B 77               [ 8] 1080 	ld	(hl), a
+    0000052C 18 B3            [12] 1081 	jr	00103$
+    0000052E                       1082 00101$:
+                                   1083 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:262: SWITCH_ROM(__save);
+    0000052E FArCEr03         [16] 1084 	ld	a, (_SpriteManagerRenderOnly___save_10000_318)
+    00000531 E0r00            [12] 1085 	ldh	(__current_bank + 0), a
+    00000533 EAr00r00         [16] 1086 	ld	(#_rROMB0),a
+                                   1087 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:263: }
+    00000536 C9               [16] 1088 	ret
+                                   1089 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:265: void SpriteManagerRenderPurge(void) {
+                                   1090 ;	---------------------------------
+                                   1091 ; Function SpriteManagerRenderPurge
+                                   1092 ; ---------------------------------
+    00000537                       1093 _SpriteManagerRenderPurge::
+                                   1094 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:267: __save = CURRENT_BANK;
+    00000537 F0r00            [12] 1095 	ldh	a, (__current_bank + 0)
+    00000539 EArCFr03         [16] 1096 	ld	(#_SpriteManagerRenderPurge___save_10000_322),a
+                                   1097 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:269: current = 0;
+                                   1098 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:270: SPRITEMANAGER_ITERATE(THIS_IDX, THIS) {
+    0000053C AF               [ 4] 1099 	xor	a, a
+    0000053D EArD0r03         [16] 1100 	ld	(#_SpriteManagerRenderPurge_current_10000_322), a
+    00000540 EArCCr03         [16] 1101 	ld	(#_THIS_IDX),a
+    00000543 21rADr03         [12] 1102 	ld	hl, #_sprite_manager_updatables + 1
+    00000546 6E               [ 8] 1103 	ld	l, (hl)
+    00000547 AF               [ 4] 1104 	xor	a, a
+    00000548 67               [ 4] 1105 	ld	h, a
+    00000549 29               [ 8] 1106 	add	hl, hl
+    0000054A 11r70r03         [12] 1107 	ld	de, #_sprite_manager_sprites
+    0000054D 19               [ 8] 1108 	add	hl, de
+    0000054E 5D               [ 4] 1109 	ld	e, l
+    0000054F 54               [ 4] 1110 	ld	d, h
+    00000550 1A               [ 8] 1111 	ld	a, (de)
+    00000551 21r05r00         [12] 1112 	ld	hl, #_THIS
+    00000554 22               [ 8] 1113 	ld	(hl+), a
+    00000555 13               [ 8] 1114 	inc	de
+    00000556 1A               [ 8] 1115 	ld	a, (de)
+    00000557 77               [ 8] 1116 	ld	(hl), a
+    00000558                       1117 00106$:
+    00000558 FArACr03         [16] 1118 	ld	a, (#_sprite_manager_updatables + 0)
+    0000055B 21rCCr03         [12] 1119 	ld	hl, #_THIS_IDX
+    0000055E 96               [ 8] 1120 	sub	a, (hl)
+    0000055F CAr01r06         [16] 1121 	jp	Z, 00104$
+                                   1122 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:272: SWITCH_ROM(spriteBanks[THIS->type]);
+    00000562 FAr05r00         [16] 1123 	ld	a, (_THIS)
+    00000565 5F               [ 4] 1124 	ld	e, a
+    00000566 21r06r00         [12] 1125 	ld	hl, #_THIS + 1
+    00000569 56               [ 8] 1126 	ld	d, (hl)
+    0000056A 21 1D 00         [12] 1127 	ld	hl, #0x001d
+    0000056D 19               [ 8] 1128 	add	hl, de
+    0000056E 4D               [ 4] 1129 	ld	c, l
+    0000056F 44               [ 4] 1130 	ld	b, h
+    00000570 0A               [ 8] 1131 	ld	a, (bc)
+    00000571 C6r00            [ 8] 1132 	add	a, #<(_spriteBanks)
+    00000573 6F               [ 4] 1133 	ld	l, a
+    00000574 3E 00            [ 8] 1134 	ld	a, #0x00
+    00000576 CEs00            [ 8] 1135 	adc	a, #>(_spriteBanks)
+    00000578 67               [ 4] 1136 	ld	h, a
+    00000579 7E               [ 8] 1137 	ld	a, (hl)
+    0000057A E0r00            [12] 1138 	ldh	(__current_bank + 0), a
+    0000057C 0A               [ 8] 1139 	ld	a, (bc)
+    0000057D C6r00            [ 8] 1140 	add	a, #<(_spriteBanks)
+    0000057F 6F               [ 4] 1141 	ld	l, a
+    00000580 3E 00            [ 8] 1142 	ld	a, #0x00
+    00000582 CEs00            [ 8] 1143 	adc	a, #>(_spriteBanks)
+    00000584 67               [ 4] 1144 	ld	h, a
+    00000585 7E               [ 8] 1145 	ld	a, (hl)
+    00000586 EAr00r00         [16] 1146 	ld	(#_rROMB0),a
+                                   1147 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:274: sprite_idx = VECTOR_GET(sprite_manager_updatables, THIS_IDX);
+    00000589 FArCCr03         [16] 1148 	ld	a, (#_THIS_IDX)
+    0000058C 3C               [ 4] 1149 	inc	a
+    0000058D C6rAC            [ 8] 1150 	add	a, #<(_sprite_manager_updatables)
+    0000058F 6F               [ 4] 1151 	ld	l, a
+    00000590 3E 00            [ 8] 1152 	ld	a, #0x00
+    00000592 CEs03            [ 8] 1153 	adc	a, #>(_sprite_manager_updatables)
+    00000594 67               [ 4] 1154 	ld	h, a
+    00000595 7E               [ 8] 1155 	ld	a, (hl)
+    00000596 EArD1r03         [16] 1156 	ld	(#_SpriteManagerRenderPurge_sprite_idx_10000_322),a
+                                   1157 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:276: if (THIS->marked_for_removal) {
+    00000599 21 1E 00         [12] 1158 	ld	hl, #0x001e
+    0000059C 19               [ 8] 1159 	add	hl, de
+    0000059D 7E               [ 8] 1160 	ld	a, (hl)
+    0000059E B7               [ 4] 1161 	or	a, a
+    0000059F 28 27            [12] 1162 	jr	Z, 00102$
+                                   1163 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:277: spriteDestroyFuncs[THIS->type]();
+    000005A1 0A               [ 8] 1164 	ld	a, (bc)
+    000005A2 26 00            [ 8] 1165 	ld	h, #0x00
+    000005A4 6F               [ 4] 1166 	ld	l, a
+    000005A5 29               [ 8] 1167 	add	hl, hl
+    000005A6 11r00r00         [12] 1168 	ld	de, #_spriteDestroyFuncs
+    000005A9 19               [ 8] 1169 	add	hl, de
+    000005AA 2A               [ 8] 1170 	ld	a, (hl+)
+    000005AB 4F               [ 4] 1171 	ld	c, a
+    000005AC 46               [ 8] 1172 	ld	b, (hl)
+    000005AD 69               [ 4] 1173 	ld	l, c
+    000005AE 60               [ 4] 1174 	ld	h, b
+    000005AF CDr00r00         [24] 1175 	call	___sdcc_call_hl
+                                   1176 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:279: StackPush(sprite_manager_sprites_pool, sprite_idx);
+    000005B2 21r00r00         [12] 1177 	ld	hl, #_sprite_manager_sprites_pool
+    000005B5 34               [12] 1178 	inc	(hl)
+    000005B6 20 02            [12] 1179 	jr	NZ, 00132$
+    000005B8 23               [ 8] 1180 	inc	hl
+    000005B9 34               [12] 1181 	inc	(hl)
+    000005BA                       1182 00132$:
+    000005BA FAr00r00         [16] 1183 	ld	a, (_sprite_manager_sprites_pool)
+    000005BD 4F               [ 4] 1184 	ld	c, a
+    000005BE 21r01r00         [12] 1185 	ld	hl, #_sprite_manager_sprites_pool + 1
+    000005C1 46               [ 8] 1186 	ld	b, (hl)
+    000005C2 FArD1r03         [16] 1187 	ld	a, (_SpriteManagerRenderPurge_sprite_idx_10000_322)
+    000005C5 02               [ 8] 1188 	ld	(bc), a
+    000005C6 18 17            [12] 1189 	jr	00107$
+    000005C8                       1190 00102$:
+                                   1191 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:282: DrawSprite();
+    000005C8 CDr00r00         [24] 1192 	call	_DrawSprite
+                                   1193 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:284: VECTOR_SET_DIRECT(sprite_manager_updatables, current++, sprite_idx);
+    000005CB FArD0r03         [16] 1194 	ld	a, (_SpriteManagerRenderPurge_current_10000_322)
+    000005CE 4F               [ 4] 1195 	ld	c, a
+    000005CF 21rD0r03         [12] 1196 	ld	hl, #_SpriteManagerRenderPurge_current_10000_322
+    000005D2 34               [12] 1197 	inc	(hl)
+    000005D3 0C               [ 4] 1198 	inc	c
+    000005D4 69               [ 4] 1199 	ld	l, c
+    000005D5 26 00            [ 8] 1200 	ld	h, #0x00
+    000005D7 11rACr03         [12] 1201 	ld	de, #_sprite_manager_updatables
+    000005DA 19               [ 8] 1202 	add	hl, de
+    000005DB FArD1r03         [16] 1203 	ld	a, (_SpriteManagerRenderPurge_sprite_idx_10000_322)
+    000005DE 77               [ 8] 1204 	ld	(hl), a
+    000005DF                       1205 00107$:
+                                   1206 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:270: SPRITEMANAGER_ITERATE(THIS_IDX, THIS) {
+    000005DF 21rCCr03         [12] 1207 	ld	hl, #_THIS_IDX
+    000005E2 34               [12] 1208 	inc	(hl)
+    000005E3 7E               [ 8] 1209 	ld	a, (hl)
+    000005E4 3C               [ 4] 1210 	inc	a
+    000005E5 6F               [ 4] 1211 	ld	l, a
+    000005E6 26 00            [ 8] 1212 	ld	h, #0x00
+    000005E8 11rACr03         [12] 1213 	ld	de, #_sprite_manager_updatables
+    000005EB 19               [ 8] 1214 	add	hl, de
+    000005EC 6E               [ 8] 1215 	ld	l, (hl)
+    000005ED AF               [ 4] 1216 	xor	a, a
+    000005EE 67               [ 4] 1217 	ld	h, a
+    000005EF 29               [ 8] 1218 	add	hl, hl
+    000005F0 11r70r03         [12] 1219 	ld	de, #_sprite_manager_sprites
+    000005F3 19               [ 8] 1220 	add	hl, de
+    000005F4 5D               [ 4] 1221 	ld	e, l
+    000005F5 54               [ 4] 1222 	ld	d, h
+    000005F6 1A               [ 8] 1223 	ld	a, (de)
+    000005F7 21r05r00         [12] 1224 	ld	hl, #_THIS
+    000005FA 22               [ 8] 1225 	ld	(hl+), a
+    000005FB 13               [ 8] 1226 	inc	de
+    000005FC 1A               [ 8] 1227 	ld	a, (de)
+    000005FD 77               [ 8] 1228 	ld	(hl), a
+    000005FE C3r58r05         [16] 1229 	jp	00106$
+    00000601                       1230 00104$:
+                                   1231 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:289: VECTOR_LEN(sprite_manager_updatables) = current;
+    00000601 11rACr03         [12] 1232 	ld	de, #_sprite_manager_updatables
+    00000604 FArD0r03         [16] 1233 	ld	a, (_SpriteManagerRenderPurge_current_10000_322)
+    00000607 12               [ 8] 1234 	ld	(de), a
+                                   1235 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:290: SWITCH_ROM(__save);
+    00000608 FArCFr03         [16] 1236 	ld	a, (_SpriteManagerRenderPurge___save_10000_322)
+    0000060B E0r00            [12] 1237 	ldh	(__current_bank + 0), a
+    0000060D EAr00r00         [16] 1238 	ld	(#_rROMB0),a
+                                   1239 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteManager.c:291: }
+    00000610 C9               [16] 1240 	ret
+                                   1241 	.area _CODE
+                                   1242 	.area _INITIALIZER
+    00000000                       1243 __xinit__sprite_manager_sprites_pool:
+    00000000r97r03                 1244 	.dw (_sprite_manager_sprites_poolSTACK - 1)
+    00000002                       1245 __xinit__sprite_tile_allocator_top:
+    00000002 80 00                 1246 	.dw #0x0080
+    00000004                       1247 __xinit__enable_flickering:
+    00000004 01                    1248 	.db #0x01	; 1
+    00000005                       1249 __xinit__THIS:
+    00000005 00 00                 1250 	.dw #0x0000
+                                   1251 	.area _CABS (ABS)

@@ -1,0 +1,2523 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module Scroll
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _ScrollUpdateColumnWithDelay
+                                     11 	.globl _ScrollUpdateColumnR
+                                     12 	.globl _ScrollUpdateRowWithDelay
+                                     13 	.globl _ScrollUpdateRowR
+                                     14 	.globl _ClampScrollLimits
+                                     15 	.globl _UPDATE_TILE
+                                     16 	.globl _get_win_xy_addr
+                                     17 	.globl _set_bkg_tiles
+                                     18 	.globl _set_bkg_data
+                                     19 	.globl _get_bkg_xy_addr
+                                     20 	.globl _set_vram_byte
+                                     21 	.globl _memset
+                                     22 	.globl _last_tile_loaded
+                                     23 	.globl _pending_w_map
+                                     24 	.globl _pending_h_map
+                                     25 	.globl _clamp_enabled
+                                     26 	.globl _scroll_h_border
+                                     27 	.globl _scroll_offset_y
+                                     28 	.globl _scroll_offset_x
+                                     29 	.globl _scroll_target
+                                     30 	.globl _scroll_y_vblank
+                                     31 	.globl _scroll_x_vblank
+                                     32 	.globl _scroll_y
+                                     33 	.globl _scroll_x
+                                     34 	.globl _scroll_cmap
+                                     35 	.globl _scroll_map
+                                     36 	.globl _scroll_bottom_movement_limit
+                                     37 	.globl _scroll_top_movement_limit
+                                     38 	.globl _dest_cptr
+                                     39 	.globl _dest_ptr
+                                     40 	.globl _map_cbuffer
+                                     41 	.globl _map_buffer
+                                     42 	.globl _scroll_cptr
+                                     43 	.globl _scroll_ptr
+                                     44 	.globl _tiles_0
+                                     45 	.globl _tiles_bank_0
+                                     46 	.globl _hud_map_offset
+                                     47 	.globl _pending_w_i
+                                     48 	.globl _pending_w_y
+                                     49 	.globl _pending_w_x
+                                     50 	.globl _pending_h_i
+                                     51 	.globl _pending_h_y
+                                     52 	.globl _pending_h_x
+                                     53 	.globl _scroll_bank
+                                     54 	.globl _scroll_tile_info
+                                     55 	.globl _scroll_collisions
+                                     56 	.globl _scroll_tiles_h
+                                     57 	.globl _scroll_tiles_w
+                                     58 	.globl _scroll_h
+                                     59 	.globl _scroll_w
+                                     60 	.globl _ScrollSetTiles
+                                     61 	.globl _UpdateMapTile
+                                     62 	.globl _LoadMap
+                                     63 	.globl _ScrollSetMap
+                                     64 	.globl _ScrollInitTilesFromMap
+                                     65 	.globl _ScrollCollisionsReset
+                                     66 	.globl _ScrollInitCollisionGroup
+                                     67 	.globl _ScrollInitCollisionGroupVector
+                                     68 	.globl _ScrollRemoveCollisionGroupVector
+                                     69 	.globl _ScrollInitCollisions
+                                     70 	.globl _ScrollScreenRedraw
+                                     71 	.globl _InitScroll
+                                     72 	.globl _ScrollUpdateRow
+                                     73 	.globl _ScrollUpdateColumn
+                                     74 	.globl _RefreshScroll
+                                     75 	.globl _MoveScroll
+                                     76 	.globl _GetScrollTile
+                                     77 	.globl _GetMapSize
+                                     78 ;--------------------------------------------------------
+                                     79 ; special function registers
+                                     80 ;--------------------------------------------------------
+                                     81 	.area _HRAM
+                                     82 ;--------------------------------------------------------
+                                     83 ; ram data
+                                     84 ;--------------------------------------------------------
+                                     85 	.area _DATA
+    00000000                         86 _scroll_w::
+    00000000                         87 	.ds 2
+    00000002                         88 _scroll_h::
+    00000002                         89 	.ds 2
+    00000004                         90 _scroll_tiles_w::
+    00000004                         91 	.ds 2
+    00000006                         92 _scroll_tiles_h::
+    00000006                         93 	.ds 2
+    00000008                         94 _scroll_collisions::
+    00000008                         95 	.ds 256
+    00000108                         96 _scroll_tile_info::
+    00000108                         97 	.ds 256
+    00000208                         98 _scroll_bank::
+    00000208                         99 	.ds 1
+    00000209                        100 _pending_h_x::
+    00000209                        101 	.ds 2
+    0000020B                        102 _pending_h_y::
+    0000020B                        103 	.ds 2
+    0000020D                        104 _pending_h_i::
+    0000020D                        105 	.ds 1
+    0000020E                        106 _pending_w_x::
+    0000020E                        107 	.ds 2
+    00000210                        108 _pending_w_y::
+    00000210                        109 	.ds 2
+    00000212                        110 _pending_w_i::
+    00000212                        111 	.ds 1
+    00000213                        112 _hud_map_offset::
+    00000213                        113 	.ds 2
+    00000215                        114 _tiles_bank_0::
+    00000215                        115 	.ds 1
+    00000216                        116 _tiles_0::
+    00000216                        117 	.ds 2
+    00000218                        118 _scroll_ptr::
+    00000218                        119 	.ds 2
+    0000021A                        120 _scroll_cptr::
+    0000021A                        121 	.ds 2
+    0000021C                        122 _map_buffer::
+    0000021C                        123 	.ds 23
+    00000233                        124 _map_cbuffer::
+    00000233                        125 	.ds 23
+    0000024A                        126 _dest_ptr::
+    0000024A                        127 	.ds 2
+    0000024C                        128 _dest_cptr::
+    0000024C                        129 	.ds 2
+    0000024E                        130 _temp_coord:
+    0000024E                        131 	.ds 2
+    00000250                        132 _ScrollUpdateRow___save_10001_360:
+    00000250                        133 	.ds 1
+    00000251                        134 _ScrollUpdateColumn___save_10001_373:
+    00000251                        135 	.ds 1
+    00000252                        136 _MoveScroll_current_column_10000_383:
+    00000252                        137 	.ds 2
+    00000254                        138 _MoveScroll_new_column_10000_383:
+    00000254                        139 	.ds 2
+    00000256                        140 _MoveScroll_current_row_10000_383:
+    00000256                        141 	.ds 2
+    00000258                        142 _MoveScroll_new_row_10000_383:
+    00000258                        143 	.ds 2
+    0000025A                        144 _MoveScroll___save_10000_383:
+    0000025A                        145 	.ds 1
+                                    146 ;--------------------------------------------------------
+                                    147 ; ram data
+                                    148 ;--------------------------------------------------------
+                                    149 	.area _INITIALIZED
+    00000000                        150 _scroll_top_movement_limit::
+    00000000                        151 	.ds 1
+    00000001                        152 _scroll_bottom_movement_limit::
+    00000001                        153 	.ds 1
+    00000002                        154 _scroll_map::
+    00000002                        155 	.ds 2
+    00000004                        156 _scroll_cmap::
+    00000004                        157 	.ds 2
+    00000006                        158 _scroll_x::
+    00000006                        159 	.ds 2
+    00000008                        160 _scroll_y::
+    00000008                        161 	.ds 2
+    0000000A                        162 _scroll_x_vblank::
+    0000000A                        163 	.ds 2
+    0000000C                        164 _scroll_y_vblank::
+    0000000C                        165 	.ds 2
+    0000000E                        166 _scroll_target::
+    0000000E                        167 	.ds 2
+    00000010                        168 _scroll_offset_x::
+    00000010                        169 	.ds 1
+    00000011                        170 _scroll_offset_y::
+    00000011                        171 	.ds 1
+    00000012                        172 _scroll_h_border::
+    00000012                        173 	.ds 2
+    00000014                        174 _clamp_enabled::
+    00000014                        175 	.ds 1
+    00000015                        176 _pending_h_map::
+    00000015                        177 	.ds 2
+    00000017                        178 _pending_w_map::
+    00000017                        179 	.ds 2
+    00000019                        180 _last_tile_loaded::
+    00000019                        181 	.ds 1
+                                    182 ;--------------------------------------------------------
+                                    183 ; absolute external ram data
+                                    184 ;--------------------------------------------------------
+                                    185 	.area _DABS (ABS)
+                                    186 ;--------------------------------------------------------
+                                    187 ; global & static initialisations
+                                    188 ;--------------------------------------------------------
+                                    189 	.area _HOME
+                                    190 	.area _GSINIT
+                                    191 	.area _GSFINAL
+                                    192 	.area _GSINIT
+                                    193 ;--------------------------------------------------------
+                                    194 ; Home
+                                    195 ;--------------------------------------------------------
+                                    196 	.area _HOME
+                                    197 	.area _HOME
+                                    198 ;--------------------------------------------------------
+                                    199 ; code
+                                    200 ;--------------------------------------------------------
+                                    201 	.area _CODE
+                                    202 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:76: UINT16 ScrollSetTiles(UINT8 first_tile, UINT8 tiles_bank, const struct TilesInfo* tiles) {
+                                    203 ;	---------------------------------
+                                    204 ; Function ScrollSetTiles
+                                    205 ; ---------------------------------
+    00000000                        206 _ScrollSetTiles::
+    00000000 E8 F8            [16]  207 	add	sp, #-8
+    00000002 F8 07            [12]  208 	ldhl	sp,	#7
+    00000004 77               [ 8]  209 	ld	(hl), a
+                                    210 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:81: UINT16 offset = first_tile;
+    00000005 7E               [ 8]  211 	ld	a, (hl)
+    00000006 F8 00            [12]  212 	ldhl	sp,	#0
+    00000008 22               [ 8]  213 	ld	(hl+), a
+    00000009 36 00            [12]  214 	ld	(hl), #0x00
+                                    215 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:83: if(first_tile == 0) {
+    0000000B F8 07            [12]  216 	ldhl	sp,	#7
+    0000000D 7E               [ 8]  217 	ld	a, (hl)
+    0000000E B7               [ 4]  218 	or	a, a
+    0000000F 20 10            [12]  219 	jr	NZ, 00102$
+                                    220 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:84: tiles_bank_0 = tiles_bank;
+    00000011 21r15r02         [12]  221 	ld	hl, #_tiles_bank_0
+    00000014 73               [ 8]  222 	ld	(hl), e
+                                    223 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:85: tiles_0 = tiles;
+    00000015 F8 0A            [12]  224 	ldhl	sp,	#10
+    00000017 7E               [ 8]  225 	ld	a, (hl)
+    00000018 EAr16r02         [16]  226 	ld	(#_tiles_0),a
+    0000001B F8 0B            [12]  227 	ldhl	sp,	#11
+    0000001D 7E               [ 8]  228 	ld	a, (hl)
+    0000001E EAr17r02         [16]  229 	ld	(#_tiles_0 + 1),a
+    00000021                        230 00102$:
+                                    231 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:88: UINT8 __save = CURRENT_BANK;
+    00000021 F0r00            [12]  232 	ldh	a, (__current_bank + 0)
+    00000023 F8 02            [12]  233 	ldhl	sp,	#2
+    00000025 77               [ 8]  234 	ld	(hl), a
+                                    235 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:89: SWITCH_ROM(tiles_bank);
+    00000026 7B               [ 4]  236 	ld	a, e
+    00000027 E0r00            [12]  237 	ldh	(__current_bank + 0), a
+    00000029 21r00r00         [12]  238 	ld	hl, #_rROMB0
+    0000002C 73               [ 8]  239 	ld	(hl), e
+                                    240 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:90: n_tiles = tiles->num_frames;
+    0000002D F8 0A            [12]  241 	ldhl	sp,	#10
+    0000002F 2A               [ 8]  242 	ld	a, (hl+)
+    00000030 4F               [ 4]  243 	ld	c, a
+    00000031 46               [ 8]  244 	ld	b, (hl)
+    00000032 0A               [ 8]  245 	ld	a, (bc)
+    00000033 F8 06            [12]  246 	ldhl	sp,	#6
+    00000035 77               [ 8]  247 	ld	(hl), a
+                                    248 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:91: palette_entries = tiles->color_data;
+    00000036 21 06 00         [12]  249 	ld	hl, #0x0006
+    00000039 09               [ 8]  250 	add	hl, bc
+    0000003A 5D               [ 4]  251 	ld	e, l
+    0000003B 54               [ 4]  252 	ld	d, h
+    0000003C 1A               [ 8]  253 	ld	a, (de)
+    0000003D F8 03            [12]  254 	ldhl	sp,	#3
+    0000003F 22               [ 8]  255 	ld	(hl+), a
+    00000040 13               [ 8]  256 	inc	de
+    00000041 1A               [ 8]  257 	ld	a, (de)
+    00000042 77               [ 8]  258 	ld	(hl), a
+                                    259 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:96: set_bkg_data(first_tile, n_tiles, tiles->data);
+    00000043 69               [ 4]  260 	ld	l, c
+    00000044 60               [ 4]  261 	ld	h, b
+    00000045 23               [ 8]  262 	inc	hl
+    00000046 2A               [ 8]  263 	ld	a, (hl+)
+    00000047 4F               [ 4]  264 	ld	c, a
+    00000048 46               [ 8]  265 	ld	b, (hl)
+    00000049 C5               [16]  266 	push	bc
+    0000004A F8 08            [12]  267 	ldhl	sp,	#8
+    0000004C 2A               [ 8]  268 	ld	a, (hl+)
+    0000004D 57               [ 4]  269 	ld	d, a
+    0000004E 5E               [ 8]  270 	ld	e, (hl)
+    0000004F D5               [16]  271 	push	de
+    00000050 CDr00r00         [24]  272 	call	_set_bkg_data
+    00000053 E8 04            [16]  273 	add	sp, #4
+                                    274 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:99: last_tile_loaded = first_tile + n_tiles;
+    00000055 F8 07            [12]  275 	ldhl	sp,	#7
+    00000057 3A               [ 8]  276 	ld	a, (hl-)
+    00000058 86               [ 8]  277 	add	a, (hl)
+    00000059 EAr19r00         [16]  278 	ld	(#_last_tile_loaded),a
+                                    279 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:100: for(i = first_tile; i != last_tile_loaded; ++i) {
+    0000005C F8 07            [12]  280 	ldhl	sp,	#7
+    0000005E 4E               [ 8]  281 	ld	c, (hl)
+    0000005F                        282 00105$:
+    0000005F FAr19r00         [16]  283 	ld	a, (#_last_tile_loaded)
+    00000062 91               [ 4]  284 	sub	a, c
+    00000063 28 37            [12]  285 	jr	Z, 00103$
+                                    286 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:101: scroll_tile_info[i] = palette_entries ? palette_entries[i - first_tile] : 0;
+    00000065 11r08r01         [12]  287 	ld	de, #_scroll_tile_info
+    00000068 69               [ 4]  288 	ld	l, c
+    00000069 26 00            [ 8]  289 	ld	h, #0x00
+    0000006B 19               [ 8]  290 	add	hl, de
+    0000006C E5               [16]  291 	push	hl
+    0000006D 7D               [ 4]  292 	ld	a, l
+    0000006E F8 07            [12]  293 	ldhl	sp,	#7
+    00000070 77               [ 8]  294 	ld	(hl), a
+    00000071 E1               [12]  295 	pop	hl
+    00000072 7C               [ 4]  296 	ld	a, h
+    00000073 F8 06            [12]  297 	ldhl	sp,	#6
+    00000075 32               [ 8]  298 	ld	(hl-), a
+    00000076 2B               [ 8]  299 	dec	hl
+    00000077 3A               [ 8]  300 	ld	a, (hl-)
+    00000078 B6               [ 8]  301 	or	a, (hl)
+    00000079 28 16            [12]  302 	jr	Z, 00109$
+    0000007B 79               [ 4]  303 	ld	a, c
+    0000007C F8 07            [12]  304 	ldhl	sp,	#7
+    0000007E 5E               [ 8]  305 	ld	e, (hl)
+    0000007F 16 00            [ 8]  306 	ld	d, #0x00
+    00000081 93               [ 4]  307 	sub	a, e
+    00000082 5F               [ 4]  308 	ld	e, a
+    00000083 9F               [ 4]  309 	sbc	a, a
+    00000084 92               [ 4]  310 	sub	a, d
+    00000085 57               [ 4]  311 	ld	d, a
+    00000086 F8 03            [12]  312 	ldhl	sp,	#3
+    00000088 2A               [ 8]  313 	ld	a,	(hl+)
+    00000089 66               [ 8]  314 	ld	h, (hl)
+    0000008A 6F               [ 4]  315 	ld	l, a
+    0000008B 19               [ 8]  316 	add	hl, de
+    0000008C 5D               [ 4]  317 	ld	e, l
+    0000008D 54               [ 4]  318 	ld	d, h
+    0000008E 1A               [ 8]  319 	ld	a, (de)
+    0000008F 18 01            [12]  320 	jr	00110$
+    00000091                        321 00109$:
+    00000091 AF               [ 4]  322 	xor	a, a
+    00000092                        323 00110$:
+    00000092 F8 05            [12]  324 	ldhl	sp,	#5
+    00000094 5E               [ 8]  325 	ld	e, (hl)
+    00000095 23               [ 8]  326 	inc	hl
+    00000096 66               [ 8]  327 	ld	h, (hl)
+    00000097 6B               [ 4]  328 	ld	l, e
+    00000098 77               [ 8]  329 	ld	(hl), a
+                                    330 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:100: for(i = first_tile; i != last_tile_loaded; ++i) {
+    00000099 0C               [ 4]  331 	inc	c
+    0000009A 18 C3            [12]  332 	jr	00105$
+    0000009C                        333 00103$:
+                                    334 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:121: SWITCH_ROM(__save);
+    0000009C F8 02            [12]  335 	ldhl	sp,	#2
+    0000009E 7E               [ 8]  336 	ld	a, (hl)
+    0000009F E0r00            [12]  337 	ldh	(__current_bank + 0), a
+    000000A1 7E               [ 8]  338 	ld	a, (hl)
+    000000A2 EAr00r00         [16]  339 	ld	(#_rROMB0),a
+                                    340 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:123: return offset;
+    000000A5 C1               [12]  341 	pop	bc
+    000000A6 C5               [16]  342 	push	bc
+                                    343 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:124: }
+    000000A7 E8 08            [16]  344 	add	sp, #8
+    000000A9 E1               [12]  345 	pop	hl
+    000000AA F1               [12]  346 	pop	af
+    000000AB E9               [ 4]  347 	jp	(hl)
+                                    348 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:126: void UpdateMapTile(UINT8 bg_or_win, UINT8 x, UINT8 y, UINT16 map_offset, UINT8 data, UINT8* attr) {
+                                    349 ;	---------------------------------
+                                    350 ; Function UpdateMapTile
+                                    351 ; ---------------------------------
+    000000AC                        352 _UpdateMapTile::
+    000000AC 4B               [ 4]  353 	ld	c, e
+                                    354 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:128: UINT8* addr = (bg_or_win == TARGET_BKG) ? get_bkg_xy_addr(x, y) : get_win_xy_addr(x, y);
+    000000AD B7               [ 4]  355 	or	a, a
+    000000AE 20 09            [12]  356 	jr	NZ, 00104$
+    000000B0 F8 02            [12]  357 	ldhl	sp,	#2
+    000000B2 5E               [ 8]  358 	ld	e, (hl)
+    000000B3 79               [ 4]  359 	ld	a, c
+    000000B4 CDr00r00         [24]  360 	call	_get_bkg_xy_addr
+    000000B7 18 07            [12]  361 	jr	00105$
+    000000B9                        362 00104$:
+    000000B9 F8 02            [12]  363 	ldhl	sp,	#2
+    000000BB 5E               [ 8]  364 	ld	e, (hl)
+    000000BC 79               [ 4]  365 	ld	a, c
+    000000BD CDr00r00         [24]  366 	call	_get_win_xy_addr
+    000000C0                        367 00105$:
+                                    368 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:133: ScrollSetAttrTileAddr(addr, (UINT8)map_offset + data, (attr) ? *attr : (UINT8)(map_offset >> 8) + scroll_tile_info[(UINT8)map_offset + data]);
+    000000C0 F8 03            [12]  369 	ldhl	sp,	#3
+    000000C2 2A               [ 8]  370 	ld	a, (hl+)
+    000000C3 23               [ 8]  371 	inc	hl
+    000000C4 86               [ 8]  372 	add	a, (hl)
+                                    373 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Scroll.h:168: set_vram_byte(addr, t);
+    000000C5 59               [ 4]  374 	ld	e, c
+    000000C6 50               [ 4]  375 	ld	d, b
+    000000C7 CDr00r00         [24]  376 	call	_set_vram_byte
+                                    377 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:133: ScrollSetAttrTileAddr(addr, (UINT8)map_offset + data, (attr) ? *attr : (UINT8)(map_offset >> 8) + scroll_tile_info[(UINT8)map_offset + data]);
+                                    378 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:134: }
+    000000CA E1               [12]  379 	pop	hl
+    000000CB E8 06            [16]  380 	add	sp, #6
+    000000CD E9               [ 4]  381 	jp	(hl)
+                                    382 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:136: UINT16 LoadMap(UINT8 bg_or_win, UINT8 x, UINT8 y, UINT8 map_bank, struct MapInfo* map) {
+                                    383 ;	---------------------------------
+                                    384 ; Function LoadMap
+                                    385 ; ---------------------------------
+    000000CE                        386 _LoadMap::
+    000000CE E8 F1            [16]  387 	add	sp, #-15
+    000000D0 F8 09            [12]  388 	ldhl	sp,	#9
+    000000D2 32               [ 8]  389 	ld	(hl-), a
+    000000D3 73               [ 8]  390 	ld	(hl), e
+                                    391 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:141: UINT8 __save = CURRENT_BANK;
+    000000D4 F0r00            [12]  392 	ldh	a, (__current_bank + 0)
+    000000D6 F8 00            [12]  393 	ldhl	sp,	#0
+    000000D8 77               [ 8]  394 	ld	(hl), a
+                                    395 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:142: SWITCH_ROM(map_bank);
+    000000D9 F8 12            [12]  396 	ldhl	sp,	#18
+    000000DB 7E               [ 8]  397 	ld	a, (hl)
+    000000DC E0r00            [12]  398 	ldh	(__current_bank + 0), a
+    000000DE EAr00r00         [16]  399 	ld	(#_rROMB0),a
+                                    400 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:146: UINT8 load_tiles = (tiles_bank_0 != map->tiles_bank) || (tiles_0 != map->tiles); // If the tile set is the same as the one used for the scroll or the bg (which is stored in tiles_bank_0 and tiles0) then do not load the tiles again
+    000000E1 F8 13            [12]  401 	ldhl	sp,	#19
+    000000E3 2A               [ 8]  402 	ld	a, (hl+)
+    000000E4 4F               [ 4]  403 	ld	c, a
+    000000E5 46               [ 8]  404 	ld	b, (hl)
+    000000E6 21 08 00         [12]  405 	ld	hl, #0x0008
+    000000E9 09               [ 8]  406 	add	hl, bc
+    000000EA E5               [16]  407 	push	hl
+    000000EB 7D               [ 4]  408 	ld	a, l
+    000000EC F8 0D            [12]  409 	ldhl	sp,	#13
+    000000EE 77               [ 8]  410 	ld	(hl), a
+    000000EF E1               [12]  411 	pop	hl
+    000000F0 7C               [ 4]  412 	ld	a, h
+    000000F1 F8 0C            [12]  413 	ldhl	sp,	#12
+    000000F3 32               [ 8]  414 	ld	(hl-), a
+    000000F4 2A               [ 8]  415 	ld	a, (hl+)
+    000000F5 5F               [ 4]  416 	ld	e, a
+    000000F6 3A               [ 8]  417 	ld	a, (hl-)
+    000000F7 2B               [ 8]  418 	dec	hl
+    000000F8 57               [ 4]  419 	ld	d, a
+    000000F9 1A               [ 8]  420 	ld	a, (de)
+    000000FA 77               [ 8]  421 	ld	(hl), a
+    000000FB 21 09 00         [12]  422 	ld	hl, #0x0009
+    000000FE 09               [ 8]  423 	add	hl, bc
+    000000FF E5               [16]  424 	push	hl
+    00000100 7D               [ 4]  425 	ld	a, l
+    00000101 F8 0F            [12]  426 	ldhl	sp,	#15
+    00000103 77               [ 8]  427 	ld	(hl), a
+    00000104 E1               [12]  428 	pop	hl
+    00000105 7C               [ 4]  429 	ld	a, h
+    00000106 F8 0E            [12]  430 	ldhl	sp,	#14
+    00000108 77               [ 8]  431 	ld	(hl), a
+    00000109 FAr15r02         [16]  432 	ld	a, (#_tiles_bank_0)
+    0000010C F8 0A            [12]  433 	ldhl	sp,	#10
+    0000010E 96               [ 8]  434 	sub	a, (hl)
+    0000010F 20 1F            [12]  435 	jr	NZ, 00122$
+    00000111 F8 0D            [12]  436 	ldhl	sp,#13
+    00000113 2A               [ 8]  437 	ld	a, (hl+)
+    00000114 5F               [ 4]  438 	ld	e, a
+    00000115 56               [ 8]  439 	ld	d, (hl)
+    00000116 1A               [ 8]  440 	ld	a, (de)
+    00000117 F8 06            [12]  441 	ldhl	sp,	#6
+    00000119 22               [ 8]  442 	ld	(hl+), a
+    0000011A 13               [ 8]  443 	inc	de
+    0000011B 1A               [ 8]  444 	ld	a, (de)
+    0000011C 77               [ 8]  445 	ld	(hl), a
+    0000011D FAr16r02         [16]  446 	ld	a, (#_tiles_0)
+    00000120 F8 06            [12]  447 	ldhl	sp,	#6
+    00000122 96               [ 8]  448 	sub	a, (hl)
+    00000123 20 0B            [12]  449 	jr	NZ, 00122$
+    00000125 FAr17r02         [16]  450 	ld	a, (#_tiles_0 + 1)
+    00000128 F8 07            [12]  451 	ldhl	sp,	#7
+    0000012A 96               [ 8]  452 	sub	a, (hl)
+    0000012B 20 03            [12]  453 	jr	NZ, 00122$
+    0000012D AF               [ 4]  454 	xor	a, a
+    0000012E 18 02            [12]  455 	jr	00123$
+    00000130                        456 00122$:
+    00000130 3E 01            [ 8]  457 	ld	a, #0x01
+    00000132                        458 00123$:
+                                    459 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:147: if (load_tiles) {
+    00000132 B7               [ 4]  460 	or	a, a
+    00000133 28 64            [12]  461 	jr	Z, 00107$
+                                    462 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:148: if (map->extra_tiles) {
+    00000135 21 0C 00         [12]  463 	ld	hl, #0x000c
+    00000138 09               [ 8]  464 	add	hl, bc
+    00000139 2A               [ 8]  465 	ld	a,	(hl+)
+    0000013A 66               [ 8]  466 	ld	h, (hl)
+    0000013B 6F               [ 4]  467 	ld	l, a
+    0000013C B4               [ 4]  468 	or	a, h
+    0000013D 28 3D            [12]  469 	jr	Z, 00104$
+                                    470 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:149: map_offset = ScrollSetTiles(last_tile_loaded, map->extra_tiles_bank, map->extra_tiles);
+    0000013F 79               [ 4]  471 	ld	a, c
+    00000140 C6 0B            [ 8]  472 	add	a, #0x0b
+    00000142 5F               [ 4]  473 	ld	e, a
+    00000143 78               [ 4]  474 	ld	a, b
+    00000144 CE 00            [ 8]  475 	adc	a, #0x00
+    00000146 57               [ 4]  476 	ld	d, a
+    00000147 1A               [ 8]  477 	ld	a, (de)
+    00000148 C5               [16]  478 	push	bc
+    00000149 E5               [16]  479 	push	hl
+    0000014A 5F               [ 4]  480 	ld	e, a
+    0000014B FAr19r00         [16]  481 	ld	a, (_last_tile_loaded)
+    0000014E CDr00r00         [24]  482 	call	_ScrollSetTiles
+    00000151 F8 03            [12]  483 	ldhl	sp,	#3
+    00000153 79               [ 4]  484 	ld	a, c
+    00000154 22               [ 8]  485 	ld	(hl+), a
+    00000155 70               [ 8]  486 	ld	(hl), b
+    00000156 C1               [12]  487 	pop	bc
+                                    488 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:150: if (map->tiles) ScrollSetTiles(last_tile_loaded, map->tiles_bank, map->tiles);
+    00000157 F8 0D            [12]  489 	ldhl	sp,#13
+    00000159 2A               [ 8]  490 	ld	a, (hl+)
+    0000015A 5F               [ 4]  491 	ld	e, a
+    0000015B 3A               [ 8]  492 	ld	a, (hl-)
+    0000015C 57               [ 4]  493 	ld	d, a
+    0000015D 1A               [ 8]  494 	ld	a, (de)
+    0000015E 22               [ 8]  495 	ld	(hl+), a
+    0000015F 13               [ 8]  496 	inc	de
+    00000160 1A               [ 8]  497 	ld	a, (de)
+    00000161 77               [ 8]  498 	ld	(hl), a
+    00000162 3A               [ 8]  499 	ld	a, (hl-)
+    00000163 B6               [ 8]  500 	or	a, (hl)
+    00000164 28 38            [12]  501 	jr	Z, 00108$
+    00000166 2B               [ 8]  502 	dec	hl
+    00000167 2B               [ 8]  503 	dec	hl
+    00000168 2A               [ 8]  504 	ld	a, (hl+)
+    00000169 5F               [ 4]  505 	ld	e, a
+    0000016A 2A               [ 8]  506 	ld	a, (hl+)
+    0000016B 57               [ 4]  507 	ld	d, a
+    0000016C 1A               [ 8]  508 	ld	a, (de)
+    0000016D C5               [16]  509 	push	bc
+    0000016E 5E               [ 8]  510 	ld	e, (hl)
+    0000016F 23               [ 8]  511 	inc	hl
+    00000170 56               [ 8]  512 	ld	d, (hl)
+    00000171 D5               [16]  513 	push	de
+    00000172 5F               [ 4]  514 	ld	e, a
+    00000173 FAr19r00         [16]  515 	ld	a, (_last_tile_loaded)
+    00000176 CDr00r00         [24]  516 	call	_ScrollSetTiles
+    00000179 C1               [12]  517 	pop	bc
+    0000017A 18 22            [12]  518 	jr	00108$
+    0000017C                        519 00104$:
+                                    520 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:152: map_offset = ScrollSetTiles(last_tile_loaded, map->tiles_bank, map->tiles);
+    0000017C F8 0D            [12]  521 	ldhl	sp,#13
+    0000017E 2A               [ 8]  522 	ld	a, (hl+)
+    0000017F 5F               [ 4]  523 	ld	e, a
+    00000180 56               [ 8]  524 	ld	d, (hl)
+    00000181 1A               [ 8]  525 	ld	a, (de)
+    00000182 6F               [ 4]  526 	ld	l, a
+    00000183 13               [ 8]  527 	inc	de
+    00000184 1A               [ 8]  528 	ld	a, (de)
+    00000185 67               [ 4]  529 	ld	h, a
+    00000186 C5               [16]  530 	push	bc
+    00000187 E5               [16]  531 	push	hl
+    00000188 F8 0E            [12]  532 	ldhl	sp,	#14
+    0000018A 5E               [ 8]  533 	ld	e, (hl)
+    0000018B FAr19r00         [16]  534 	ld	a, (_last_tile_loaded)
+    0000018E CDr00r00         [24]  535 	call	_ScrollSetTiles
+    00000191 F8 03            [12]  536 	ldhl	sp,	#3
+    00000193 79               [ 4]  537 	ld	a, c
+    00000194 22               [ 8]  538 	ld	(hl+), a
+    00000195 70               [ 8]  539 	ld	(hl), b
+    00000196 C1               [12]  540 	pop	bc
+    00000197 18 05            [12]  541 	jr	00108$
+    00000199                        542 00107$:
+                                    543 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:155: map_offset = 0;
+    00000199 AF               [ 4]  544 	xor	a, a
+    0000019A F8 01            [12]  545 	ldhl	sp,	#1
+    0000019C 22               [ 8]  546 	ld	(hl+), a
+    0000019D 77               [ 8]  547 	ld	(hl), a
+    0000019E                        548 00108$:
+                                    549 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:159: UINT8* data = map->data;
+    0000019E 59               [ 4]  550 	ld	e, c
+    0000019F 50               [ 4]  551 	ld	d, b
+    000001A0 1A               [ 8]  552 	ld	a, (de)
+    000001A1 F8 0D            [12]  553 	ldhl	sp,	#13
+    000001A3 22               [ 8]  554 	ld	(hl+), a
+    000001A4 13               [ 8]  555 	inc	de
+    000001A5 1A               [ 8]  556 	ld	a, (de)
+    000001A6 77               [ 8]  557 	ld	(hl), a
+                                    558 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:160: UINT8* attrs = map->attributes;
+    000001A7 21 06 00         [12]  559 	ld	hl, #0x0006
+    000001AA 09               [ 8]  560 	add	hl, bc
+    000001AB 5D               [ 4]  561 	ld	e, l
+    000001AC 54               [ 4]  562 	ld	d, h
+    000001AD 1A               [ 8]  563 	ld	a, (de)
+    000001AE F8 0B            [12]  564 	ldhl	sp,	#11
+    000001B0 22               [ 8]  565 	ld	(hl+), a
+    000001B1 13               [ 8]  566 	inc	de
+    000001B2 1A               [ 8]  567 	ld	a, (de)
+    000001B3 77               [ 8]  568 	ld	(hl), a
+                                    569 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:161: for (UINT8 j = 0; j < map->height; ++j) {
+    000001B4 21 02 00         [12]  570 	ld	hl, #0x0002
+    000001B7 09               [ 8]  571 	add	hl, bc
+    000001B8 E5               [16]  572 	push	hl
+    000001B9 7D               [ 4]  573 	ld	a, l
+    000001BA F8 05            [12]  574 	ldhl	sp,	#5
+    000001BC 77               [ 8]  575 	ld	(hl), a
+    000001BD E1               [12]  576 	pop	hl
+    000001BE 7C               [ 4]  577 	ld	a, h
+    000001BF F8 04            [12]  578 	ldhl	sp,	#4
+    000001C1 77               [ 8]  579 	ld	(hl), a
+    000001C2 21 04 00         [12]  580 	ld	hl, #0x0004
+    000001C5 09               [ 8]  581 	add	hl, bc
+    000001C6 E5               [16]  582 	push	hl
+    000001C7 7D               [ 4]  583 	ld	a, l
+    000001C8 F8 07            [12]  584 	ldhl	sp,	#7
+    000001CA 77               [ 8]  585 	ld	(hl), a
+    000001CB E1               [12]  586 	pop	hl
+    000001CC 7C               [ 4]  587 	ld	a, h
+    000001CD F8 06            [12]  588 	ldhl	sp,	#6
+    000001CF 77               [ 8]  589 	ld	(hl), a
+    000001D0 F8 0A            [12]  590 	ldhl	sp,	#10
+    000001D2 36 00            [12]  591 	ld	(hl), #0x00
+    000001D4                        592 00117$:
+    000001D4 F8 05            [12]  593 	ldhl	sp,#5
+    000001D6 2A               [ 8]  594 	ld	a, (hl+)
+    000001D7 5F               [ 4]  595 	ld	e, a
+    000001D8 56               [ 8]  596 	ld	d, (hl)
+    000001D9 1A               [ 8]  597 	ld	a, (de)
+    000001DA 4F               [ 4]  598 	ld	c, a
+    000001DB 13               [ 8]  599 	inc	de
+    000001DC 1A               [ 8]  600 	ld	a, (de)
+    000001DD 47               [ 4]  601 	ld	b, a
+    000001DE F8 0A            [12]  602 	ldhl	sp,	#10
+    000001E0 5E               [ 8]  603 	ld	e, (hl)
+    000001E1 16 00            [ 8]  604 	ld	d, #0x00
+    000001E3 7B               [ 4]  605 	ld	a, e
+    000001E4 91               [ 4]  606 	sub	a, c
+    000001E5 7A               [ 4]  607 	ld	a, d
+    000001E6 98               [ 4]  608 	sbc	a, b
+    000001E7 30 5F            [12]  609 	jr	NC, 00112$
+                                    610 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:162: for (UINT8 i = 0; i < map->width; ++i) {
+    000001E9 F8 11            [12]  611 	ldhl	sp,	#17
+    000001EB 7E               [ 8]  612 	ld	a, (hl)
+    000001EC F8 0A            [12]  613 	ldhl	sp,	#10
+    000001EE 86               [ 8]  614 	add	a, (hl)
+    000001EF F8 07            [12]  615 	ldhl	sp,	#7
+    000001F1 77               [ 8]  616 	ld	(hl), a
+    000001F2 0E 00            [ 8]  617 	ld	c, #0x00
+    000001F4                        618 00114$:
+    000001F4 F8 03            [12]  619 	ldhl	sp,#3
+    000001F6 2A               [ 8]  620 	ld	a, (hl+)
+    000001F7 5F               [ 4]  621 	ld	e, a
+    000001F8 56               [ 8]  622 	ld	d, (hl)
+    000001F9 1A               [ 8]  623 	ld	a, (de)
+    000001FA 47               [ 4]  624 	ld	b, a
+    000001FB 13               [ 8]  625 	inc	de
+    000001FC 1A               [ 8]  626 	ld	a, (de)
+    000001FD 6F               [ 4]  627 	ld	l, a
+    000001FE 59               [ 4]  628 	ld	e, c
+    000001FF 16 00            [ 8]  629 	ld	d, #0x00
+    00000201 7B               [ 4]  630 	ld	a, e
+    00000202 90               [ 4]  631 	sub	a, b
+    00000203 7A               [ 4]  632 	ld	a, d
+    00000204 9D               [ 4]  633 	sbc	a, l
+    00000205 30 3C            [12]  634 	jr	NC, 00134$
+                                    635 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:163: UpdateMapTile(bg_or_win, x + i, y + j, map_offset, *data, attrs);
+    00000207 F8 0D            [12]  636 	ldhl	sp,#13
+    00000209 2A               [ 8]  637 	ld	a, (hl+)
+    0000020A 5F               [ 4]  638 	ld	e, a
+    0000020B 56               [ 8]  639 	ld	d, (hl)
+    0000020C 1A               [ 8]  640 	ld	a, (de)
+    0000020D 47               [ 4]  641 	ld	b, a
+    0000020E F8 08            [12]  642 	ldhl	sp,	#8
+    00000210 7E               [ 8]  643 	ld	a, (hl)
+    00000211 81               [ 4]  644 	add	a, c
+    00000212 C5               [16]  645 	push	bc
+    00000213 F8 0D            [12]  646 	ldhl	sp,	#13
+    00000215 5E               [ 8]  647 	ld	e, (hl)
+    00000216 23               [ 8]  648 	inc	hl
+    00000217 56               [ 8]  649 	ld	d, (hl)
+    00000218 D5               [16]  650 	push	de
+    00000219 C5               [16]  651 	push	bc
+    0000021A 33               [ 8]  652 	inc	sp
+    0000021B F8 06            [12]  653 	ldhl	sp,	#6
+    0000021D 5E               [ 8]  654 	ld	e, (hl)
+    0000021E 23               [ 8]  655 	inc	hl
+    0000021F 56               [ 8]  656 	ld	d, (hl)
+    00000220 D5               [16]  657 	push	de
+    00000221 F8 0E            [12]  658 	ldhl	sp,	#14
+    00000223 66               [ 8]  659 	ld	h, (hl)
+    00000224 E5               [16]  660 	push	hl
+    00000225 33               [ 8]  661 	inc	sp
+    00000226 5F               [ 4]  662 	ld	e, a
+    00000227 F8 11            [12]  663 	ldhl	sp,	#17
+    00000229 7E               [ 8]  664 	ld	a, (hl)
+    0000022A CDrACr00         [24]  665 	call	_UpdateMapTile
+    0000022D C1               [12]  666 	pop	bc
+                                    667 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:165: ++data;
+    0000022E F8 0D            [12]  668 	ldhl	sp,	#13
+    00000230 34               [12]  669 	inc	(hl)
+    00000231 20 02            [12]  670 	jr	NZ, 00200$
+    00000233 23               [ 8]  671 	inc	hl
+    00000234 34               [12]  672 	inc	(hl)
+    00000235                        673 00200$:
+                                    674 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:166: if (attrs)
+    00000235 F8 0C            [12]  675 	ldhl	sp,	#12
+    00000237 3A               [ 8]  676 	ld	a, (hl-)
+    00000238 B6               [ 8]  677 	or	a, (hl)
+    00000239 28 05            [12]  678 	jr	Z, 00115$
+                                    679 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:167: ++attrs;
+    0000023B 34               [12]  680 	inc	(hl)
+    0000023C 20 02            [12]  681 	jr	NZ, 00201$
+    0000023E 23               [ 8]  682 	inc	hl
+    0000023F 34               [12]  683 	inc	(hl)
+    00000240                        684 00201$:
+    00000240                        685 00115$:
+                                    686 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:162: for (UINT8 i = 0; i < map->width; ++i) {
+    00000240 0C               [ 4]  687 	inc	c
+    00000241 18 B1            [12]  688 	jr	00114$
+    00000243                        689 00134$:
+                                    690 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:161: for (UINT8 j = 0; j < map->height; ++j) {
+    00000243 F8 0A            [12]  691 	ldhl	sp,	#10
+    00000245 34               [12]  692 	inc	(hl)
+    00000246 18 8C            [12]  693 	jr	00117$
+    00000248                        694 00112$:
+                                    695 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:171: SWITCH_ROM(__save);
+    00000248 F8 00            [12]  696 	ldhl	sp,	#0
+    0000024A 7E               [ 8]  697 	ld	a, (hl)
+    0000024B E0r00            [12]  698 	ldh	(__current_bank + 0), a
+    0000024D 7E               [ 8]  699 	ld	a, (hl)
+    0000024E EAr00r00         [16]  700 	ld	(#_rROMB0),a
+                                    701 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:174: return map_offset;
+    00000251 F8 01            [12]  702 	ldhl	sp,	#1
+    00000253 4E               [ 8]  703 	ld	c, (hl)
+    00000254 23               [ 8]  704 	inc	hl
+    00000255 46               [ 8]  705 	ld	b, (hl)
+                                    706 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:175: }
+    00000256 E8 0F            [16]  707 	add	sp, #15
+    00000258 E1               [12]  708 	pop	hl
+    00000259 E8 04            [16]  709 	add	sp, #4
+    0000025B E9               [ 4]  710 	jp	(hl)
+                                    711 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:179: void ScrollSetMap(UINT8 map_bank, const struct MapInfo* map) {
+                                    712 ;	---------------------------------
+                                    713 ; Function ScrollSetMap
+                                    714 ; ---------------------------------
+    0000025C                        715 _ScrollSetMap::
+    0000025C 3B               [ 8]  716 	dec	sp
+    0000025D 3B               [ 8]  717 	dec	sp
+    0000025E F8 01            [12]  718 	ldhl	sp,	#1
+                                    719 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:180: UINT8 __save = CURRENT_BANK;
+    00000260 32               [ 8]  720 	ld	(hl-), a
+    00000261 4B               [ 4]  721 	ld	c, e
+    00000262 42               [ 4]  722 	ld	b, d
+    00000263 F0r00            [12]  723 	ldh	a, (__current_bank + 0)
+                                    724 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:181: SWITCH_ROM(map_bank);
+    00000265 22               [ 8]  725 	ld	(hl+), a
+    00000266 7E               [ 8]  726 	ld	a, (hl)
+    00000267 E0r00            [12]  727 	ldh	(__current_bank + 0), a
+    00000269 7E               [ 8]  728 	ld	a, (hl)
+    0000026A EAr00r00         [16]  729 	ld	(#_rROMB0),a
+                                    730 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:182: scroll_tiles_w = map->width;
+    0000026D 69               [ 4]  731 	ld	l, c
+    0000026E 60               [ 4]  732 	ld	h, b
+    0000026F 23               [ 8]  733 	inc	hl
+    00000270 23               [ 8]  734 	inc	hl
+    00000271 5D               [ 4]  735 	ld	e, l
+    00000272 54               [ 4]  736 	ld	d, h
+    00000273 1A               [ 8]  737 	ld	a, (de)
+    00000274 21r04r00         [12]  738 	ld	hl, #_scroll_tiles_w
+    00000277 22               [ 8]  739 	ld	(hl+), a
+    00000278 13               [ 8]  740 	inc	de
+    00000279 1A               [ 8]  741 	ld	a, (de)
+    0000027A 77               [ 8]  742 	ld	(hl), a
+                                    743 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:183: scroll_tiles_h = map->height;
+    0000027B 21 04 00         [12]  744 	ld	hl, #0x0004
+    0000027E 09               [ 8]  745 	add	hl, bc
+    0000027F 5D               [ 4]  746 	ld	e, l
+    00000280 54               [ 4]  747 	ld	d, h
+    00000281 1A               [ 8]  748 	ld	a, (de)
+    00000282 21r06r00         [12]  749 	ld	hl, #_scroll_tiles_h
+    00000285 22               [ 8]  750 	ld	(hl+), a
+    00000286 13               [ 8]  751 	inc	de
+    00000287 1A               [ 8]  752 	ld	a, (de)
+    00000288 77               [ 8]  753 	ld	(hl), a
+                                    754 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:184: scroll_map = map->data;
+    00000289 59               [ 4]  755 	ld	e, c
+    0000028A 50               [ 4]  756 	ld	d, b
+    0000028B 1A               [ 8]  757 	ld	a, (de)
+    0000028C 21r02r00         [12]  758 	ld	hl, #_scroll_map
+    0000028F 22               [ 8]  759 	ld	(hl+), a
+    00000290 13               [ 8]  760 	inc	de
+    00000291 1A               [ 8]  761 	ld	a, (de)
+    00000292 77               [ 8]  762 	ld	(hl), a
+                                    763 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:185: scroll_cmap = map->attributes;
+    00000293 21 06 00         [12]  764 	ld	hl, #0x0006
+    00000296 09               [ 8]  765 	add	hl, bc
+    00000297 5D               [ 4]  766 	ld	e, l
+    00000298 54               [ 4]  767 	ld	d, h
+    00000299 1A               [ 8]  768 	ld	a, (de)
+    0000029A 21r04r00         [12]  769 	ld	hl, #_scroll_cmap
+    0000029D 22               [ 8]  770 	ld	(hl+), a
+    0000029E 13               [ 8]  771 	inc	de
+    0000029F 1A               [ 8]  772 	ld	a, (de)
+    000002A0 77               [ 8]  773 	ld	(hl), a
+                                    774 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:186: scroll_x = 0;
+    000002A1 AF               [ 4]  775 	xor	a, a
+    000002A2 21r06r00         [12]  776 	ld	hl, #_scroll_x
+    000002A5 22               [ 8]  777 	ld	(hl+), a
+    000002A6 77               [ 8]  778 	ld	(hl), a
+                                    779 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:187: scroll_y = 0;
+    000002A7 AF               [ 4]  780 	xor	a, a
+    000002A8 21r08r00         [12]  781 	ld	hl, #_scroll_y
+    000002AB 22               [ 8]  782 	ld	(hl+), a
+    000002AC 77               [ 8]  783 	ld	(hl), a
+                                    784 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:188: scroll_w = TILE_TO_PX(scroll_tiles_w);
+    000002AD FAr04r00         [16]  785 	ld	a, (#_scroll_tiles_w)
+    000002B0 EAr00r00         [16]  786 	ld	(#_scroll_w),a
+    000002B3 FAr05r00         [16]  787 	ld	a, (#_scroll_tiles_w + 1)
+    000002B6 EAr01r00         [16]  788 	ld	(#_scroll_w + 1),a
+    000002B9 3E 03            [ 8]  789 	ld	a, #0x03
+    000002BB                        790 00112$:
+    000002BB 21r00r00         [12]  791 	ld	hl, #_scroll_w
+    000002BE CB 26            [16]  792 	sla	(hl)
+    000002C0 23               [ 8]  793 	inc	hl
+    000002C1 CB 16            [16]  794 	rl	(hl)
+    000002C3 3D               [ 4]  795 	dec	a
+    000002C4 20 F5            [12]  796 	jr	NZ, 00112$
+                                    797 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:189: scroll_h = TILE_TO_PX(scroll_tiles_h);
+    000002C6 FAr06r00         [16]  798 	ld	a, (#_scroll_tiles_h)
+    000002C9 EAr02r00         [16]  799 	ld	(#_scroll_h),a
+    000002CC FAr07r00         [16]  800 	ld	a, (#_scroll_tiles_h + 1)
+    000002CF EAr03r00         [16]  801 	ld	(#_scroll_h + 1),a
+    000002D2 3E 03            [ 8]  802 	ld	a, #0x03
+    000002D4                        803 00113$:
+    000002D4 21r02r00         [12]  804 	ld	hl, #_scroll_h
+    000002D7 CB 26            [16]  805 	sla	(hl)
+    000002D9 23               [ 8]  806 	inc	hl
+    000002DA CB 16            [16]  807 	rl	(hl)
+    000002DC 3D               [ 4]  808 	dec	a
+    000002DD 20 F5            [12]  809 	jr	NZ, 00113$
+                                    810 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:190: scroll_bank = map_bank;
+    000002DF F8 01            [12]  811 	ldhl	sp,	#1
+    000002E1 7E               [ 8]  812 	ld	a, (hl)
+    000002E2 EAr08r02         [16]  813 	ld	(#_scroll_bank),a
+                                    814 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:191: if (scroll_target) {
+    000002E5 21r0Fr00         [12]  815 	ld	hl, #_scroll_target + 1
+    000002E8 3A               [ 8]  816 	ld	a, (hl-)
+    000002E9 B6               [ 8]  817 	or	a, (hl)
+    000002EA 28 30            [12]  818 	jr	Z, 00102$
+                                    819 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:192: scroll_x = scroll_target->x - (SCREEN_WIDTH >> 1);
+    000002EC 2A               [ 8]  820 	ld	a,	(hl+)
+    000002ED 66               [ 8]  821 	ld	h, (hl)
+    000002EE 6F               [ 4]  822 	ld	l, a
+    000002EF 2A               [ 8]  823 	ld	a, (hl+)
+    000002F0 4F               [ 4]  824 	ld	c, a
+    000002F1 46               [ 8]  825 	ld	b, (hl)
+    000002F2 79               [ 4]  826 	ld	a, c
+    000002F3 C6 B0            [ 8]  827 	add	a, #0xb0
+    000002F5 21r06r00         [12]  828 	ld	hl, #_scroll_x
+    000002F8 22               [ 8]  829 	ld	(hl+), a
+    000002F9 78               [ 4]  830 	ld	a, b
+    000002FA CE FF            [ 8]  831 	adc	a, #0xff
+    000002FC 77               [ 8]  832 	ld	(hl), a
+                                    833 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:193: scroll_y = scroll_target->y - scroll_bottom_movement_limit; //Move the camera to its bottom limit
+    000002FD FAr0Er00         [16]  834 	ld	a, (_scroll_target)
+    00000300 21r0Fr00         [12]  835 	ld	hl, #_scroll_target + 1
+    00000303 66               [ 8]  836 	ld	h, (hl)
+    00000304 6F               [ 4]  837 	ld	l, a
+    00000305 23               [ 8]  838 	inc	hl
+    00000306 23               [ 8]  839 	inc	hl
+    00000307 2A               [ 8]  840 	ld	a, (hl+)
+    00000308 4F               [ 4]  841 	ld	c, a
+    00000309 46               [ 8]  842 	ld	b, (hl)
+    0000030A FAr01r00         [16]  843 	ld	a, (_scroll_bottom_movement_limit)
+    0000030D 5F               [ 4]  844 	ld	e, a
+    0000030E 16 00            [ 8]  845 	ld	d, #0x00
+    00000310 79               [ 4]  846 	ld	a, c
+    00000311 93               [ 4]  847 	sub	a, e
+    00000312 21r08r00         [12]  848 	ld	hl, #_scroll_y
+    00000315 22               [ 8]  849 	ld	(hl+), a
+    00000316 78               [ 4]  850 	ld	a, b
+    00000317 9A               [ 4]  851 	sbc	a, d
+    00000318 77               [ 8]  852 	ld	(hl), a
+                                    853 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:194: ClampScrollLimits();
+    00000319 CDr00r00         [24]  854 	call	_ClampScrollLimits
+    0000031C                        855 00102$:
+                                    856 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:196: pending_h_i = 0;
+                                    857 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:197: pending_w_i = 0;
+    0000031C AF               [ 4]  858 	xor	a, a
+    0000031D EAr0Dr02         [16]  859 	ld	(#_pending_h_i), a
+    00000320 EAr12r02         [16]  860 	ld	(#_pending_w_i),a
+                                    861 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:198: SWITCH_ROM(__save);
+    00000323 F8 00            [12]  862 	ldhl	sp,	#0
+    00000325 7E               [ 8]  863 	ld	a, (hl)
+    00000326 E0r00            [12]  864 	ldh	(__current_bank + 0), a
+    00000328 7E               [ 8]  865 	ld	a, (hl)
+    00000329 EAr00r00         [16]  866 	ld	(#_rROMB0),a
+                                    867 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:199: }
+    0000032C 33               [ 8]  868 	inc	sp
+    0000032D 33               [ 8]  869 	inc	sp
+    0000032E C9               [16]  870 	ret
+                                    871 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:201: void ScrollInitTilesFromMap(UINT8 first_tile, UINT8 map_bank, const struct MapInfo* map) {
+                                    872 ;	---------------------------------
+                                    873 ; Function ScrollInitTilesFromMap
+                                    874 ; ---------------------------------
+    0000032F                        875 _ScrollInitTilesFromMap::
+    0000032F 3B               [ 8]  876 	dec	sp
+    00000330 EAr19r00         [16]  877 	ld	(#_last_tile_loaded),a
+                                    878 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:203: UINT8 __save = CURRENT_BANK;
+    00000333 F0r00            [12]  879 	ldh	a, (__current_bank + 0)
+    00000335 F8 00            [12]  880 	ldhl	sp,	#0
+    00000337 77               [ 8]  881 	ld	(hl), a
+                                    882 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:204: SWITCH_ROM(map_bank);
+    00000338 7B               [ 4]  883 	ld	a, e
+    00000339 E0r00            [12]  884 	ldh	(__current_bank + 0), a
+    0000033B 21r00r00         [12]  885 	ld	hl, #_rROMB0
+    0000033E 73               [ 8]  886 	ld	(hl), e
+                                    887 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:205: if (map->tiles) ScrollSetTiles(0, map->tiles_bank, map->tiles);
+    0000033F F8 03            [12]  888 	ldhl	sp,	#3
+    00000341 2A               [ 8]  889 	ld	a, (hl+)
+    00000342 4F               [ 4]  890 	ld	c, a
+    00000343 46               [ 8]  891 	ld	b, (hl)
+    00000344 21 09 00         [12]  892 	ld	hl, #0x0009
+    00000347 09               [ 8]  893 	add	hl, bc
+    00000348 2A               [ 8]  894 	ld	a,	(hl+)
+    00000349 66               [ 8]  895 	ld	h, (hl)
+    0000034A 6F               [ 4]  896 	ld	l, a
+    0000034B B4               [ 4]  897 	or	a, h
+    0000034C 28 11            [12]  898 	jr	Z, 00102$
+    0000034E 79               [ 4]  899 	ld	a, c
+    0000034F C6 08            [ 8]  900 	add	a, #0x08
+    00000351 5F               [ 4]  901 	ld	e, a
+    00000352 78               [ 4]  902 	ld	a, b
+    00000353 CE 00            [ 8]  903 	adc	a, #0x00
+    00000355 57               [ 4]  904 	ld	d, a
+    00000356 1A               [ 8]  905 	ld	a, (de)
+    00000357 C5               [16]  906 	push	bc
+    00000358 E5               [16]  907 	push	hl
+    00000359 5F               [ 4]  908 	ld	e, a
+    0000035A AF               [ 4]  909 	xor	a, a
+    0000035B CDr00r00         [24]  910 	call	_ScrollSetTiles
+    0000035E C1               [12]  911 	pop	bc
+    0000035F                        912 00102$:
+                                    913 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:206: if (map->extra_tiles) ScrollSetTiles(last_tile_loaded, map->extra_tiles_bank, map->extra_tiles);
+    0000035F 21 0C 00         [12]  914 	ld	hl, #0x000c
+    00000362 09               [ 8]  915 	add	hl, bc
+    00000363 2A               [ 8]  916 	ld	a,	(hl+)
+    00000364 66               [ 8]  917 	ld	h, (hl)
+    00000365 6F               [ 4]  918 	ld	l, a
+    00000366 B4               [ 4]  919 	or	a, h
+    00000367 28 10            [12]  920 	jr	Z, 00104$
+    00000369 79               [ 4]  921 	ld	a, c
+    0000036A C6 0B            [ 8]  922 	add	a, #0x0b
+    0000036C 4F               [ 4]  923 	ld	c, a
+    0000036D 30 01            [12]  924 	jr	NC, 00121$
+    0000036F 04               [ 4]  925 	inc	b
+    00000370                        926 00121$:
+    00000370 0A               [ 8]  927 	ld	a, (bc)
+    00000371 E5               [16]  928 	push	hl
+    00000372 5F               [ 4]  929 	ld	e, a
+    00000373 FAr19r00         [16]  930 	ld	a, (_last_tile_loaded)
+    00000376 CDr00r00         [24]  931 	call	_ScrollSetTiles
+    00000379                        932 00104$:
+                                    933 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:207: SWITCH_ROM(__save);
+    00000379 F8 00            [12]  934 	ldhl	sp,	#0
+    0000037B 7E               [ 8]  935 	ld	a, (hl)
+    0000037C E0r00            [12]  936 	ldh	(__current_bank + 0), a
+    0000037E 7E               [ 8]  937 	ld	a, (hl)
+    0000037F EAr00r00         [16]  938 	ld	(#_rROMB0),a
+                                    939 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:208: }
+    00000382 33               [ 8]  940 	inc	sp
+    00000383 E1               [12]  941 	pop	hl
+    00000384 F1               [12]  942 	pop	af
+    00000385 E9               [ 4]  943 	jp	(hl)
+                                    944 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:211: void ScrollCollisionsReset(void) {
+                                    945 ;	---------------------------------
+                                    946 ; Function ScrollCollisionsReset
+                                    947 ; ---------------------------------
+    00000386                        948 _ScrollCollisionsReset::
+                                    949 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:212: memset(scroll_collisions, 0, sizeof(scroll_collisions));
+    00000386 AF               [ 4]  950 	xor	a, a
+    00000387 3C               [ 4]  951 	inc	a
+    00000388 F5               [16]  952 	push	af
+    00000389 11 00 00         [12]  953 	ld	de, #0x0000
+    0000038C D5               [16]  954 	push	de
+    0000038D 11r08r00         [12]  955 	ld	de, #_scroll_collisions
+    00000390 D5               [16]  956 	push	de
+    00000391 CDr00r00         [24]  957 	call	_memset
+    00000394 E8 06            [16]  958 	add	sp, #6
+                                    959 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:213: }
+    00000396 C9               [16]  960 	ret
+                                    961 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:215: void ScrollInitCollisionGroup(UINT8 group, const UINT8* coll_list) {
+                                    962 ;	---------------------------------
+                                    963 ; Function ScrollInitCollisionGroup
+                                    964 ; ---------------------------------
+    00000397                        965 _ScrollInitCollisionGroup::
+    00000397 4F               [ 4]  966 	ld	c, a
+                                    967 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:216: for (const UINT8 * ptr = coll_list; (*ptr); ptr++)
+    00000398                        968 00103$:
+    00000398 1A               [ 8]  969 	ld	a, (de)
+    00000399 B7               [ 4]  970 	or	a, a
+    0000039A C8               [20]  971 	ret	Z
+                                    972 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:217: scroll_collisions[*ptr] |= group;
+    0000039B C6r08            [ 8]  973 	add	a, #<(_scroll_collisions)
+    0000039D 6F               [ 4]  974 	ld	l, a
+    0000039E 3E 00            [ 8]  975 	ld	a, #0x00
+    000003A0 CEs00            [ 8]  976 	adc	a, #>(_scroll_collisions)
+    000003A2 67               [ 4]  977 	ld	h, a
+    000003A3 7E               [ 8]  978 	ld	a, (hl)
+    000003A4 B1               [ 4]  979 	or	a, c
+    000003A5 77               [ 8]  980 	ld	(hl), a
+                                    981 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:216: for (const UINT8 * ptr = coll_list; (*ptr); ptr++)
+    000003A6 13               [ 8]  982 	inc	de
+                                    983 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:218: }
+    000003A7 18 EF            [12]  984 	jr	00103$
+                                    985 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:220: void ScrollInitCollisionGroupVector(UINT8 group, const UINT8* coll_vector) {
+                                    986 ;	---------------------------------
+                                    987 ; Function ScrollInitCollisionGroupVector
+                                    988 ; ---------------------------------
+    000003A9                        989 _ScrollInitCollisionGroupVector::
+    000003A9 4F               [ 4]  990 	ld	c, a
+                                    991 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:221: for (UINT8 idx = *coll_vector++; (idx); --idx) scroll_collisions[*coll_vector++] |= group;
+    000003AA 1A               [ 8]  992 	ld	a, (de)
+    000003AB 47               [ 4]  993 	ld	b, a
+    000003AC 13               [ 8]  994 	inc	de
+    000003AD                        995 00103$:
+    000003AD 78               [ 4]  996 	ld	a, b
+    000003AE B7               [ 4]  997 	or	a, a
+    000003AF C8               [20]  998 	ret	Z
+    000003B0 1A               [ 8]  999 	ld	a, (de)
+    000003B1 13               [ 8] 1000 	inc	de
+    000003B2 C6r08            [ 8] 1001 	add	a, #<(_scroll_collisions)
+    000003B4 6F               [ 4] 1002 	ld	l, a
+    000003B5 3E 00            [ 8] 1003 	ld	a, #0x00
+    000003B7 CEs00            [ 8] 1004 	adc	a, #>(_scroll_collisions)
+    000003B9 67               [ 4] 1005 	ld	h, a
+    000003BA 7E               [ 8] 1006 	ld	a, (hl)
+    000003BB B1               [ 4] 1007 	or	a, c
+    000003BC 77               [ 8] 1008 	ld	(hl), a
+    000003BD 05               [ 4] 1009 	dec	b
+                                   1010 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:222: }
+    000003BE 18 ED            [12] 1011 	jr	00103$
+                                   1012 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:224: void ScrollRemoveCollisionGroupVector(UINT8 group, const UINT8* coll_vector) {
+                                   1013 ;	---------------------------------
+                                   1014 ; Function ScrollRemoveCollisionGroupVector
+                                   1015 ; ---------------------------------
+    000003C0                       1016 _ScrollRemoveCollisionGroupVector::
+    000003C0 47               [ 4] 1017 	ld	b, a
+                                   1018 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:225: for (UINT8 idx = *coll_vector++; (idx); --idx) scroll_collisions[*coll_vector++] &= ~group;
+    000003C1 1A               [ 8] 1019 	ld	a, (de)
+    000003C2 4F               [ 4] 1020 	ld	c, a
+    000003C3 13               [ 8] 1021 	inc	de
+    000003C4 78               [ 4] 1022 	ld	a, b
+    000003C5 2F               [ 4] 1023 	cpl
+    000003C6 47               [ 4] 1024 	ld	b, a
+    000003C7                       1025 00103$:
+    000003C7 79               [ 4] 1026 	ld	a, c
+    000003C8 B7               [ 4] 1027 	or	a, a
+    000003C9 C8               [20] 1028 	ret	Z
+    000003CA 1A               [ 8] 1029 	ld	a, (de)
+    000003CB 13               [ 8] 1030 	inc	de
+    000003CC C6r08            [ 8] 1031 	add	a, #<(_scroll_collisions)
+    000003CE 6F               [ 4] 1032 	ld	l, a
+    000003CF 3E 00            [ 8] 1033 	ld	a, #0x00
+    000003D1 CEs00            [ 8] 1034 	adc	a, #>(_scroll_collisions)
+    000003D3 67               [ 4] 1035 	ld	h, a
+    000003D4 7E               [ 8] 1036 	ld	a, (hl)
+    000003D5 A0               [ 4] 1037 	and	a, b
+    000003D6 77               [ 8] 1038 	ld	(hl), a
+    000003D7 0D               [ 4] 1039 	dec	c
+                                   1040 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:226: }
+    000003D8 18 ED            [12] 1041 	jr	00103$
+                                   1042 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:228: void ScrollInitCollisions(const UINT8* coll_list, const UINT8* coll_list_down) {
+                                   1043 ;	---------------------------------
+                                   1044 ; Function ScrollInitCollisions
+                                   1045 ; ---------------------------------
+    000003DA                       1046 _ScrollInitCollisions::
+                                   1047 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:229: ScrollCollisionsReset();
+    000003DA C5               [16] 1048 	push	bc
+    000003DB D5               [16] 1049 	push	de
+    000003DC CDr86r03         [24] 1050 	call	_ScrollCollisionsReset
+    000003DF D1               [12] 1051 	pop	de
+    000003E0 C1               [12] 1052 	pop	bc
+                                   1053 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:230: if (coll_list) {
+    000003E1 7A               [ 4] 1054 	ld	a, d
+    000003E2 B3               [ 4] 1055 	or	a, e
+    000003E3 28 07            [12] 1056 	jr	Z, 00102$
+                                   1057 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:231: ScrollInitCollisionGroup((COLL_GROUP_DEFAULT | COLL_GROUP_DOWN), coll_list);
+    000003E5 C5               [16] 1058 	push	bc
+    000003E6 3E 81            [ 8] 1059 	ld	a, #0x81
+    000003E8 CDr97r03         [24] 1060 	call	_ScrollInitCollisionGroup
+    000003EB C1               [12] 1061 	pop	bc
+    000003EC                       1062 00102$:
+                                   1063 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:233: if (coll_list_down) {
+    000003EC 78               [ 4] 1064 	ld	a, b
+    000003ED B1               [ 4] 1065 	or	a, c
+    000003EE C8               [20] 1066 	ret	Z
+                                   1067 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:234: ScrollInitCollisionGroup(COLL_GROUP_DOWN, coll_list_down);
+    000003EF 59               [ 4] 1068 	ld	e, c
+    000003F0 50               [ 4] 1069 	ld	d, b
+    000003F1 3E 80            [ 8] 1070 	ld	a, #0x80
+                                   1071 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:236: }
+    000003F3 C3r97r03         [16] 1072 	jp	_ScrollInitCollisionGroup
+                                   1073 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:238: void ScrollScreenRedraw(void) {
+                                   1074 ;	---------------------------------
+                                   1075 ; Function ScrollScreenRedraw
+                                   1076 ; ---------------------------------
+    000003F6                       1077 _ScrollScreenRedraw::
+    000003F6 E8 FC            [16] 1078 	add	sp, #-4
+                                   1079 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:239: UINT8 __save = CURRENT_BANK;
+    000003F8 F0r00            [12] 1080 	ldh	a, (__current_bank + 0)
+    000003FA F8 00            [12] 1081 	ldhl	sp,	#0
+    000003FC 77               [ 8] 1082 	ld	(hl), a
+                                   1083 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:240: SWITCH_ROM(scroll_bank);
+    000003FD FAr08r02         [16] 1084 	ld	a, (_scroll_bank)
+    00000400 E0r00            [12] 1085 	ldh	(__current_bank + 0), a
+    00000402 EAr00r00         [16] 1086 	ld	(#_rROMB0),a
+                                   1087 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:241: INT16 y = PX_TO_TILE(scroll_y) - SCREEN_PAD_TOP;
+    00000405 21r08r00         [12] 1088 	ld	hl, #_scroll_y
+    00000408 2A               [ 8] 1089 	ld	a, (hl+)
+    00000409 4F               [ 4] 1090 	ld	c, a
+    0000040A 46               [ 8] 1091 	ld	b, (hl)
+    0000040B CB 28            [ 8] 1092 	sra	b
+    0000040D CB 19            [ 8] 1093 	rr	c
+    0000040F CB 28            [ 8] 1094 	sra	b
+    00000411 CB 19            [ 8] 1095 	rr	c
+    00000413 CB 28            [ 8] 1096 	sra	b
+    00000415 CB 19            [ 8] 1097 	rr	c
+    00000417 11 01 00         [12] 1098 	ld	de, #0x0001
+    0000041A 79               [ 4] 1099 	ld	a, c
+    0000041B 93               [ 4] 1100 	sub	a, e
+    0000041C 5F               [ 4] 1101 	ld	e, a
+    0000041D 78               [ 4] 1102 	ld	a, b
+    0000041E 9A               [ 4] 1103 	sbc	a, d
+    0000041F F8 02            [12] 1104 	ldhl	sp,	#2
+    00000421 32               [ 8] 1105 	ld	(hl-), a
+    00000422 73               [ 8] 1106 	ld	(hl), e
+                                   1107 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:242: INT16 x = PX_TO_TILE(scroll_x) - SCREEN_PAD_LEFT;
+    00000423 21r06r00         [12] 1108 	ld	hl, #_scroll_x
+    00000426 2A               [ 8] 1109 	ld	a, (hl+)
+    00000427 5F               [ 4] 1110 	ld	e, a
+    00000428 56               [ 8] 1111 	ld	d, (hl)
+    00000429 CB 2A            [ 8] 1112 	sra	d
+    0000042B CB 1B            [ 8] 1113 	rr	e
+    0000042D CB 2A            [ 8] 1114 	sra	d
+    0000042F CB 1B            [ 8] 1115 	rr	e
+    00000431 CB 2A            [ 8] 1116 	sra	d
+    00000433 CB 1B            [ 8] 1117 	rr	e
+    00000435 1B               [ 8] 1118 	dec	de
+                                   1119 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:243: for (UINT8 i = 0u; i != (SCREEN_TILE_REFRES_H) && y != scroll_h; ++i) ScrollUpdateRow(x,  y++);
+    00000436 F8 03            [12] 1120 	ldhl	sp,	#3
+    00000438 36 00            [12] 1121 	ld	(hl), #0x00
+    0000043A                       1122 00104$:
+    0000043A F8 03            [12] 1123 	ldhl	sp,	#3
+    0000043C 7E               [ 8] 1124 	ld	a, (hl)
+    0000043D D6 15            [ 8] 1125 	sub	a, #0x15
+    0000043F 28 26            [12] 1126 	jr	Z, 00101$
+    00000441 F8 01            [12] 1127 	ldhl	sp,	#1
+    00000443 2A               [ 8] 1128 	ld	a, (hl+)
+    00000444 4F               [ 4] 1129 	ld	c, a
+    00000445 46               [ 8] 1130 	ld	b, (hl)
+    00000446 21r02r00         [12] 1131 	ld	hl, #_scroll_h
+    00000449 7E               [ 8] 1132 	ld	a, (hl)
+    0000044A 91               [ 4] 1133 	sub	a, c
+    0000044B 20 05            [12] 1134 	jr	NZ, 00131$
+    0000044D 23               [ 8] 1135 	inc	hl
+    0000044E 7E               [ 8] 1136 	ld	a, (hl)
+    0000044F 90               [ 4] 1137 	sub	a, b
+    00000450 28 15            [12] 1138 	jr	Z, 00101$
+    00000452                       1139 00131$:
+    00000452 F8 01            [12] 1140 	ldhl	sp,	#1
+    00000454 2A               [ 8] 1141 	ld	a, (hl+)
+    00000455 4F               [ 4] 1142 	ld	c, a
+    00000456 3A               [ 8] 1143 	ld	a, (hl-)
+    00000457 47               [ 4] 1144 	ld	b, a
+    00000458 34               [12] 1145 	inc	(hl)
+    00000459 20 02            [12] 1146 	jr	NZ, 00132$
+    0000045B 23               [ 8] 1147 	inc	hl
+    0000045C 34               [12] 1148 	inc	(hl)
+    0000045D                       1149 00132$:
+    0000045D D5               [16] 1150 	push	de
+    0000045E CDr7Ar06         [24] 1151 	call	_ScrollUpdateRow
+    00000461 D1               [12] 1152 	pop	de
+    00000462 F8 03            [12] 1153 	ldhl	sp,	#3
+    00000464 34               [12] 1154 	inc	(hl)
+    00000465 18 D3            [12] 1155 	jr	00104$
+    00000467                       1156 00101$:
+                                   1157 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:244: SWITCH_ROM(__save);
+    00000467 F8 00            [12] 1158 	ldhl	sp,	#0
+    00000469 7E               [ 8] 1159 	ld	a, (hl)
+    0000046A E0r00            [12] 1160 	ldh	(__current_bank + 0), a
+    0000046C 7E               [ 8] 1161 	ld	a, (hl)
+    0000046D EAr00r00         [16] 1162 	ld	(#_rROMB0),a
+                                   1163 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:245: }
+    00000470 E8 04            [16] 1164 	add	sp, #4
+    00000472 C9               [16] 1165 	ret
+                                   1166 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:247: void InitScroll(UINT8 map_bank, const struct MapInfo* map, const UINT8* coll_list, const UINT8* coll_list_down) {
+                                   1167 ;	---------------------------------
+                                   1168 ; Function InitScroll
+                                   1169 ; ---------------------------------
+    00000473                       1170 _InitScroll::
+    00000473 4F               [ 4] 1171 	ld	c, a
+                                   1172 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:249: ScrollInitTilesFromMap(0, map_bank, map);
+    00000474 C5               [16] 1173 	push	bc
+    00000475 D5               [16] 1174 	push	de
+    00000476 D5               [16] 1175 	push	de
+    00000477 59               [ 4] 1176 	ld	e, c
+    00000478 AF               [ 4] 1177 	xor	a, a
+    00000479 CDr2Fr03         [24] 1178 	call	_ScrollInitTilesFromMap
+    0000047C D1               [12] 1179 	pop	de
+    0000047D C1               [12] 1180 	pop	bc
+                                   1181 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:252: ScrollSetMap(map_bank, map);
+    0000047E 79               [ 4] 1182 	ld	a, c
+    0000047F CDr5Cr02         [24] 1183 	call	_ScrollSetMap
+                                   1184 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:255: ScrollInitCollisions(coll_list, coll_list_down);
+    00000482 F8 04            [12] 1185 	ldhl	sp,	#4
+    00000484 2A               [ 8] 1186 	ld	a, (hl+)
+    00000485 4F               [ 4] 1187 	ld	c, a
+    00000486 46               [ 8] 1188 	ld	b, (hl)
+    00000487 F8 02            [12] 1189 	ldhl	sp,	#2
+    00000489 2A               [ 8] 1190 	ld	a, (hl+)
+    0000048A 5F               [ 4] 1191 	ld	e, a
+    0000048B 56               [ 8] 1192 	ld	d, (hl)
+    0000048C CDrDAr03         [24] 1193 	call	_ScrollInitCollisions
+                                   1194 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:258: ScrollScreenRedraw();
+    0000048F CDrF6r03         [24] 1195 	call	_ScrollScreenRedraw
+                                   1196 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:259: }
+    00000492 E1               [12] 1197 	pop	hl
+    00000493 E8 04            [16] 1198 	add	sp, #4
+    00000495 E9               [ 4] 1199 	jp	(hl)
+                                   1200 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:261: static void ScrollSetTileMapPart(UINT8 x, UINT8 y, UINT8 w, UINT8 h, UINT8 * map, UINT8 * cmap) {
+                                   1201 ;	---------------------------------
+                                   1202 ; Function ScrollSetTileMapPart
+                                   1203 ; ---------------------------------
+    00000496                       1204 _ScrollSetTileMapPart:
+    00000496 43               [ 4] 1205 	ld	b, e
+                                   1206 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:270: set_tile_map(x, y, w, h, map);
+    00000497 F8 04            [12] 1207 	ldhl	sp,	#4
+    00000499 5E               [ 8] 1208 	ld	e, (hl)
+    0000049A 23               [ 8] 1209 	inc	hl
+    0000049B 56               [ 8] 1210 	ld	d, (hl)
+    0000049C 2B               [ 8] 1211 	dec	hl
+    0000049D 2B               [ 8] 1212 	dec	hl
+    0000049E D5               [16] 1213 	push	de
+    0000049F 66               [ 8] 1214 	ld	h, (hl)
+    000004A0 E5               [16] 1215 	push	hl
+    000004A1 33               [ 8] 1216 	inc	sp
+    000004A2 F8 05            [12] 1217 	ldhl	sp,	#5
+    000004A4 66               [ 8] 1218 	ld	h, (hl)
+    000004A5 68               [ 4] 1219 	ld	l, b
+    000004A6 E5               [16] 1220 	push	hl
+    000004A7 F5               [16] 1221 	push	af
+    000004A8 33               [ 8] 1222 	inc	sp
+    000004A9 CDr00r00         [24] 1223 	call	_set_bkg_tiles
+    000004AC E8 06            [16] 1224 	add	sp, #6
+                                   1225 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:271: }
+    000004AE E1               [12] 1226 	pop	hl
+    000004AF E8 06            [16] 1227 	add	sp, #6
+    000004B1 E9               [ 4] 1228 	jp	(hl)
+                                   1229 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:273: static void ScrollSetTileMapRow(INT16 x, INT16 y, UINT8 w, UINT8 * map, UINT8 * cmap) {
+                                   1230 ;	---------------------------------
+                                   1231 ; Function ScrollSetTileMapRow
+                                   1232 ; ---------------------------------
+    000004B2                       1233 _ScrollSetTileMapRow:
+    000004B2 3B               [ 8] 1234 	dec	sp
+    000004B3 3B               [ 8] 1235 	dec	sp
+    000004B4 69               [ 4] 1236 	ld	l, c
+                                   1237 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:276: UINT8 map_x = (UINT8)(SCREEN_BKG_OFFSET_X + x + scroll_offset_x) & 0x1Fu;
+    000004B5 FAr10r00         [16] 1238 	ld	a, (_scroll_offset_x)
+    000004B8 83               [ 4] 1239 	add	a, e
+    000004B9 E6 1F            [ 8] 1240 	and	a, #0x1f
+    000004BB 4F               [ 4] 1241 	ld	c, a
+                                   1242 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:277: UINT8 map_y = (UINT8)(y + scroll_offset_y) & 0x1Fu;
+    000004BC FAr11r00         [16] 1243 	ld	a, (_scroll_offset_y)
+    000004BF 85               [ 4] 1244 	add	a, l
+    000004C0 E6 1F            [ 8] 1245 	and	a, #0x1f
+    000004C2 5F               [ 4] 1246 	ld	e, a
+                                   1247 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:278: UINT8 first_width = MIN(w, 32u - map_x);
+    000004C3 41               [ 4] 1248 	ld	b, c
+    000004C4 3E 20            [ 8] 1249 	ld	a, #0x20
+    000004C6 90               [ 4] 1250 	sub	a, b
+    000004C7 47               [ 4] 1251 	ld	b, a
+    000004C8 F8 04            [12] 1252 	ldhl	sp,	#4
+    000004CA 7E               [ 8] 1253 	ld	a, (hl)
+    000004CB 90               [ 4] 1254 	sub	a, b
+    000004CC 30 03            [12] 1255 	jr	NC, 00105$
+    000004CE 56               [ 8] 1256 	ld	d, (hl)
+    000004CF 18 04            [12] 1257 	jr	00106$
+    000004D1                       1258 00105$:
+    000004D1 3E 20            [ 8] 1259 	ld	a, #0x20
+    000004D3 91               [ 4] 1260 	sub	a, c
+    000004D4 57               [ 4] 1261 	ld	d, a
+    000004D5                       1262 00106$:
+                                   1263 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:279: ScrollSetTileMapPart(map_x, map_y, first_width, 1, map, cmap);
+    000004D5 D5               [16] 1264 	push	de
+    000004D6 F8 09            [12] 1265 	ldhl	sp,	#9
+    000004D8 2A               [ 8] 1266 	ld	a, (hl+)
+    000004D9 66               [ 8] 1267 	ld	h, (hl)
+    000004DA 6F               [ 4] 1268 	ld	l, a
+    000004DB E5               [16] 1269 	push	hl
+    000004DC F8 09            [12] 1270 	ldhl	sp,	#9
+    000004DE 2A               [ 8] 1271 	ld	a, (hl+)
+    000004DF 66               [ 8] 1272 	ld	h, (hl)
+    000004E0 6F               [ 4] 1273 	ld	l, a
+    000004E1 E5               [16] 1274 	push	hl
+    000004E2 3E 01            [ 8] 1275 	ld	a, #0x01
+    000004E4 F5               [16] 1276 	push	af
+    000004E5 33               [ 8] 1277 	inc	sp
+    000004E6 D5               [16] 1278 	push	de
+    000004E7 33               [ 8] 1279 	inc	sp
+    000004E8 79               [ 4] 1280 	ld	a, c
+    000004E9 CDr96r04         [24] 1281 	call	_ScrollSetTileMapPart
+    000004EC D1               [12] 1282 	pop	de
+                                   1283 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:280: if (first_width < w) {
+    000004ED 7A               [ 4] 1284 	ld	a, d
+    000004EE F8 04            [12] 1285 	ldhl	sp,	#4
+    000004F0 96               [ 8] 1286 	sub	a, (hl)
+    000004F1 30 30            [12] 1287 	jr	NC, 00103$
+                                   1288 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:281: ScrollSetTileMapPart(0, map_y, w - first_width, 1, map + first_width, cmap + first_width);
+    000004F3 D5               [16] 1289 	push	de
+    000004F4 5A               [ 4] 1290 	ld	e, d
+    000004F5 16 00            [ 8] 1291 	ld	d, #0x00
+    000004F7 F8 09            [12] 1292 	ldhl	sp,	#9
+    000004F9 2A               [ 8] 1293 	ld	a,	(hl+)
+    000004FA 66               [ 8] 1294 	ld	h, (hl)
+    000004FB 6F               [ 4] 1295 	ld	l, a
+    000004FC 19               [ 8] 1296 	add	hl, de
+    000004FD D1               [12] 1297 	pop	de
+    000004FE 4D               [ 4] 1298 	ld	c, l
+    000004FF 44               [ 4] 1299 	ld	b, h
+    00000500 D5               [16] 1300 	push	de
+    00000501 5A               [ 4] 1301 	ld	e, d
+    00000502 16 00            [ 8] 1302 	ld	d, #0x00
+    00000504 F8 07            [12] 1303 	ldhl	sp,	#7
+    00000506 2A               [ 8] 1304 	ld	a,	(hl+)
+    00000507 66               [ 8] 1305 	ld	h, (hl)
+    00000508 6F               [ 4] 1306 	ld	l, a
+    00000509 19               [ 8] 1307 	add	hl, de
+    0000050A D1               [12] 1308 	pop	de
+    0000050B 33               [ 8] 1309 	inc	sp
+    0000050C 33               [ 8] 1310 	inc	sp
+    0000050D E5               [16] 1311 	push	hl
+    0000050E F8 04            [12] 1312 	ldhl	sp,	#4
+    00000510 7E               [ 8] 1313 	ld	a, (hl)
+    00000511 92               [ 4] 1314 	sub	a, d
+    00000512 C5               [16] 1315 	push	bc
+    00000513 F8 02            [12] 1316 	ldhl	sp,	#2
+    00000515 4E               [ 8] 1317 	ld	c, (hl)
+    00000516 23               [ 8] 1318 	inc	hl
+    00000517 46               [ 8] 1319 	ld	b, (hl)
+    00000518 C5               [16] 1320 	push	bc
+    00000519 26 01            [ 8] 1321 	ld	h, #0x01
+    0000051B E5               [16] 1322 	push	hl
+    0000051C 33               [ 8] 1323 	inc	sp
+    0000051D F5               [16] 1324 	push	af
+    0000051E 33               [ 8] 1325 	inc	sp
+    0000051F AF               [ 4] 1326 	xor	a, a
+    00000520 CDr96r04         [24] 1327 	call	_ScrollSetTileMapPart
+    00000523                       1328 00103$:
+                                   1329 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:286: }
+    00000523 33               [ 8] 1330 	inc	sp
+    00000524 33               [ 8] 1331 	inc	sp
+    00000525 E1               [12] 1332 	pop	hl
+    00000526 E8 05            [16] 1333 	add	sp, #5
+    00000528 E9               [ 4] 1334 	jp	(hl)
+                                   1335 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:288: static void ScrollSetTileMapColumn(INT16 x, INT16 y, UINT8 h, UINT8 * map, UINT8 * cmap) {
+                                   1336 ;	---------------------------------
+                                   1337 ; Function ScrollSetTileMapColumn
+                                   1338 ; ---------------------------------
+    00000529                       1339 _ScrollSetTileMapColumn:
+    00000529 3B               [ 8] 1340 	dec	sp
+    0000052A 3B               [ 8] 1341 	dec	sp
+                                   1342 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:290: UINT8 map_x = (UINT8)(SCREEN_BKG_OFFSET_X + x + scroll_offset_x) & 0x1Fu;
+    0000052B FAr10r00         [16] 1343 	ld	a, (_scroll_offset_x)
+    0000052E 83               [ 4] 1344 	add	a, e
+    0000052F E6 1F            [ 8] 1345 	and	a, #0x1f
+    00000531 F8 00            [12] 1346 	ldhl	sp,	#0
+    00000533 77               [ 8] 1347 	ld	(hl), a
+                                   1348 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:291: UINT8 map_y = (UINT8)(y + scroll_offset_y) & 0x1Fu;
+    00000534 FAr11r00         [16] 1349 	ld	a, (_scroll_offset_y)
+    00000537 81               [ 4] 1350 	add	a, c
+    00000538 E6 1F            [ 8] 1351 	and	a, #0x1f
+    0000053A 5F               [ 4] 1352 	ld	e, a
+                                   1353 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:292: UINT8 first_height = MIN(h, 32u - map_y);
+    0000053B 4B               [ 4] 1354 	ld	c, e
+    0000053C 3E 20            [ 8] 1355 	ld	a, #0x20
+    0000053E 91               [ 4] 1356 	sub	a, c
+    0000053F 4F               [ 4] 1357 	ld	c, a
+    00000540 F8 04            [12] 1358 	ldhl	sp,	#4
+    00000542 7E               [ 8] 1359 	ld	a,(hl)
+    00000543 B9               [ 4] 1360 	cp	a,c
+    00000544 38 03            [12] 1361 	jr	C, 00106$
+    00000546 3E 20            [ 8] 1362 	ld	a, #0x20
+    00000548 93               [ 4] 1363 	sub	a, e
+    00000549                       1364 00106$:
+    00000549 F8 01            [12] 1365 	ldhl	sp,	#1
+    0000054B 77               [ 8] 1366 	ld	(hl), a
+                                   1367 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:293: ScrollSetTileMapPart(map_x, map_y, 1, first_height, map, cmap);
+    0000054C F8 07            [12] 1368 	ldhl	sp,	#7
+    0000054E 2A               [ 8] 1369 	ld	a, (hl+)
+    0000054F 4F               [ 4] 1370 	ld	c, a
+    00000550 46               [ 8] 1371 	ld	b, (hl)
+    00000551 C5               [16] 1372 	push	bc
+    00000552 F8 07            [12] 1373 	ldhl	sp,	#7
+    00000554 2A               [ 8] 1374 	ld	a, (hl+)
+    00000555 4F               [ 4] 1375 	ld	c, a
+    00000556 46               [ 8] 1376 	ld	b, (hl)
+    00000557 C5               [16] 1377 	push	bc
+    00000558 F8 05            [12] 1378 	ldhl	sp,	#5
+    0000055A 3A               [ 8] 1379 	ld	a, (hl-)
+    0000055B 47               [ 4] 1380 	ld	b, a
+    0000055C 0E 01            [ 8] 1381 	ld	c, #0x01
+    0000055E C5               [16] 1382 	push	bc
+    0000055F 7E               [ 8] 1383 	ld	a, (hl)
+    00000560 CDr96r04         [24] 1384 	call	_ScrollSetTileMapPart
+                                   1385 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:294: if (first_height < h) {
+    00000563 F8 01            [12] 1386 	ldhl	sp,	#1
+    00000565 7E               [ 8] 1387 	ld	a, (hl)
+    00000566 F8 04            [12] 1388 	ldhl	sp,	#4
+    00000568 96               [ 8] 1389 	sub	a, (hl)
+    00000569 30 2D            [12] 1390 	jr	NC, 00103$
+                                   1391 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:295: ScrollSetTileMapPart(map_x, 0, 1, h - first_height, map + first_height, cmap + first_height);
+    0000056B F8 07            [12] 1392 	ldhl	sp,#7
+    0000056D 2A               [ 8] 1393 	ld	a, (hl+)
+    0000056E 5F               [ 4] 1394 	ld	e, a
+    0000056F 56               [ 8] 1395 	ld	d, (hl)
+    00000570 F8 01            [12] 1396 	ldhl	sp,	#1
+    00000572 6E               [ 8] 1397 	ld	l, (hl)
+    00000573 26 00            [ 8] 1398 	ld	h, #0x00
+    00000575 19               [ 8] 1399 	add	hl, de
+    00000576 4D               [ 4] 1400 	ld	c, l
+    00000577 44               [ 4] 1401 	ld	b, h
+    00000578 F8 05            [12] 1402 	ldhl	sp,#5
+    0000057A 2A               [ 8] 1403 	ld	a, (hl+)
+    0000057B 5F               [ 4] 1404 	ld	e, a
+    0000057C 56               [ 8] 1405 	ld	d, (hl)
+    0000057D F8 01            [12] 1406 	ldhl	sp,	#1
+    0000057F 6E               [ 8] 1407 	ld	l, (hl)
+    00000580 26 00            [ 8] 1408 	ld	h, #0x00
+    00000582 19               [ 8] 1409 	add	hl, de
+    00000583 5D               [ 4] 1410 	ld	e, l
+    00000584 54               [ 4] 1411 	ld	d, h
+    00000585 F8 04            [12] 1412 	ldhl	sp,	#4
+    00000587 7E               [ 8] 1413 	ld	a, (hl)
+    00000588 F8 01            [12] 1414 	ldhl	sp,	#1
+    0000058A 96               [ 8] 1415 	sub	a, (hl)
+    0000058B 2B               [ 8] 1416 	dec	hl
+    0000058C C5               [16] 1417 	push	bc
+    0000058D D5               [16] 1418 	push	de
+    0000058E 57               [ 4] 1419 	ld	d, a
+    0000058F 1E 01            [ 8] 1420 	ld	e, #0x01
+    00000591 D5               [16] 1421 	push	de
+    00000592 1E 00            [ 8] 1422 	ld	e, #0x00
+    00000594 7E               [ 8] 1423 	ld	a, (hl)
+    00000595 CDr96r04         [24] 1424 	call	_ScrollSetTileMapPart
+    00000598                       1425 00103$:
+                                   1426 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:300: }
+    00000598 33               [ 8] 1427 	inc	sp
+    00000599 33               [ 8] 1428 	inc	sp
+    0000059A E1               [12] 1429 	pop	hl
+    0000059B E8 05            [16] 1430 	add	sp, #5
+    0000059D E9               [ 4] 1431 	jp	(hl)
+                                   1432 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:302: void ScrollUpdateRowR(void) {
+                                   1433 ;	---------------------------------
+                                   1434 ; Function ScrollUpdateRowR
+                                   1435 ; ---------------------------------
+    0000059E                       1436 _ScrollUpdateRowR::
+    0000059E 3B               [ 8] 1437 	dec	sp
+                                   1438 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:303: scroll_ptr = pending_w_map;
+    0000059F FAr17r00         [16] 1439 	ld	a, (#_pending_w_map)
+    000005A2 EAr18r02         [16] 1440 	ld	(#_scroll_ptr),a
+    000005A5 FAr18r00         [16] 1441 	ld	a, (#_pending_w_map + 1)
+    000005A8 EAr19r02         [16] 1442 	ld	(#_scroll_ptr + 1),a
+                                   1443 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:304: dest_ptr = map_buffer;
+    000005AB 21r4Ar02         [12] 1444 	ld	hl, #_dest_ptr
+    000005AE 36r1C            [12] 1445 	ld	(hl), #<(_map_buffer)
+    000005B0 23               [ 8] 1446 	inc	hl
+    000005B1 36s02            [12] 1447 	ld	(hl), #>(_map_buffer)
+                                   1448 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:312: scroll_cptr = NULL;
+    000005B3 AF               [ 4] 1449 	xor	a, a
+    000005B4 21r1Ar02         [12] 1450 	ld	hl, #_scroll_cptr
+    000005B7 22               [ 8] 1451 	ld	(hl+), a
+    000005B8 77               [ 8] 1452 	ld	(hl), a
+                                   1453 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:314: temp_coord = pending_w_x;
+    000005B9 FAr0Er02         [16] 1454 	ld	a, (#_pending_w_x)
+    000005BC EAr4Er02         [16] 1455 	ld	(#_temp_coord),a
+    000005BF FAr0Fr02         [16] 1456 	ld	a, (#_pending_w_x + 1)
+    000005C2 EAr4Fr02         [16] 1457 	ld	(#_temp_coord + 1),a
+                                   1458 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:315: for (UINT8 i = MAX(SCREEN_RESTORE_W, pending_w_i); (i); --i) {
+    000005C5 FAr12r02         [16] 1459 	ld	a, (#_pending_w_i)
+    000005C8 D6 05            [ 8] 1460 	sub	a, #0x05
+    000005CA 30 04            [12] 1461 	jr	NC, 00107$
+    000005CC 3E 05            [ 8] 1462 	ld	a, #0x05
+    000005CE 18 03            [12] 1463 	jr	00108$
+    000005D0                       1464 00107$:
+    000005D0 FAr12r02         [16] 1465 	ld	a, (_pending_w_i)
+    000005D3                       1466 00108$:
+    000005D3 F8 00            [12] 1467 	ldhl	sp,	#0
+    000005D5 77               [ 8] 1468 	ld	(hl), a
+    000005D6                       1469 00103$:
+    000005D6 F8 00            [12] 1470 	ldhl	sp,	#0
+    000005D8 7E               [ 8] 1471 	ld	a, (hl)
+    000005D9 B7               [ 4] 1472 	or	a, a
+    000005DA 28 2E            [12] 1473 	jr	Z, 00101$
+                                   1474 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:316: UPDATE_TILE(pending_w_x++, pending_w_y);
+    000005DC FAr0Er02         [16] 1475 	ld	a, (_pending_w_x)
+    000005DF 5F               [ 4] 1476 	ld	e, a
+    000005E0 21r0Fr02         [12] 1477 	ld	hl, #_pending_w_x + 1
+    000005E3 3A               [ 8] 1478 	ld	a, (hl-)
+    000005E4 57               [ 4] 1479 	ld	d, a
+    000005E5 34               [12] 1480 	inc	(hl)
+    000005E6 20 02            [12] 1481 	jr	NZ, 00140$
+    000005E8 23               [ 8] 1482 	inc	hl
+    000005E9 34               [12] 1483 	inc	(hl)
+    000005EA                       1484 00140$:
+    000005EA FAr10r02         [16] 1485 	ld	a, (_pending_w_y)
+    000005ED 4F               [ 4] 1486 	ld	c, a
+    000005EE 21r11r02         [12] 1487 	ld	hl, #_pending_w_y + 1
+    000005F1 46               [ 8] 1488 	ld	b, (hl)
+    000005F2 CDr00r00         [24] 1489 	call	_UPDATE_TILE
+                                   1490 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:317: scroll_ptr++;
+    000005F5 21r18r02         [12] 1491 	ld	hl, #_scroll_ptr
+    000005F8 34               [12] 1492 	inc	(hl)
+    000005F9 20 02            [12] 1493 	jr	NZ, 00141$
+    000005FB 23               [ 8] 1494 	inc	hl
+    000005FC 34               [12] 1495 	inc	(hl)
+    000005FD                       1496 00141$:
+                                   1497 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:323: dest_ptr++;
+    000005FD 21r4Ar02         [12] 1498 	ld	hl, #_dest_ptr
+    00000600 34               [12] 1499 	inc	(hl)
+    00000601 20 02            [12] 1500 	jr	NZ, 00142$
+    00000603 23               [ 8] 1501 	inc	hl
+    00000604 34               [12] 1502 	inc	(hl)
+    00000605                       1503 00142$:
+                                   1504 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:315: for (UINT8 i = MAX(SCREEN_RESTORE_W, pending_w_i); (i); --i) {
+    00000605 F8 00            [12] 1505 	ldhl	sp,	#0
+    00000607 35               [12] 1506 	dec	(hl)
+    00000608 18 CC            [12] 1507 	jr	00103$
+    0000060A                       1508 00101$:
+                                   1509 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:330: ScrollSetTileMapRow(temp_coord, pending_w_y, MAX(SCREEN_RESTORE_W, pending_w_i), map_buffer, map_cbuffer);
+    0000060A 01r33r02         [12] 1510 	ld	bc, #_map_cbuffer+0
+    0000060D FAr12r02         [16] 1511 	ld	a, (#_pending_w_i)
+    00000610 D6 05            [ 8] 1512 	sub	a, #0x05
+    00000612 30 04            [12] 1513 	jr	NC, 00109$
+    00000614 3E 05            [ 8] 1514 	ld	a, #0x05
+    00000616 18 03            [12] 1515 	jr	00110$
+    00000618                       1516 00109$:
+    00000618 FAr12r02         [16] 1517 	ld	a, (_pending_w_i)
+    0000061B                       1518 00110$:
+    0000061B C5               [16] 1519 	push	bc
+    0000061C 11r1Cr02         [12] 1520 	ld	de, #_map_buffer
+    0000061F D5               [16] 1521 	push	de
+    00000620 F5               [16] 1522 	push	af
+    00000621 33               [ 8] 1523 	inc	sp
+    00000622 FAr10r02         [16] 1524 	ld	a, (_pending_w_y)
+    00000625 4F               [ 4] 1525 	ld	c, a
+    00000626 21r11r02         [12] 1526 	ld	hl, #_pending_w_y + 1
+    00000629 46               [ 8] 1527 	ld	b, (hl)
+    0000062A FAr4Er02         [16] 1528 	ld	a, (_temp_coord)
+    0000062D 5F               [ 4] 1529 	ld	e, a
+    0000062E 21r4Fr02         [12] 1530 	ld	hl, #_temp_coord + 1
+    00000631 56               [ 8] 1531 	ld	d, (hl)
+    00000632 CDrB2r04         [24] 1532 	call	_ScrollSetTileMapRow
+                                   1533 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:331: pending_w_i = 0;
+    00000635 AF               [ 4] 1534 	xor	a, a
+    00000636 EAr12r02         [16] 1535 	ld	(#_pending_w_i),a
+                                   1536 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:332: }
+    00000639 33               [ 8] 1537 	inc	sp
+    0000063A C9               [16] 1538 	ret
+                                   1539 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:334: void ScrollUpdateRowWithDelay(INT16 x, INT16 y) {
+                                   1540 ;	---------------------------------
+                                   1541 ; Function ScrollUpdateRowWithDelay
+                                   1542 ; ---------------------------------
+    0000063B                       1543 _ScrollUpdateRowWithDelay::
+                                   1544 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:335: if (pending_w_i) ScrollUpdateRowR();
+    0000063B FAr12r02         [16] 1545 	ld	a, (#_pending_w_i)
+    0000063E B7               [ 4] 1546 	or	a, a
+    0000063F 28 07            [12] 1547 	jr	Z, 00102$
+    00000641 C5               [16] 1548 	push	bc
+    00000642 D5               [16] 1549 	push	de
+    00000643 CDr9Er05         [24] 1550 	call	_ScrollUpdateRowR
+    00000646 D1               [12] 1551 	pop	de
+    00000647 C1               [12] 1552 	pop	bc
+    00000648                       1553 00102$:
+                                   1554 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:337: pending_w_i = SCREEN_TILE_REFRES_W;
+    00000648 21r12r02         [12] 1555 	ld	hl, #_pending_w_i
+    0000064B 36 17            [12] 1556 	ld	(hl), #0x17
+                                   1557 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:339: UINT16 offset = scroll_tiles_w * (pending_w_y = y) + (pending_w_x = x);
+    0000064D 21r10r02         [12] 1558 	ld	hl, #_pending_w_y
+    00000650 79               [ 4] 1559 	ld	a, c
+    00000651 22               [ 8] 1560 	ld	(hl+), a
+    00000652 70               [ 8] 1561 	ld	(hl), b
+    00000653 D5               [16] 1562 	push	de
+    00000654 FAr04r00         [16] 1563 	ld	a, (_scroll_tiles_w)
+    00000657 5F               [ 4] 1564 	ld	e, a
+    00000658 21r05r00         [12] 1565 	ld	hl, #_scroll_tiles_w + 1
+    0000065B 56               [ 8] 1566 	ld	d, (hl)
+    0000065C CDr00r00         [24] 1567 	call	__mulint
+    0000065F D1               [12] 1568 	pop	de
+    00000660 21r0Er02         [12] 1569 	ld	hl, #_pending_w_x
+    00000663 7B               [ 4] 1570 	ld	a, e
+    00000664 22               [ 8] 1571 	ld	(hl+), a
+    00000665 72               [ 8] 1572 	ld	(hl), d
+    00000666 6B               [ 4] 1573 	ld	l, e
+    00000667 62               [ 4] 1574 	ld	h, d
+    00000668 09               [ 8] 1575 	add	hl, bc
+    00000669 4D               [ 4] 1576 	ld	c, l
+    0000066A 44               [ 4] 1577 	ld	b, h
+                                   1578 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:340: pending_w_map = scroll_map + offset;
+    0000066B FAr02r00         [16] 1579 	ld	a, (#_scroll_map)
+    0000066E 81               [ 4] 1580 	add	a, c
+    0000066F EAr17r00         [16] 1581 	ld	(#_pending_w_map),a
+    00000672 FAr03r00         [16] 1582 	ld	a, (#_scroll_map + 1)
+    00000675 88               [ 4] 1583 	adc	a, b
+    00000676 EAr18r00         [16] 1584 	ld	(#_pending_w_map + 1),a
+                                   1585 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:344: }
+    00000679 C9               [16] 1586 	ret
+                                   1587 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:346: void ScrollUpdateRow(INT16 x, INT16 y) {
+                                   1588 ;	---------------------------------
+                                   1589 ; Function ScrollUpdateRow
+                                   1590 ; ---------------------------------
+    0000067A                       1591 _ScrollUpdateRow::
+    0000067A E8 FF            [16] 1592 	add	sp, #-1
+                                   1593 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:347: UINT16 offset = scroll_tiles_w * y + x;
+    0000067C C5               [16] 1594 	push	bc
+    0000067D D5               [16] 1595 	push	de
+    0000067E FAr04r00         [16] 1596 	ld	a, (_scroll_tiles_w)
+    00000681 5F               [ 4] 1597 	ld	e, a
+    00000682 21r05r00         [12] 1598 	ld	hl, #_scroll_tiles_w + 1
+    00000685 56               [ 8] 1599 	ld	d, (hl)
+    00000686 CDr00r00         [24] 1600 	call	__mulint
+    00000689 D1               [12] 1601 	pop	de
+    0000068A 6B               [ 4] 1602 	ld	l, e
+    0000068B 62               [ 4] 1603 	ld	h, d
+    0000068C 09               [ 8] 1604 	add	hl, bc
+    0000068D 4D               [ 4] 1605 	ld	c, l
+    0000068E 44               [ 4] 1606 	ld	b, h
+                                   1607 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:349: scroll_ptr = scroll_map + offset;
+    0000068F FAr02r00         [16] 1608 	ld	a, (#_scroll_map)
+    00000692 81               [ 4] 1609 	add	a, c
+    00000693 EAr18r02         [16] 1610 	ld	(#_scroll_ptr),a
+    00000696 FAr03r00         [16] 1611 	ld	a, (#_scroll_map + 1)
+    00000699 88               [ 4] 1612 	adc	a, b
+    0000069A EAr19r02         [16] 1613 	ld	(#_scroll_ptr + 1),a
+                                   1614 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:350: dest_ptr = map_buffer;
+    0000069D 21r4Ar02         [12] 1615 	ld	hl, #_dest_ptr
+    000006A0 36r1C            [12] 1616 	ld	(hl), #<(_map_buffer)
+    000006A2 23               [ 8] 1617 	inc	hl
+    000006A3 36s02            [12] 1618 	ld	(hl), #>(_map_buffer)
+                                   1619 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:358: scroll_cptr = NULL;
+    000006A5 AF               [ 4] 1620 	xor	a, a
+    000006A6 21r1Ar02         [12] 1621 	ld	hl, #_scroll_cptr
+    000006A9 22               [ 8] 1622 	ld	(hl+), a
+    000006AA 77               [ 8] 1623 	ld	(hl), a
+                                   1624 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:361: temp_coord = x;
+    000006AB 21r4Er02         [12] 1625 	ld	hl, #_temp_coord
+    000006AE 73               [ 8] 1626 	ld	(hl), e
+    000006AF 23               [ 8] 1627 	inc	hl
+    000006B0 72               [ 8] 1628 	ld	(hl), d
+                                   1629 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:363: __save = CURRENT_BANK;
+    000006B1 F0r00            [12] 1630 	ldh	a, (__current_bank + 0)
+    000006B3 EAr50r02         [16] 1631 	ld	(#_ScrollUpdateRow___save_10001_360),a
+                                   1632 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:364: SWITCH_ROM(scroll_bank);
+    000006B6 FAr08r02         [16] 1633 	ld	a, (_scroll_bank)
+    000006B9 E0r00            [12] 1634 	ldh	(__current_bank + 0), a
+    000006BB EAr00r00         [16] 1635 	ld	(#_rROMB0),a
+                                   1636 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:365: for (UINT8 i = SCREEN_TILE_REFRES_W; (i); --i) {
+    000006BE F8 02            [12] 1637 	ldhl	sp,	#2
+    000006C0 36 17            [12] 1638 	ld	(hl), #0x17
+    000006C2                       1639 00103$:
+    000006C2 F8 02            [12] 1640 	ldhl	sp,	#2
+    000006C4 7E               [ 8] 1641 	ld	a, (hl)
+    000006C5 B7               [ 4] 1642 	or	a, a
+    000006C6 28 27            [12] 1643 	jr	Z, 00101$
+                                   1644 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:366: UPDATE_TILE(x++, y);
+    000006C8 7B               [ 4] 1645 	ld	a, e
+    000006C9 6A               [ 4] 1646 	ld	l, d
+    000006CA 13               [ 8] 1647 	inc	de
+    000006CB D5               [16] 1648 	push	de
+    000006CC E5               [16] 1649 	push	hl
+    000006CD F8 04            [12] 1650 	ldhl	sp,	#4
+    000006CF 4E               [ 8] 1651 	ld	c, (hl)
+    000006D0 F8 05            [12] 1652 	ldhl	sp,	#5
+    000006D2 46               [ 8] 1653 	ld	b, (hl)
+    000006D3 E1               [12] 1654 	pop	hl
+    000006D4 5F               [ 4] 1655 	ld	e, a
+    000006D5 55               [ 4] 1656 	ld	d, l
+    000006D6 CDr00r00         [24] 1657 	call	_UPDATE_TILE
+    000006D9 D1               [12] 1658 	pop	de
+                                   1659 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:367: scroll_ptr++;
+    000006DA 21r18r02         [12] 1660 	ld	hl, #_scroll_ptr
+    000006DD 34               [12] 1661 	inc	(hl)
+    000006DE 20 02            [12] 1662 	jr	NZ, 00122$
+    000006E0 23               [ 8] 1663 	inc	hl
+    000006E1 34               [12] 1664 	inc	(hl)
+    000006E2                       1665 00122$:
+                                   1666 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:373: dest_ptr++;
+    000006E2 21r4Ar02         [12] 1667 	ld	hl, #_dest_ptr
+    000006E5 34               [12] 1668 	inc	(hl)
+    000006E6 20 02            [12] 1669 	jr	NZ, 00123$
+    000006E8 23               [ 8] 1670 	inc	hl
+    000006E9 34               [12] 1671 	inc	(hl)
+    000006EA                       1672 00123$:
+                                   1673 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:365: for (UINT8 i = SCREEN_TILE_REFRES_W; (i); --i) {
+    000006EA F8 02            [12] 1674 	ldhl	sp,	#2
+    000006EC 35               [12] 1675 	dec	(hl)
+    000006ED 18 D3            [12] 1676 	jr	00103$
+    000006EF                       1677 00101$:
+                                   1678 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:380: SWITCH_ROM(__save);
+    000006EF FAr50r02         [16] 1679 	ld	a, (_ScrollUpdateRow___save_10001_360)
+    000006F2 E0r00            [12] 1680 	ldh	(__current_bank + 0), a
+    000006F4 EAr00r00         [16] 1681 	ld	(#_rROMB0),a
+                                   1682 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:382: ScrollSetTileMapRow(temp_coord, y, SCREEN_TILE_REFRES_W, map_buffer, map_cbuffer);
+    000006F7 11r33r02         [12] 1683 	ld	de, #_map_cbuffer
+    000006FA D5               [16] 1684 	push	de
+    000006FB 11r1Cr02         [12] 1685 	ld	de, #_map_buffer
+    000006FE D5               [16] 1686 	push	de
+    000006FF 3E 17            [ 8] 1687 	ld	a, #0x17
+    00000701 F5               [16] 1688 	push	af
+    00000702 33               [ 8] 1689 	inc	sp
+    00000703 F8 05            [12] 1690 	ldhl	sp,	#5
+    00000705 2A               [ 8] 1691 	ld	a, (hl+)
+    00000706 4F               [ 4] 1692 	ld	c, a
+    00000707 46               [ 8] 1693 	ld	b, (hl)
+    00000708 FAr4Er02         [16] 1694 	ld	a, (_temp_coord)
+    0000070B 5F               [ 4] 1695 	ld	e, a
+    0000070C 21r4Fr02         [12] 1696 	ld	hl, #_temp_coord + 1
+    0000070F 56               [ 8] 1697 	ld	d, (hl)
+    00000710 CDrB2r04         [24] 1698 	call	_ScrollSetTileMapRow
+                                   1699 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:383: }
+    00000713 E8 03            [16] 1700 	add	sp, #3
+    00000715 C9               [16] 1701 	ret
+                                   1702 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:385: void ScrollUpdateColumnR(void) {
+                                   1703 ;	---------------------------------
+                                   1704 ; Function ScrollUpdateColumnR
+                                   1705 ; ---------------------------------
+    00000716                       1706 _ScrollUpdateColumnR::
+                                   1707 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:386: scroll_ptr = pending_h_map;
+    00000716 FAr15r00         [16] 1708 	ld	a, (#_pending_h_map)
+    00000719 EAr18r02         [16] 1709 	ld	(#_scroll_ptr),a
+    0000071C FAr16r00         [16] 1710 	ld	a, (#_pending_h_map + 1)
+    0000071F EAr19r02         [16] 1711 	ld	(#_scroll_ptr + 1),a
+                                   1712 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:387: dest_ptr = map_buffer;
+    00000722 21r4Ar02         [12] 1713 	ld	hl, #_dest_ptr
+    00000725 36r1C            [12] 1714 	ld	(hl), #<(_map_buffer)
+    00000727 23               [ 8] 1715 	inc	hl
+    00000728 36s02            [12] 1716 	ld	(hl), #>(_map_buffer)
+                                   1717 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:395: scroll_cptr = NULL;
+    0000072A AF               [ 4] 1718 	xor	a, a
+    0000072B 21r1Ar02         [12] 1719 	ld	hl, #_scroll_cptr
+    0000072E 22               [ 8] 1720 	ld	(hl+), a
+    0000072F 77               [ 8] 1721 	ld	(hl), a
+                                   1722 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:397: temp_coord = pending_h_y;
+    00000730 FAr0Br02         [16] 1723 	ld	a, (#_pending_h_y)
+    00000733 EAr4Er02         [16] 1724 	ld	(#_temp_coord),a
+    00000736 FAr0Cr02         [16] 1725 	ld	a, (#_pending_h_y + 1)
+    00000739 EAr4Fr02         [16] 1726 	ld	(#_temp_coord + 1),a
+                                   1727 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:398: for (UINT8 i = MAX(SCREEN_RESTORE_H, pending_h_i); (i); --i) {
+    0000073C FAr0Dr02         [16] 1728 	ld	a, (#_pending_h_i)
+    0000073F D6 05            [ 8] 1729 	sub	a, #0x05
+    00000741 30 04            [12] 1730 	jr	NC, 00107$
+    00000743 1E 05            [ 8] 1731 	ld	e, #0x05
+    00000745 18 04            [12] 1732 	jr	00108$
+    00000747                       1733 00107$:
+    00000747 FAr0Dr02         [16] 1734 	ld	a, (_pending_h_i)
+    0000074A 5F               [ 4] 1735 	ld	e, a
+    0000074B                       1736 00108$:
+    0000074B                       1737 00103$:
+    0000074B 7B               [ 4] 1738 	ld	a, e
+    0000074C B7               [ 4] 1739 	or	a, a
+    0000074D 28 39            [12] 1740 	jr	Z, 00101$
+                                   1741 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:399: UPDATE_TILE(pending_h_x, pending_h_y++);
+    0000074F FAr0Br02         [16] 1742 	ld	a, (_pending_h_y)
+    00000752 4F               [ 4] 1743 	ld	c, a
+    00000753 21r0Cr02         [12] 1744 	ld	hl, #_pending_h_y + 1
+    00000756 3A               [ 8] 1745 	ld	a, (hl-)
+    00000757 47               [ 4] 1746 	ld	b, a
+    00000758 34               [12] 1747 	inc	(hl)
+    00000759 20 02            [12] 1748 	jr	NZ, 00140$
+    0000075B 23               [ 8] 1749 	inc	hl
+    0000075C 34               [12] 1750 	inc	(hl)
+    0000075D                       1751 00140$:
+    0000075D D5               [16] 1752 	push	de
+    0000075E FAr09r02         [16] 1753 	ld	a, (_pending_h_x)
+    00000761 5F               [ 4] 1754 	ld	e, a
+    00000762 21r0Ar02         [12] 1755 	ld	hl, #_pending_h_x + 1
+    00000765 56               [ 8] 1756 	ld	d, (hl)
+    00000766 CDr00r00         [24] 1757 	call	_UPDATE_TILE
+    00000769 D1               [12] 1758 	pop	de
+                                   1759 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:400: scroll_ptr += scroll_tiles_w;
+    0000076A FAr18r02         [16] 1760 	ld	a, (#_scroll_ptr)
+    0000076D 21r04r00         [12] 1761 	ld	hl, #_scroll_tiles_w
+    00000770 86               [ 8] 1762 	add	a, (hl)
+    00000771 21r18r02         [12] 1763 	ld	hl, #_scroll_ptr
+    00000774 22               [ 8] 1764 	ld	(hl+), a
+    00000775 7E               [ 8] 1765 	ld	a, (hl)
+    00000776 21r05r00         [12] 1766 	ld	hl, #_scroll_tiles_w + 1
+    00000779 8E               [ 8] 1767 	adc	a, (hl)
+    0000077A EAr19r02         [16] 1768 	ld	(#_scroll_ptr + 1),a
+                                   1769 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:406: dest_ptr++;
+    0000077D 21r4Ar02         [12] 1770 	ld	hl, #_dest_ptr
+    00000780 34               [12] 1771 	inc	(hl)
+    00000781 20 02            [12] 1772 	jr	NZ, 00141$
+    00000783 23               [ 8] 1773 	inc	hl
+    00000784 34               [12] 1774 	inc	(hl)
+    00000785                       1775 00141$:
+                                   1776 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:398: for (UINT8 i = MAX(SCREEN_RESTORE_H, pending_h_i); (i); --i) {
+    00000785 1D               [ 4] 1777 	dec	e
+    00000786 18 C3            [12] 1778 	jr	00103$
+    00000788                       1779 00101$:
+                                   1780 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:413: ScrollSetTileMapColumn(pending_h_x, temp_coord, MAX(SCREEN_RESTORE_H, pending_h_i), map_buffer, map_cbuffer);
+    00000788 01r33r02         [12] 1781 	ld	bc, #_map_cbuffer+0
+    0000078B FAr0Dr02         [16] 1782 	ld	a, (#_pending_h_i)
+    0000078E D6 05            [ 8] 1783 	sub	a, #0x05
+    00000790 30 04            [12] 1784 	jr	NC, 00109$
+    00000792 3E 05            [ 8] 1785 	ld	a, #0x05
+    00000794 18 03            [12] 1786 	jr	00110$
+    00000796                       1787 00109$:
+    00000796 FAr0Dr02         [16] 1788 	ld	a, (_pending_h_i)
+    00000799                       1789 00110$:
+    00000799 C5               [16] 1790 	push	bc
+    0000079A 11r1Cr02         [12] 1791 	ld	de, #_map_buffer
+    0000079D D5               [16] 1792 	push	de
+    0000079E F5               [16] 1793 	push	af
+    0000079F 33               [ 8] 1794 	inc	sp
+    000007A0 FAr4Er02         [16] 1795 	ld	a, (_temp_coord)
+    000007A3 4F               [ 4] 1796 	ld	c, a
+    000007A4 21r4Fr02         [12] 1797 	ld	hl, #_temp_coord + 1
+    000007A7 46               [ 8] 1798 	ld	b, (hl)
+    000007A8 FAr09r02         [16] 1799 	ld	a, (_pending_h_x)
+    000007AB 5F               [ 4] 1800 	ld	e, a
+    000007AC 21r0Ar02         [12] 1801 	ld	hl, #_pending_h_x + 1
+    000007AF 56               [ 8] 1802 	ld	d, (hl)
+    000007B0 CDr29r05         [24] 1803 	call	_ScrollSetTileMapColumn
+                                   1804 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:414: pending_h_i = 0;
+    000007B3 AF               [ 4] 1805 	xor	a, a
+    000007B4 EAr0Dr02         [16] 1806 	ld	(#_pending_h_i),a
+                                   1807 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:415: }
+    000007B7 C9               [16] 1808 	ret
+                                   1809 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:417: void ScrollUpdateColumnWithDelay(INT16 x, INT16 y) {
+                                   1810 ;	---------------------------------
+                                   1811 ; Function ScrollUpdateColumnWithDelay
+                                   1812 ; ---------------------------------
+    000007B8                       1813 _ScrollUpdateColumnWithDelay::
+                                   1814 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:418: if (pending_h_i) ScrollUpdateColumnR();
+    000007B8 FAr0Dr02         [16] 1815 	ld	a, (#_pending_h_i)
+    000007BB B7               [ 4] 1816 	or	a, a
+    000007BC 28 07            [12] 1817 	jr	Z, 00102$
+    000007BE C5               [16] 1818 	push	bc
+    000007BF D5               [16] 1819 	push	de
+    000007C0 CDr16r07         [24] 1820 	call	_ScrollUpdateColumnR
+    000007C3 D1               [12] 1821 	pop	de
+    000007C4 C1               [12] 1822 	pop	bc
+    000007C5                       1823 00102$:
+                                   1824 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:420: pending_h_i = SCREEN_TILE_REFRES_H;
+    000007C5 21r0Dr02         [12] 1825 	ld	hl, #_pending_h_i
+    000007C8 36 15            [12] 1826 	ld	(hl), #0x15
+                                   1827 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:422: UINT16 offset = scroll_tiles_w * (pending_h_y = y) + (pending_h_x = x);
+    000007CA 21r0Br02         [12] 1828 	ld	hl, #_pending_h_y
+    000007CD 79               [ 4] 1829 	ld	a, c
+    000007CE 22               [ 8] 1830 	ld	(hl+), a
+    000007CF 70               [ 8] 1831 	ld	(hl), b
+    000007D0 D5               [16] 1832 	push	de
+    000007D1 FAr04r00         [16] 1833 	ld	a, (_scroll_tiles_w)
+    000007D4 5F               [ 4] 1834 	ld	e, a
+    000007D5 21r05r00         [12] 1835 	ld	hl, #_scroll_tiles_w + 1
+    000007D8 56               [ 8] 1836 	ld	d, (hl)
+    000007D9 CDr00r00         [24] 1837 	call	__mulint
+    000007DC D1               [12] 1838 	pop	de
+    000007DD 21r09r02         [12] 1839 	ld	hl, #_pending_h_x
+    000007E0 7B               [ 4] 1840 	ld	a, e
+    000007E1 22               [ 8] 1841 	ld	(hl+), a
+    000007E2 72               [ 8] 1842 	ld	(hl), d
+    000007E3 6B               [ 4] 1843 	ld	l, e
+    000007E4 62               [ 4] 1844 	ld	h, d
+    000007E5 09               [ 8] 1845 	add	hl, bc
+    000007E6 4D               [ 4] 1846 	ld	c, l
+    000007E7 44               [ 4] 1847 	ld	b, h
+                                   1848 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:423: pending_h_map = scroll_map + offset;
+    000007E8 FAr02r00         [16] 1849 	ld	a, (#_scroll_map)
+    000007EB 81               [ 4] 1850 	add	a, c
+    000007EC EAr15r00         [16] 1851 	ld	(#_pending_h_map),a
+    000007EF FAr03r00         [16] 1852 	ld	a, (#_scroll_map + 1)
+    000007F2 88               [ 4] 1853 	adc	a, b
+    000007F3 EAr16r00         [16] 1854 	ld	(#_pending_h_map + 1),a
+                                   1855 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:427: }
+    000007F6 C9               [16] 1856 	ret
+                                   1857 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:429: void ScrollUpdateColumn(INT16 x, INT16 y) {
+                                   1858 ;	---------------------------------
+                                   1859 ; Function ScrollUpdateColumn
+                                   1860 ; ---------------------------------
+    000007F7                       1861 _ScrollUpdateColumn::
+    000007F7 E8 FB            [16] 1862 	add	sp, #-5
+    000007F9 F8 02            [12] 1863 	ldhl	sp,	#2
+    000007FB 7B               [ 4] 1864 	ld	a, e
+    000007FC 22               [ 8] 1865 	ld	(hl+), a
+    000007FD 72               [ 8] 1866 	ld	(hl), d
+                                   1867 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:430: UINT16 offset = scroll_tiles_w * y + x;
+    000007FE C5               [16] 1868 	push	bc
+    000007FF FAr04r00         [16] 1869 	ld	a, (_scroll_tiles_w)
+    00000802 5F               [ 4] 1870 	ld	e, a
+    00000803 21r05r00         [12] 1871 	ld	hl, #_scroll_tiles_w + 1
+    00000806 56               [ 8] 1872 	ld	d, (hl)
+    00000807 CDr00r00         [24] 1873 	call	__mulint
+    0000080A D1               [12] 1874 	pop	de
+    0000080B F8 02            [12] 1875 	ldhl	sp,	#2
+    0000080D 3A               [ 8] 1876 	ld	a, (hl-)
+    0000080E 2B               [ 8] 1877 	dec	hl
+    0000080F 77               [ 8] 1878 	ld	(hl), a
+    00000810 F8 03            [12] 1879 	ldhl	sp,	#3
+    00000812 3A               [ 8] 1880 	ld	a, (hl-)
+    00000813 2B               [ 8] 1881 	dec	hl
+    00000814 77               [ 8] 1882 	ld	(hl), a
+    00000815 E1               [12] 1883 	pop	hl
+    00000816 E5               [16] 1884 	push	hl
+    00000817 09               [ 8] 1885 	add	hl, bc
+    00000818 4D               [ 4] 1886 	ld	c, l
+    00000819 44               [ 4] 1887 	ld	b, h
+                                   1888 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:432: scroll_ptr = scroll_map + offset;
+    0000081A FAr02r00         [16] 1889 	ld	a, (#_scroll_map)
+    0000081D 81               [ 4] 1890 	add	a, c
+    0000081E EAr18r02         [16] 1891 	ld	(#_scroll_ptr),a
+    00000821 FAr03r00         [16] 1892 	ld	a, (#_scroll_map + 1)
+    00000824 88               [ 4] 1893 	adc	a, b
+    00000825 EAr19r02         [16] 1894 	ld	(#_scroll_ptr + 1),a
+                                   1895 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:433: dest_ptr = map_buffer;
+    00000828 21r4Ar02         [12] 1896 	ld	hl, #_dest_ptr
+    0000082B 36r1C            [12] 1897 	ld	(hl), #<(_map_buffer)
+    0000082D 23               [ 8] 1898 	inc	hl
+    0000082E 36s02            [12] 1899 	ld	(hl), #>(_map_buffer)
+                                   1900 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:441: scroll_cptr = NULL;
+    00000830 AF               [ 4] 1901 	xor	a, a
+    00000831 21r1Ar02         [12] 1902 	ld	hl, #_scroll_cptr
+    00000834 22               [ 8] 1903 	ld	(hl+), a
+    00000835 77               [ 8] 1904 	ld	(hl), a
+                                   1905 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:444: temp_coord = y;
+    00000836 21r4Er02         [12] 1906 	ld	hl, #_temp_coord
+    00000839 73               [ 8] 1907 	ld	(hl), e
+    0000083A 23               [ 8] 1908 	inc	hl
+    0000083B 72               [ 8] 1909 	ld	(hl), d
+                                   1910 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:446: __save = CURRENT_BANK;
+    0000083C F0r00            [12] 1911 	ldh	a, (__current_bank + 0)
+    0000083E EAr51r02         [16] 1912 	ld	(#_ScrollUpdateColumn___save_10001_373),a
+                                   1913 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:447: SWITCH_ROM(scroll_bank);
+    00000841 FAr08r02         [16] 1914 	ld	a, (_scroll_bank)
+    00000844 E0r00            [12] 1915 	ldh	(__current_bank + 0), a
+    00000846 EAr00r00         [16] 1916 	ld	(#_rROMB0),a
+                                   1917 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:448: for (UINT8 i = SCREEN_TILE_REFRES_H; (i); --i) {
+    00000849 F8 04            [12] 1918 	ldhl	sp,	#4
+    0000084B 36 15            [12] 1919 	ld	(hl), #0x15
+    0000084D                       1920 00103$:
+    0000084D F8 04            [12] 1921 	ldhl	sp,	#4
+    0000084F 7E               [ 8] 1922 	ld	a, (hl)
+    00000850 B7               [ 4] 1923 	or	a, a
+    00000851 28 2D            [12] 1924 	jr	Z, 00101$
+                                   1925 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:449: UPDATE_TILE(x, y++);
+    00000853 2B               [ 8] 1926 	dec	hl
+    00000854 2B               [ 8] 1927 	dec	hl
+    00000855 4B               [ 4] 1928 	ld	c, e
+    00000856 42               [ 4] 1929 	ld	b, d
+    00000857 13               [ 8] 1930 	inc	de
+    00000858 D5               [16] 1931 	push	de
+    00000859 2A               [ 8] 1932 	ld	a, (hl+)
+    0000085A 5F               [ 4] 1933 	ld	e, a
+    0000085B 56               [ 8] 1934 	ld	d, (hl)
+    0000085C CDr00r00         [24] 1935 	call	_UPDATE_TILE
+    0000085F D1               [12] 1936 	pop	de
+                                   1937 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:450: scroll_ptr += scroll_tiles_w;
+    00000860 FAr18r02         [16] 1938 	ld	a, (#_scroll_ptr)
+    00000863 21r04r00         [12] 1939 	ld	hl, #_scroll_tiles_w
+    00000866 86               [ 8] 1940 	add	a, (hl)
+    00000867 21r18r02         [12] 1941 	ld	hl, #_scroll_ptr
+    0000086A 22               [ 8] 1942 	ld	(hl+), a
+    0000086B 7E               [ 8] 1943 	ld	a, (hl)
+    0000086C 21r05r00         [12] 1944 	ld	hl, #_scroll_tiles_w + 1
+    0000086F 8E               [ 8] 1945 	adc	a, (hl)
+    00000870 EAr19r02         [16] 1946 	ld	(#_scroll_ptr + 1),a
+                                   1947 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:456: dest_ptr++;
+    00000873 21r4Ar02         [12] 1948 	ld	hl, #_dest_ptr
+    00000876 34               [12] 1949 	inc	(hl)
+    00000877 20 02            [12] 1950 	jr	NZ, 00122$
+    00000879 23               [ 8] 1951 	inc	hl
+    0000087A 34               [12] 1952 	inc	(hl)
+    0000087B                       1953 00122$:
+                                   1954 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:448: for (UINT8 i = SCREEN_TILE_REFRES_H; (i); --i) {
+    0000087B F8 04            [12] 1955 	ldhl	sp,	#4
+    0000087D 35               [12] 1956 	dec	(hl)
+    0000087E 18 CD            [12] 1957 	jr	00103$
+    00000880                       1958 00101$:
+                                   1959 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:463: SWITCH_ROM(__save);
+    00000880 FAr51r02         [16] 1960 	ld	a, (_ScrollUpdateColumn___save_10001_373)
+    00000883 E0r00            [12] 1961 	ldh	(__current_bank + 0), a
+    00000885 EAr00r00         [16] 1962 	ld	(#_rROMB0),a
+                                   1963 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:465: ScrollSetTileMapColumn(x, temp_coord, SCREEN_TILE_REFRES_H, map_buffer, map_cbuffer);
+    00000888 11r33r02         [12] 1964 	ld	de, #_map_cbuffer
+    0000088B D5               [16] 1965 	push	de
+    0000088C 11r1Cr02         [12] 1966 	ld	de, #_map_buffer
+    0000088F D5               [16] 1967 	push	de
+    00000890 3E 15            [ 8] 1968 	ld	a, #0x15
+    00000892 F5               [16] 1969 	push	af
+    00000893 33               [ 8] 1970 	inc	sp
+    00000894 FAr4Er02         [16] 1971 	ld	a, (_temp_coord)
+    00000897 4F               [ 4] 1972 	ld	c, a
+    00000898 21r4Fr02         [12] 1973 	ld	hl, #_temp_coord + 1
+    0000089B 46               [ 8] 1974 	ld	b, (hl)
+    0000089C F8 07            [12] 1975 	ldhl	sp,	#7
+    0000089E 2A               [ 8] 1976 	ld	a, (hl+)
+    0000089F 5F               [ 4] 1977 	ld	e, a
+    000008A0 56               [ 8] 1978 	ld	d, (hl)
+    000008A1 CDr29r05         [24] 1979 	call	_ScrollSetTileMapColumn
+                                   1980 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:466: }
+    000008A4 E8 05            [16] 1981 	add	sp, #5
+    000008A6 C9               [16] 1982 	ret
+                                   1983 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:468: void RefreshScroll(void) {
+                                   1984 ;	---------------------------------
+                                   1985 ; Function RefreshScroll
+                                   1986 ; ---------------------------------
+    000008A7                       1987 _RefreshScroll::
+    000008A7 E8 FC            [16] 1988 	add	sp, #-4
+                                   1989 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:469: if (scroll_target) {
+    000008A9 21r0Fr00         [12] 1990 	ld	hl, #_scroll_target + 1
+    000008AC 3A               [ 8] 1991 	ld	a, (hl-)
+    000008AD B6               [ 8] 1992 	or	a, (hl)
+    000008AE CAr34r09         [16] 1993 	jp	Z, 00108$
+                                   1994 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:470: UINT16 ny = scroll_y;
+    000008B1 FAr08r00         [16] 1995 	ld	a, (#_scroll_y)
+    000008B4 F8 00            [12] 1996 	ldhl	sp,	#0
+    000008B6 77               [ 8] 1997 	ld	(hl), a
+    000008B7 FAr09r00         [16] 1998 	ld	a, (#_scroll_y + 1)
+    000008BA F8 01            [12] 1999 	ldhl	sp,	#1
+    000008BC 77               [ 8] 2000 	ld	(hl), a
+                                   2001 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:472: if (scroll_bottom_movement_limit < (scroll_target->y - scroll_y)) ny = scroll_target->y - scroll_bottom_movement_limit;
+    000008BD FAr0Er00         [16] 2002 	ld	a, (_scroll_target)
+    000008C0 21r0Fr00         [12] 2003 	ld	hl, #_scroll_target + 1
+    000008C3 66               [ 8] 2004 	ld	h, (hl)
+    000008C4 6F               [ 4] 2005 	ld	l, a
+    000008C5 23               [ 8] 2006 	inc	hl
+    000008C6 23               [ 8] 2007 	inc	hl
+    000008C7 2A               [ 8] 2008 	ld	a, (hl+)
+    000008C8 47               [ 4] 2009 	ld	b, a
+    000008C9 4E               [ 8] 2010 	ld	c, (hl)
+    000008CA FAr08r00         [16] 2011 	ld	a, (_scroll_y)
+    000008CD 5F               [ 4] 2012 	ld	e, a
+    000008CE 21r09r00         [12] 2013 	ld	hl, #_scroll_y + 1
+    000008D1 56               [ 8] 2014 	ld	d, (hl)
+    000008D2 78               [ 4] 2015 	ld	a, b
+    000008D3 93               [ 4] 2016 	sub	a, e
+    000008D4 5F               [ 4] 2017 	ld	e, a
+    000008D5 79               [ 4] 2018 	ld	a, c
+    000008D6 9A               [ 4] 2019 	sbc	a, d
+    000008D7 57               [ 4] 2020 	ld	d, a
+    000008D8 FAr01r00         [16] 2021 	ld	a, (_scroll_bottom_movement_limit)
+    000008DB 6F               [ 4] 2022 	ld	l, a
+    000008DC 26 00            [ 8] 2023 	ld	h, #0x00
+    000008DE 7D               [ 4] 2024 	ld	a, l
+    000008DF 93               [ 4] 2025 	sub	a, e
+    000008E0 7C               [ 4] 2026 	ld	a, h
+    000008E1 9A               [ 4] 2027 	sbc	a, d
+    000008E2 30 18            [12] 2028 	jr	NC, 00104$
+    000008E4 FAr01r00         [16] 2029 	ld	a, (_scroll_bottom_movement_limit)
+    000008E7 F8 02            [12] 2030 	ldhl	sp,	#2
+    000008E9 22               [ 8] 2031 	ld	(hl+), a
+    000008EA 36 00            [12] 2032 	ld	(hl), #0x00
+    000008EC 58               [ 4] 2033 	ld	e, b
+    000008ED 51               [ 4] 2034 	ld	d, c
+    000008EE 3A               [ 8] 2035 	ld	a, (hl-)
+    000008EF 6E               [ 8] 2036 	ld	l, (hl)
+    000008F0 67               [ 4] 2037 	ld	h, a
+    000008F1 7B               [ 4] 2038 	ld	a, e
+    000008F2 95               [ 4] 2039 	sub	a, l
+    000008F3 5F               [ 4] 2040 	ld	e, a
+    000008F4 7A               [ 4] 2041 	ld	a, d
+    000008F5 9C               [ 4] 2042 	sbc	a, h
+    000008F6 F8 01            [12] 2043 	ldhl	sp,	#1
+    000008F8 32               [ 8] 2044 	ld	(hl-), a
+    000008F9 73               [ 8] 2045 	ld	(hl), e
+    000008FA 18 22            [12] 2046 	jr	00105$
+    000008FC                       2047 00104$:
+                                   2048 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:473: else if (scroll_top_movement_limit > (scroll_target->y - scroll_y)) ny = scroll_target->y - scroll_top_movement_limit;
+    000008FC FAr00r00         [16] 2049 	ld	a, (_scroll_top_movement_limit)
+    000008FF 6F               [ 4] 2050 	ld	l, a
+    00000900 26 00            [ 8] 2051 	ld	h, #0x00
+    00000902 7B               [ 4] 2052 	ld	a, e
+    00000903 95               [ 4] 2053 	sub	a, l
+    00000904 7A               [ 4] 2054 	ld	a, d
+    00000905 9C               [ 4] 2055 	sbc	a, h
+    00000906 30 16            [12] 2056 	jr	NC, 00105$
+    00000908 FAr00r00         [16] 2057 	ld	a, (_scroll_top_movement_limit)
+    0000090B F8 02            [12] 2058 	ldhl	sp,	#2
+    0000090D 22               [ 8] 2059 	ld	(hl+), a
+    0000090E 36 00            [12] 2060 	ld	(hl), #0x00
+    00000910 58               [ 4] 2061 	ld	e, b
+    00000911 51               [ 4] 2062 	ld	d, c
+    00000912 3A               [ 8] 2063 	ld	a, (hl-)
+    00000913 6E               [ 8] 2064 	ld	l, (hl)
+    00000914 67               [ 4] 2065 	ld	h, a
+    00000915 7B               [ 4] 2066 	ld	a, e
+    00000916 95               [ 4] 2067 	sub	a, l
+    00000917 5F               [ 4] 2068 	ld	e, a
+    00000918 7A               [ 4] 2069 	ld	a, d
+    00000919 9C               [ 4] 2070 	sbc	a, h
+    0000091A F8 01            [12] 2071 	ldhl	sp,	#1
+    0000091C 32               [ 8] 2072 	ld	(hl-), a
+    0000091D 73               [ 8] 2073 	ld	(hl), e
+    0000091E                       2074 00105$:
+                                   2075 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:475: MoveScroll(scroll_target->x - (SCREEN_WIDTH >> 1), ny);
+    0000091E 21r0Er00         [12] 2076 	ld	hl, #_scroll_target
+    00000921 2A               [ 8] 2077 	ld	a,	(hl+)
+    00000922 66               [ 8] 2078 	ld	h, (hl)
+    00000923 6F               [ 4] 2079 	ld	l, a
+    00000924 2A               [ 8] 2080 	ld	a, (hl+)
+    00000925 4F               [ 4] 2081 	ld	c, a
+    00000926 46               [ 8] 2082 	ld	b, (hl)
+    00000927 79               [ 4] 2083 	ld	a, c
+    00000928 C6 B0            [ 8] 2084 	add	a, #0xb0
+    0000092A 5F               [ 4] 2085 	ld	e, a
+    0000092B 78               [ 4] 2086 	ld	a, b
+    0000092C CE FF            [ 8] 2087 	adc	a, #0xff
+    0000092E C1               [12] 2088 	pop	bc
+    0000092F C5               [16] 2089 	push	bc
+    00000930 57               [ 4] 2090 	ld	d, a
+    00000931 CDr37r09         [24] 2091 	call	_MoveScroll
+    00000934                       2092 00108$:
+                                   2093 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:477: }
+    00000934 E8 04            [16] 2094 	add	sp, #4
+    00000936 C9               [16] 2095 	ret
+                                   2096 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:479: void MoveScroll(INT16 x, INT16 y) {
+                                   2097 ;	---------------------------------
+                                   2098 ; Function MoveScroll
+                                   2099 ; ---------------------------------
+    00000937                       2100 _MoveScroll::
+    00000937 3B               [ 8] 2101 	dec	sp
+    00000938 3B               [ 8] 2102 	dec	sp
+                                   2103 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:483: __save = CURRENT_BANK;
+    00000939 F0r00            [12] 2104 	ldh	a, (__current_bank + 0)
+    0000093B EAr5Ar02         [16] 2105 	ld	(#_MoveScroll___save_10000_383),a
+                                   2106 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:484: SWITCH_ROM(scroll_bank);
+    0000093E FAr08r02         [16] 2107 	ld	a, (_scroll_bank)
+    00000941 E0r00            [12] 2108 	ldh	(__current_bank + 0), a
+    00000943 EAr00r00         [16] 2109 	ld	(#_rROMB0),a
+                                   2110 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:486: current_column = PX_TO_TILE(scroll_x);
+    00000946 FAr06r00         [16] 2111 	ld	a, (#_scroll_x)
+    00000949 EAr52r02         [16] 2112 	ld	(#_MoveScroll_current_column_10000_383),a
+    0000094C FAr07r00         [16] 2113 	ld	a, (#_scroll_x + 1)
+    0000094F 21r53r02         [12] 2114 	ld	hl, #_MoveScroll_current_column_10000_383 + 1
+    00000952 77               [ 8] 2115 	ld	(hl), a
+    00000953 CB 2E            [16] 2116 	sra	(hl)
+    00000955 2B               [ 8] 2117 	dec	hl
+    00000956 CB 1E            [16] 2118 	rr	(hl)
+    00000958 23               [ 8] 2119 	inc	hl
+    00000959 CB 2E            [16] 2120 	sra	(hl)
+    0000095B 2B               [ 8] 2121 	dec	hl
+    0000095C CB 1E            [16] 2122 	rr	(hl)
+    0000095E 23               [ 8] 2123 	inc	hl
+    0000095F CB 2E            [16] 2124 	sra	(hl)
+    00000961 2B               [ 8] 2125 	dec	hl
+    00000962 CB 1E            [16] 2126 	rr	(hl)
+                                   2127 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:487: current_row    = PX_TO_TILE(scroll_y);
+    00000964 FAr08r00         [16] 2128 	ld	a, (#_scroll_y)
+    00000967 EAr56r02         [16] 2129 	ld	(#_MoveScroll_current_row_10000_383),a
+    0000096A FAr09r00         [16] 2130 	ld	a, (#_scroll_y + 1)
+    0000096D 21r57r02         [12] 2131 	ld	hl, #_MoveScroll_current_row_10000_383 + 1
+    00000970 77               [ 8] 2132 	ld	(hl), a
+    00000971 CB 2E            [16] 2133 	sra	(hl)
+    00000973 2B               [ 8] 2134 	dec	hl
+    00000974 CB 1E            [16] 2135 	rr	(hl)
+    00000976 23               [ 8] 2136 	inc	hl
+    00000977 CB 2E            [16] 2137 	sra	(hl)
+    00000979 2B               [ 8] 2138 	dec	hl
+    0000097A CB 1E            [16] 2139 	rr	(hl)
+    0000097C 23               [ 8] 2140 	inc	hl
+    0000097D CB 2E            [16] 2141 	sra	(hl)
+    0000097F 2B               [ 8] 2142 	dec	hl
+    00000980 CB 1E            [16] 2143 	rr	(hl)
+                                   2144 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:489: scroll_x = x;
+    00000982 21r06r00         [12] 2145 	ld	hl, #_scroll_x
+    00000985 7B               [ 4] 2146 	ld	a, e
+    00000986 22               [ 8] 2147 	ld	(hl+), a
+    00000987 72               [ 8] 2148 	ld	(hl), d
+                                   2149 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:490: scroll_y = y;
+    00000988 21r08r00         [12] 2150 	ld	hl, #_scroll_y
+    0000098B 79               [ 4] 2151 	ld	a, c
+    0000098C 22               [ 8] 2152 	ld	(hl+), a
+    0000098D 70               [ 8] 2153 	ld	(hl), b
+                                   2154 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:491: ClampScrollLimits();
+    0000098E CDr00r00         [24] 2155 	call	_ClampScrollLimits
+                                   2156 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:493: new_column     = PX_TO_TILE(scroll_x);
+    00000991 FAr06r00         [16] 2157 	ld	a, (#_scroll_x)
+    00000994 EAr54r02         [16] 2158 	ld	(#_MoveScroll_new_column_10000_383),a
+    00000997 FAr07r00         [16] 2159 	ld	a, (#_scroll_x + 1)
+    0000099A 21r55r02         [12] 2160 	ld	hl, #_MoveScroll_new_column_10000_383 + 1
+    0000099D 77               [ 8] 2161 	ld	(hl), a
+    0000099E CB 2E            [16] 2162 	sra	(hl)
+    000009A0 2B               [ 8] 2163 	dec	hl
+    000009A1 CB 1E            [16] 2164 	rr	(hl)
+    000009A3 23               [ 8] 2165 	inc	hl
+    000009A4 CB 2E            [16] 2166 	sra	(hl)
+    000009A6 2B               [ 8] 2167 	dec	hl
+    000009A7 CB 1E            [16] 2168 	rr	(hl)
+    000009A9 23               [ 8] 2169 	inc	hl
+    000009AA CB 2E            [16] 2170 	sra	(hl)
+    000009AC 2B               [ 8] 2171 	dec	hl
+    000009AD CB 1E            [16] 2172 	rr	(hl)
+                                   2173 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:494: new_row        = PX_TO_TILE(scroll_y);
+    000009AF FAr08r00         [16] 2174 	ld	a, (#_scroll_y)
+    000009B2 EAr58r02         [16] 2175 	ld	(#_MoveScroll_new_row_10000_383),a
+    000009B5 FAr09r00         [16] 2176 	ld	a, (#_scroll_y + 1)
+    000009B8 21r59r02         [12] 2177 	ld	hl, #_MoveScroll_new_row_10000_383 + 1
+    000009BB 77               [ 8] 2178 	ld	(hl), a
+    000009BC CB 2E            [16] 2179 	sra	(hl)
+    000009BE 2B               [ 8] 2180 	dec	hl
+    000009BF CB 1E            [16] 2181 	rr	(hl)
+    000009C1 23               [ 8] 2182 	inc	hl
+    000009C2 CB 2E            [16] 2183 	sra	(hl)
+    000009C4 2B               [ 8] 2184 	dec	hl
+    000009C5 CB 1E            [16] 2185 	rr	(hl)
+    000009C7 23               [ 8] 2186 	inc	hl
+    000009C8 CB 2E            [16] 2187 	sra	(hl)
+    000009CA 2B               [ 8] 2188 	dec	hl
+    000009CB CB 1E            [16] 2189 	rr	(hl)
+                                   2190 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:496: if (current_column != new_column) {
+    000009CD FAr52r02         [16] 2191 	ld	a, (#_MoveScroll_current_column_10000_383)
+    000009D0 21r54r02         [12] 2192 	ld	hl, #_MoveScroll_new_column_10000_383
+    000009D3 96               [ 8] 2193 	sub	a, (hl)
+    000009D4 20 09            [12] 2194 	jr	NZ, 00168$
+    000009D6 FAr53r02         [16] 2195 	ld	a, (#_MoveScroll_current_column_10000_383 + 1)
+    000009D9 21r55r02         [12] 2196 	ld	hl, #_MoveScroll_new_column_10000_383 + 1
+    000009DC 96               [ 8] 2197 	sub	a, (hl)
+    000009DD 28 41            [12] 2198 	jr	Z, 00105$
+    000009DF                       2199 00168$:
+                                   2200 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:498: ScrollUpdateColumnWithDelay(new_column - SCREEN_PAD_LEFT + SCREEN_TILE_REFRES_W - 1, new_row - SCREEN_PAD_TOP);
+    000009DF 21r58r02         [12] 2201 	ld	hl, #_MoveScroll_new_row_10000_383
+    000009E2 2A               [ 8] 2202 	ld	a, (hl+)
+    000009E3 4F               [ 4] 2203 	ld	c, a
+    000009E4 46               [ 8] 2204 	ld	b, (hl)
+    000009E5 0B               [ 8] 2205 	dec	bc
+                                   2206 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:497: if (new_column > current_column) {
+    000009E6 11r52r02         [12] 2207 	ld	de, #_MoveScroll_current_column_10000_383
+    000009E9 21r54r02         [12] 2208 	ld	hl, #_MoveScroll_new_column_10000_383
+    000009EC 1A               [ 8] 2209 	ld	a, (de)
+    000009ED 13               [ 8] 2210 	inc	de
+    000009EE 96               [ 8] 2211 	sub	a, (hl)
+    000009EF 23               [ 8] 2212 	inc	hl
+    000009F0 1A               [ 8] 2213 	ld	a, (de)
+    000009F1 9E               [ 8] 2214 	sbc	a, (hl)
+    000009F2 1A               [ 8] 2215 	ld	a, (de)
+    000009F3 57               [ 4] 2216 	ld	d, a
+    000009F4 CB 7E            [12] 2217 	bit	7, (hl)
+    000009F6 28 07            [12] 2218 	jr	Z, 00169$
+    000009F8 CB 7A            [ 8] 2219 	bit	7, d
+    000009FA 20 08            [12] 2220 	jr	NZ, 00170$
+    000009FC BF               [ 4] 2221 	cp	a, a
+    000009FD 18 05            [12] 2222 	jr	00170$
+    000009FF                       2223 00169$:
+    000009FF CB 7A            [ 8] 2224 	bit	7, d
+    00000A01 28 01            [12] 2225 	jr	Z, 00170$
+    00000A03 37               [ 4] 2226 	scf
+    00000A04                       2227 00170$:
+    00000A04 30 10            [12] 2228 	jr	NC, 00102$
+                                   2229 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:498: ScrollUpdateColumnWithDelay(new_column - SCREEN_PAD_LEFT + SCREEN_TILE_REFRES_W - 1, new_row - SCREEN_PAD_TOP);
+    00000A06 21r54r02         [12] 2230 	ld	hl, #_MoveScroll_new_column_10000_383
+    00000A09 2A               [ 8] 2231 	ld	a, (hl+)
+    00000A0A C6 15            [ 8] 2232 	add	a, #0x15
+    00000A0C 5F               [ 4] 2233 	ld	e, a
+    00000A0D 7E               [ 8] 2234 	ld	a, (hl)
+    00000A0E CE 00            [ 8] 2235 	adc	a, #0x00
+    00000A10 57               [ 4] 2236 	ld	d, a
+    00000A11 CDrB8r07         [24] 2237 	call	_ScrollUpdateColumnWithDelay
+    00000A14 18 0A            [12] 2238 	jr	00105$
+    00000A16                       2239 00102$:
+                                   2240 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:500: ScrollUpdateColumnWithDelay(new_column - SCREEN_PAD_LEFT,                            new_row - SCREEN_PAD_TOP);
+    00000A16 21r54r02         [12] 2241 	ld	hl, #_MoveScroll_new_column_10000_383
+    00000A19 2A               [ 8] 2242 	ld	a, (hl+)
+    00000A1A 5F               [ 4] 2243 	ld	e, a
+    00000A1B 56               [ 8] 2244 	ld	d, (hl)
+    00000A1C 1B               [ 8] 2245 	dec	de
+    00000A1D CDrB8r07         [24] 2246 	call	_ScrollUpdateColumnWithDelay
+    00000A20                       2247 00105$:
+                                   2248 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:504: if (current_row != new_row) {
+    00000A20 FAr56r02         [16] 2249 	ld	a, (#_MoveScroll_current_row_10000_383)
+    00000A23 21r58r02         [12] 2250 	ld	hl, #_MoveScroll_new_row_10000_383
+    00000A26 96               [ 8] 2251 	sub	a, (hl)
+    00000A27 20 09            [12] 2252 	jr	NZ, 00171$
+    00000A29 FAr57r02         [16] 2253 	ld	a, (#_MoveScroll_current_row_10000_383 + 1)
+    00000A2C 21r59r02         [12] 2254 	ld	hl, #_MoveScroll_new_row_10000_383 + 1
+    00000A2F 96               [ 8] 2255 	sub	a, (hl)
+    00000A30 28 6F            [12] 2256 	jr	Z, 00112$
+    00000A32                       2257 00171$:
+                                   2258 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:500: ScrollUpdateColumnWithDelay(new_column - SCREEN_PAD_LEFT,                            new_row - SCREEN_PAD_TOP);
+    00000A32 21r54r02         [12] 2259 	ld	hl, #_MoveScroll_new_column_10000_383
+    00000A35 2A               [ 8] 2260 	ld	a, (hl+)
+    00000A36 5F               [ 4] 2261 	ld	e, a
+    00000A37 56               [ 8] 2262 	ld	d, (hl)
+    00000A38 21 01 00         [12] 2263 	ld	hl, #0x0001
+    00000A3B 7B               [ 4] 2264 	ld	a, e
+    00000A3C 95               [ 4] 2265 	sub	a, l
+    00000A3D 5F               [ 4] 2266 	ld	e, a
+    00000A3E 7A               [ 4] 2267 	ld	a, d
+    00000A3F 9C               [ 4] 2268 	sbc	a, h
+    00000A40 F8 01            [12] 2269 	ldhl	sp,	#1
+    00000A42 32               [ 8] 2270 	ld	(hl-), a
+    00000A43 73               [ 8] 2271 	ld	(hl), e
+                                   2272 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:505: if (new_row > current_row) {
+    00000A44 11r56r02         [12] 2273 	ld	de, #_MoveScroll_current_row_10000_383
+    00000A47 21r58r02         [12] 2274 	ld	hl, #_MoveScroll_new_row_10000_383
+    00000A4A 1A               [ 8] 2275 	ld	a, (de)
+    00000A4B 13               [ 8] 2276 	inc	de
+    00000A4C 96               [ 8] 2277 	sub	a, (hl)
+    00000A4D 23               [ 8] 2278 	inc	hl
+    00000A4E 1A               [ 8] 2279 	ld	a, (de)
+    00000A4F 9E               [ 8] 2280 	sbc	a, (hl)
+    00000A50 1A               [ 8] 2281 	ld	a, (de)
+    00000A51 57               [ 4] 2282 	ld	d, a
+    00000A52 CB 7E            [12] 2283 	bit	7, (hl)
+    00000A54 28 07            [12] 2284 	jr	Z, 00172$
+    00000A56 CB 7A            [ 8] 2285 	bit	7, d
+    00000A58 20 08            [12] 2286 	jr	NZ, 00173$
+    00000A5A BF               [ 4] 2287 	cp	a, a
+    00000A5B 18 05            [12] 2288 	jr	00173$
+    00000A5D                       2289 00172$:
+    00000A5D CB 7A            [ 8] 2290 	bit	7, d
+    00000A5F 28 01            [12] 2291 	jr	Z, 00173$
+    00000A61 37               [ 4] 2292 	scf
+    00000A62                       2293 00173$:
+    00000A62 30 12            [12] 2294 	jr	NC, 00109$
+                                   2295 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:506: ScrollUpdateRowWithDelay(new_column - SCREEN_PAD_LEFT, new_row - SCREEN_PAD_TOP + SCREEN_TILE_REFRES_H - 1);
+    00000A64 21r58r02         [12] 2296 	ld	hl, #_MoveScroll_new_row_10000_383
+    00000A67 2A               [ 8] 2297 	ld	a, (hl+)
+    00000A68 C6 13            [ 8] 2298 	add	a, #0x13
+    00000A6A 4F               [ 4] 2299 	ld	c, a
+    00000A6B 7E               [ 8] 2300 	ld	a, (hl)
+    00000A6C CE 00            [ 8] 2301 	adc	a, #0x00
+    00000A6E 47               [ 4] 2302 	ld	b, a
+    00000A6F D1               [12] 2303 	pop	de
+    00000A70 D5               [16] 2304 	push	de
+    00000A71 CDr3Br06         [24] 2305 	call	_ScrollUpdateRowWithDelay
+    00000A74 18 2B            [12] 2306 	jr	00112$
+    00000A76                       2307 00109$:
+                                   2308 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:507: } else if (new_row >= SCREEN_PAD_TOP) {
+    00000A76 21r58r02         [12] 2309 	ld	hl, #_MoveScroll_new_row_10000_383
+    00000A79 2A               [ 8] 2310 	ld	a, (hl+)
+    00000A7A D6 01            [ 8] 2311 	sub	a, #0x01
+    00000A7C 7E               [ 8] 2312 	ld	a, (hl)
+    00000A7D DE 00            [ 8] 2313 	sbc	a, #0x00
+    00000A7F 56               [ 8] 2314 	ld	d, (hl)
+    00000A80 3E 00            [ 8] 2315 	ld	a, #0x00
+    00000A82 5F               [ 4] 2316 	ld	e, a
+    00000A83 CB 7B            [ 8] 2317 	bit	7, e
+    00000A85 28 07            [12] 2318 	jr	Z, 00174$
+    00000A87 CB 7A            [ 8] 2319 	bit	7, d
+    00000A89 20 08            [12] 2320 	jr	NZ, 00175$
+    00000A8B BF               [ 4] 2321 	cp	a, a
+    00000A8C 18 05            [12] 2322 	jr	00175$
+    00000A8E                       2323 00174$:
+    00000A8E CB 7A            [ 8] 2324 	bit	7, d
+    00000A90 28 01            [12] 2325 	jr	Z, 00175$
+    00000A92 37               [ 4] 2326 	scf
+    00000A93                       2327 00175$:
+    00000A93 38 0C            [12] 2328 	jr	C, 00112$
+                                   2329 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:508: ScrollUpdateRowWithDelay(new_column - SCREEN_PAD_LEFT, new_row - SCREEN_PAD_TOP);
+    00000A95 21r58r02         [12] 2330 	ld	hl, #_MoveScroll_new_row_10000_383
+    00000A98 2A               [ 8] 2331 	ld	a, (hl+)
+    00000A99 4F               [ 4] 2332 	ld	c, a
+    00000A9A 46               [ 8] 2333 	ld	b, (hl)
+    00000A9B 0B               [ 8] 2334 	dec	bc
+    00000A9C D1               [12] 2335 	pop	de
+    00000A9D D5               [16] 2336 	push	de
+    00000A9E CDr3Br06         [24] 2337 	call	_ScrollUpdateRowWithDelay
+    00000AA1                       2338 00112$:
+                                   2339 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:512: if (pending_w_i) {
+    00000AA1 FAr12r02         [16] 2340 	ld	a, (#_pending_w_i)
+    00000AA4 B7               [ 4] 2341 	or	a, a
+    00000AA5 28 03            [12] 2342 	jr	Z, 00114$
+                                   2343 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:513: ScrollUpdateRowR();
+    00000AA7 CDr9Er05         [24] 2344 	call	_ScrollUpdateRowR
+    00000AAA                       2345 00114$:
+                                   2346 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:515: if (pending_h_i) {
+    00000AAA FAr0Dr02         [16] 2347 	ld	a, (#_pending_h_i)
+    00000AAD B7               [ 4] 2348 	or	a, a
+    00000AAE 28 03            [12] 2349 	jr	Z, 00116$
+                                   2350 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:516: ScrollUpdateColumnR();
+    00000AB0 CDr16r07         [24] 2351 	call	_ScrollUpdateColumnR
+    00000AB3                       2352 00116$:
+                                   2353 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:518: SWITCH_ROM(__save);
+    00000AB3 FAr5Ar02         [16] 2354 	ld	a, (_MoveScroll___save_10000_383)
+    00000AB6 E0r00            [12] 2355 	ldh	(__current_bank + 0), a
+    00000AB8 EAr00r00         [16] 2356 	ld	(#_rROMB0),a
+                                   2357 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:519: }
+    00000ABB 33               [ 8] 2358 	inc	sp
+    00000ABC 33               [ 8] 2359 	inc	sp
+    00000ABD C9               [16] 2360 	ret
+                                   2361 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:521: UINT8 GetScrollTile(UINT16 x, UINT16 y) {
+                                   2362 ;	---------------------------------
+                                   2363 ; Function GetScrollTile
+                                   2364 ; ---------------------------------
+    00000ABE                       2365 _GetScrollTile::
+    00000ABE 68               [ 4] 2366 	ld	l, b
+                                   2367 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:523: UINT8 __save = CURRENT_BANK;
+    00000ABF F0r00            [12] 2368 	ldh	a, (__current_bank + 0)
+    00000AC1 47               [ 4] 2369 	ld	b, a
+                                   2370 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:524: SWITCH_ROM(scroll_bank);
+    00000AC2 FAr08r02         [16] 2371 	ld	a, (_scroll_bank)
+    00000AC5 E0r00            [12] 2372 	ldh	(__current_bank + 0), a
+    00000AC7 EAr00r00         [16] 2373 	ld	(_rROMB0), a
+                                   2374 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Scroll.h:157: return scroll_map + (scroll_tiles_w * y + x);
+    00000ACA C5               [16] 2375 	push	bc
+    00000ACB D5               [16] 2376 	push	de
+    00000ACC 45               [ 4] 2377 	ld	b, l
+    00000ACD FAr04r00         [16] 2378 	ld	a, (_scroll_tiles_w)
+    00000AD0 5F               [ 4] 2379 	ld	e, a
+    00000AD1 21r05r00         [12] 2380 	ld	hl, #_scroll_tiles_w + 1
+    00000AD4 56               [ 8] 2381 	ld	d, (hl)
+    00000AD5 CDr00r00         [24] 2382 	call	__mulint
+    00000AD8 69               [ 4] 2383 	ld	l, c
+    00000AD9 60               [ 4] 2384 	ld	h, b
+    00000ADA D1               [12] 2385 	pop	de
+    00000ADB C1               [12] 2386 	pop	bc
+    00000ADC 19               [ 8] 2387 	add	hl, de
+    00000ADD 7D               [ 4] 2388 	ld	a, l
+    00000ADE 54               [ 4] 2389 	ld	d, h
+    00000ADF 21r02r00         [12] 2390 	ld	hl, #_scroll_map
+    00000AE2 86               [ 8] 2391 	add	a, (hl)
+    00000AE3 23               [ 8] 2392 	inc	hl
+    00000AE4 5F               [ 4] 2393 	ld	e, a
+    00000AE5 7A               [ 4] 2394 	ld	a, d
+    00000AE6 8E               [ 8] 2395 	adc	a, (hl)
+    00000AE7 57               [ 4] 2396 	ld	d, a
+                                   2397 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:525: ret = *GetScrollTilePtr(x, y);
+    00000AE8 1A               [ 8] 2398 	ld	a, (de)
+    00000AE9 4F               [ 4] 2399 	ld	c, a
+                                   2400 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:526: SWITCH_ROM(__save);
+    00000AEA 78               [ 4] 2401 	ld	a, b
+    00000AEB E0r00            [12] 2402 	ldh	(__current_bank + 0), a
+    00000AED 21r00r00         [12] 2403 	ld	hl, #_rROMB0
+    00000AF0 70               [ 8] 2404 	ld	(hl), b
+                                   2405 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:527: return ret;
+    00000AF1 79               [ 4] 2406 	ld	a, c
+                                   2407 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:528: }
+    00000AF2 C9               [16] 2408 	ret
+                                   2409 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:530: void GetMapSize(UINT8 map_bank, const struct MapInfo* map, UINT16* tiles_w, UINT16* tiles_h) {
+                                   2410 ;	---------------------------------
+                                   2411 ; Function GetMapSize
+                                   2412 ; ---------------------------------
+    00000AF3                       2413 _GetMapSize::
+    00000AF3 E8 FB            [16] 2414 	add	sp, #-5
+    00000AF5 4F               [ 4] 2415 	ld	c, a
+    00000AF6 F8 03            [12] 2416 	ldhl	sp,	#3
+    00000AF8 73               [ 8] 2417 	ld	(hl), e
+    00000AF9 23               [ 8] 2418 	inc	hl
+    00000AFA 72               [ 8] 2419 	ld	(hl), d
+                                   2420 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:531: UINT8 __save = CURRENT_BANK;
+    00000AFB F0r00            [12] 2421 	ldh	a, (__current_bank + 0)
+    00000AFD F8 00            [12] 2422 	ldhl	sp,	#0
+    00000AFF 77               [ 8] 2423 	ld	(hl), a
+                                   2424 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:532: SWITCH_ROM(map_bank);
+    00000B00 79               [ 4] 2425 	ld	a, c
+    00000B01 E0r00            [12] 2426 	ldh	(__current_bank + 0), a
+    00000B03 21r00r00         [12] 2427 	ld	hl, #_rROMB0
+    00000B06 71               [ 8] 2428 	ld	(hl), c
+                                   2429 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:533: if (tiles_w) *tiles_w = map->width;
+    00000B07 F8 08            [12] 2430 	ldhl	sp,	#8
+    00000B09 3A               [ 8] 2431 	ld	a, (hl-)
+    00000B0A B6               [ 8] 2432 	or	a, (hl)
+    00000B0B 28 10            [12] 2433 	jr	Z, 00102$
+    00000B0D 2A               [ 8] 2434 	ld	a, (hl+)
+    00000B0E 4F               [ 4] 2435 	ld	c, a
+    00000B0F 46               [ 8] 2436 	ld	b, (hl)
+    00000B10 F8 03            [12] 2437 	ldhl	sp,	#3
+    00000B12 2A               [ 8] 2438 	ld	a, (hl+)
+    00000B13 66               [ 8] 2439 	ld	h, (hl)
+    00000B14 6F               [ 4] 2440 	ld	l, a
+    00000B15 23               [ 8] 2441 	inc	hl
+    00000B16 23               [ 8] 2442 	inc	hl
+    00000B17 2A               [ 8] 2443 	ld	a,	(hl+)
+    00000B18 66               [ 8] 2444 	ld	h, (hl)
+    00000B19 02               [ 8] 2445 	ld	(bc), a
+    00000B1A 03               [ 8] 2446 	inc	bc
+    00000B1B 7C               [ 4] 2447 	ld	a, h
+    00000B1C 02               [ 8] 2448 	ld	(bc), a
+    00000B1D                       2449 00102$:
+                                   2450 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:534: if (tiles_h) *tiles_h = map->height;
+    00000B1D F8 0A            [12] 2451 	ldhl	sp,	#10
+    00000B1F 3A               [ 8] 2452 	ld	a, (hl-)
+    00000B20 B6               [ 8] 2453 	or	a, (hl)
+    00000B21 28 1C            [12] 2454 	jr	Z, 00104$
+    00000B23 7E               [ 8] 2455 	ld	a, (hl)
+    00000B24 F8 01            [12] 2456 	ldhl	sp,	#1
+    00000B26 77               [ 8] 2457 	ld	(hl), a
+    00000B27 F8 0A            [12] 2458 	ldhl	sp,	#10
+    00000B29 7E               [ 8] 2459 	ld	a, (hl)
+    00000B2A F8 02            [12] 2460 	ldhl	sp,	#2
+    00000B2C 22               [ 8] 2461 	ld	(hl+), a
+    00000B2D 2A               [ 8] 2462 	ld	a, (hl+)
+    00000B2E 5F               [ 4] 2463 	ld	e, a
+    00000B2F 56               [ 8] 2464 	ld	d, (hl)
+    00000B30 21 04 00         [12] 2465 	ld	hl, #0x0004
+    00000B33 19               [ 8] 2466 	add	hl, de
+    00000B34 2A               [ 8] 2467 	ld	a, (hl+)
+    00000B35 4F               [ 4] 2468 	ld	c, a
+    00000B36 46               [ 8] 2469 	ld	b, (hl)
+    00000B37 F8 01            [12] 2470 	ldhl	sp,	#1
+    00000B39 2A               [ 8] 2471 	ld	a, (hl+)
+    00000B3A 66               [ 8] 2472 	ld	h, (hl)
+    00000B3B 6F               [ 4] 2473 	ld	l, a
+    00000B3C 79               [ 4] 2474 	ld	a, c
+    00000B3D 22               [ 8] 2475 	ld	(hl+), a
+    00000B3E 70               [ 8] 2476 	ld	(hl), b
+    00000B3F                       2477 00104$:
+                                   2478 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:535: SWITCH_ROM(__save);
+    00000B3F F8 00            [12] 2479 	ldhl	sp,	#0
+    00000B41 7E               [ 8] 2480 	ld	a, (hl)
+    00000B42 E0r00            [12] 2481 	ldh	(__current_bank + 0), a
+    00000B44 7E               [ 8] 2482 	ld	a, (hl)
+    00000B45 EAr00r00         [16] 2483 	ld	(#_rROMB0),a
+                                   2484 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Scroll.c:536: }
+    00000B48 E8 05            [16] 2485 	add	sp, #5
+    00000B4A E1               [12] 2486 	pop	hl
+    00000B4B E8 04            [16] 2487 	add	sp, #4
+    00000B4D E9               [ 4] 2488 	jp	(hl)
+                                   2489 	.area _CODE
+                                   2490 	.area _INITIALIZER
+    00000000                       2491 __xinit__scroll_top_movement_limit:
+    00000000 1E                    2492 	.db #0x1e	; 30
+    00000001                       2493 __xinit__scroll_bottom_movement_limit:
+    00000001 64                    2494 	.db #0x64	; 100	'd'
+    00000002                       2495 __xinit__scroll_map:
+    00000002 00 00                 2496 	.dw #0x0000
+    00000004                       2497 __xinit__scroll_cmap:
+    00000004 00 00                 2498 	.dw #0x0000
+    00000006                       2499 __xinit__scroll_x:
+    00000006 00 00                 2500 	.dw #0x0000
+    00000008                       2501 __xinit__scroll_y:
+    00000008 00 00                 2502 	.dw #0x0000
+    0000000A                       2503 __xinit__scroll_x_vblank:
+    0000000A 00 00                 2504 	.dw #0x0000
+    0000000C                       2505 __xinit__scroll_y_vblank:
+    0000000C 00 00                 2506 	.dw #0x0000
+    0000000E                       2507 __xinit__scroll_target:
+    0000000E 00 00                 2508 	.dw #0x0000
+    00000010                       2509 __xinit__scroll_offset_x:
+    00000010 00                    2510 	.db #0x00	; 0
+    00000011                       2511 __xinit__scroll_offset_y:
+    00000011 00                    2512 	.db #0x00	; 0
+    00000012                       2513 __xinit__scroll_h_border:
+    00000012 00 00                 2514 	.dw #0x0000
+    00000014                       2515 __xinit__clamp_enabled:
+    00000014 01                    2516 	.db #0x01	; 1
+    00000015                       2517 __xinit__pending_h_map:
+    00000015 00 00                 2518 	.dw #0x0000
+    00000017                       2519 __xinit__pending_w_map:
+    00000017 00 00                 2520 	.dw #0x0000
+    00000019                       2521 __xinit__last_tile_loaded:
+    00000019 00                    2522 	.db #0x00	; 0
+                                   2523 	.area _CABS (ABS)

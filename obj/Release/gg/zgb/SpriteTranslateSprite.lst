@@ -1,0 +1,765 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module SpriteTranslateSprite
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _TranslateSprite
+                                     11 ;--------------------------------------------------------
+                                     12 ; special function registers
+                                     13 ;--------------------------------------------------------
+                         00000000    14 _GG_STATE	=	0x0000
+                         00000001    15 _GG_EXT_7BIT	=	0x0001
+                         00000002    16 _GG_EXT_CTL	=	0x0002
+                         00000003    17 _GG_SIO_SEND	=	0x0003
+                         00000004    18 _GG_SIO_RECV	=	0x0004
+                         00000005    19 _GG_SIO_CTL	=	0x0005
+                         00000006    20 _GG_SOUND_PAN	=	0x0006
+                         0000003E    21 _MEMORY_CTL	=	0x003e
+                         0000003F    22 _JOY_CTL	=	0x003f
+                         0000007E    23 _VCOUNTER	=	0x007e
+                         0000007F    24 _PSG	=	0x007f
+                         0000007F    25 _HCOUNTER	=	0x007f
+                         000000BE    26 _VDP_DATA	=	0x00be
+                         000000BF    27 _VDP_CMD	=	0x00bf
+                         000000BF    28 _VDP_STATUS	=	0x00bf
+                         000000DC    29 _JOY_PORT1	=	0x00dc
+                         000000DD    30 _JOY_PORT2	=	0x00dd
+                         000000F0    31 _FMADDRESS	=	0x00f0
+                         000000F1    32 _FMDATA	=	0x00f1
+                         000000F2    33 _AUDIOCTRL	=	0x00f2
+                                     34 ;--------------------------------------------------------
+                                     35 ; ram data
+                                     36 ;--------------------------------------------------------
+                                     37 	.area _DATA
+                         0000FFFC    38 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    39 _GLASSES_3D	=	0xfff8
+                         0000FFFD    40 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    41 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    42 _MAP_FRAME2	=	0xffff
+    00000000                         43 _TranslateSprite___save_10000_241:
+    00000000                         44 	.ds 1
+    00000001                         45 _TranslateSprite_tile_coll_10000_241:
+    00000001                         46 	.ds 2
+    00000003                         47 _TranslateSprite_start_tile_x_10000_241:
+    00000003                         48 	.ds 2
+    00000005                         49 _TranslateSprite_end_tile_x_10000_241:
+    00000005                         50 	.ds 2
+    00000007                         51 _TranslateSprite_start_tile_y_10000_241:
+    00000007                         52 	.ds 2
+    00000009                         53 _TranslateSprite_end_tile_y_10000_241:
+    00000009                         54 	.ds 2
+                                     55 ;--------------------------------------------------------
+                                     56 ; ram data
+                                     57 ;--------------------------------------------------------
+                                     58 	.area _INITIALIZED
+                                     59 ;--------------------------------------------------------
+                                     60 ; absolute external ram data
+                                     61 ;--------------------------------------------------------
+                                     62 	.area _DABS (ABS)
+                                     63 ;--------------------------------------------------------
+                                     64 ; global & static initialisations
+                                     65 ;--------------------------------------------------------
+                                     66 	.area _HOME
+                                     67 	.area _GSINIT
+                                     68 	.area _GSFINAL
+                                     69 	.area _GSINIT
+                                     70 ;--------------------------------------------------------
+                                     71 ; Home
+                                     72 ;--------------------------------------------------------
+                                     73 	.area _HOME
+                                     74 	.area _HOME
+                                     75 ;--------------------------------------------------------
+                                     76 ; code
+                                     77 ;--------------------------------------------------------
+                                     78 	.area _CODE
+                                     79 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:7: UINT8 TranslateSprite(Sprite* sprite, INT8 x, INT8 y) {
+                                     80 ;	---------------------------------
+                                     81 ; Function TranslateSprite
+                                     82 ; ---------------------------------
+    00000000                         83 _TranslateSprite::
+    00000000 DD E5            [15]   84 	push	ix
+    00000002 DD 21 00 00      [14]   85 	ld	ix,#0
+    00000006 DD 39            [15]   86 	add	ix,sp
+    00000008 FD 21 EC FF      [14]   87 	ld	iy, #-20
+    0000000C FD 39            [15]   88 	add	iy, sp
+    0000000E FD F9            [10]   89 	ld	sp, iy
+    00000010 DD 75 FE         [19]   90 	ld	-2 (ix), l
+    00000013 DD 74 FF         [19]   91 	ld	-1 (ix), h
+                                     92 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:13: UINT8 ret = 0;
+    00000016 DD 36 EC 00      [19]   93 	ld	-20 (ix), #0x00
+                                     94 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:16: __save = CURRENT_BANK;
+    0000001A 3A FE FF         [13]   95 	ld	a, (_MAP_FRAME1+0)
+    0000001D 32r00r00         [13]   96 	ld	(_TranslateSprite___save_10000_241+0), a
+                                     97 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:17: SWITCH_ROM(scroll_bank);
+    00000020 3Ar00r00         [13]   98 	ld	a, (_scroll_bank+0)
+    00000023 32 FE FF         [13]   99 	ld	(_MAP_FRAME1+0), a
+                                    100 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:19: pivot_x = (x > 0) ? (sprite->x + (UINT8)(sprite->coll_w - 1u)) : sprite->x;
+    00000026 DD 7E FE         [19]  101 	ld	a, -2 (ix)
+    00000029 DD 77 ED         [19]  102 	ld	-19 (ix), a
+    0000002C DD 7E FF         [19]  103 	ld	a, -1 (ix)
+    0000002F DD 77 EE         [19]  104 	ld	-18 (ix), a
+    00000032 DD 7E FE         [19]  105 	ld	a, -2 (ix)
+    00000035 C6 04            [ 7]  106 	add	a, #0x04
+    00000037 DD 77 EF         [19]  107 	ld	-17 (ix), a
+    0000003A DD 7E FF         [19]  108 	ld	a, -1 (ix)
+    0000003D CE 00            [ 7]  109 	adc	a, #0x00
+    0000003F DD 77 F0         [19]  110 	ld	-16 (ix), a
+                                    111 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:23: pivot_x += x;
+    00000042 DD 7E 04         [19]  112 	ld	a, 4 (ix)
+    00000045 DD 77 F1         [19]  113 	ld	-15 (ix), a
+    00000048 07               [ 4]  114 	rlca
+    00000049 9F               [ 4]  115 	sbc	a, a
+    0000004A DD 77 F2         [19]  116 	ld	-14 (ix), a
+                                    117 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:35: if (sprite->y >= scroll_h) {
+    0000004D DD 7E FE         [19]  118 	ld	a, -2 (ix)
+    00000050 C6 02            [ 7]  119 	add	a, #0x02
+    00000052 DD 77 F3         [19]  120 	ld	-13 (ix), a
+    00000055 DD 7E FF         [19]  121 	ld	a, -1 (ix)
+    00000058 CE 00            [ 7]  122 	adc	a, #0x00
+    0000005A DD 77 F4         [19]  123 	ld	-12 (ix), a
+                                    124 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:42: pivot_y = sprite->y + sprite->coll_h - 1;
+    0000005D DD 7E FE         [19]  125 	ld	a, -2 (ix)
+    00000060 C6 05            [ 7]  126 	add	a, #0x05
+    00000062 DD 77 F5         [19]  127 	ld	-11 (ix), a
+    00000065 DD 7E FF         [19]  128 	ld	a, -1 (ix)
+    00000068 CE 00            [ 7]  129 	adc	a, #0x00
+    0000006A DD 77 F6         [19]  130 	ld	-10 (ix), a
+                                    131 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:51: scroll_coll_group = sprite->coll_group;
+    0000006D DD 7E FE         [19]  132 	ld	a, -2 (ix)
+    00000070 C6 22            [ 7]  133 	add	a, #0x22
+    00000072 DD 77 F7         [19]  134 	ld	-9 (ix), a
+    00000075 DD 7E FF         [19]  135 	ld	a, -1 (ix)
+    00000078 CE 00            [ 7]  136 	adc	a, #0x00
+    0000007A DD 77 F8         [19]  137 	ld	-8 (ix), a
+                                    138 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:18: if (x) {
+    0000007D DD 7E 04         [19]  139 	ld	a, 4 (ix)
+    00000080 B7               [ 4]  140 	or	a, a
+    00000081 CAr93r02         [10]  141 	jp	Z, 00116$
+                                    142 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:19: pivot_x = (x > 0) ? (sprite->x + (UINT8)(sprite->coll_w - 1u)) : sprite->x;
+    00000084 AF               [ 4]  143 	xor	a, a
+    00000085 DD 96 04         [19]  144 	sub	a, 4 (ix)
+    00000088 E2r8Dr00         [10]  145 	jp	PO, 00336$
+    0000008B EE 80            [ 7]  146 	xor	a, #0x80
+    0000008D                        147 00336$:
+    0000008D 07               [ 4]  148 	rlca
+    0000008E E6 01            [ 7]  149 	and	a,#0x01
+    00000090 DD 77 F9         [19]  150 	ld	-7 (ix), a
+                                    151 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:82: if (sprite->x >= scroll_w){
+    00000093 DD 6E ED         [19]  152 	ld	l, -19 (ix)
+    00000096 DD 66 EE         [19]  153 	ld	h, -18 (ix)
+    00000099 5E               [ 7]  154 	ld	e, (hl)
+    0000009A 23               [ 6]  155 	inc	hl
+    0000009B 56               [ 7]  156 	ld	d, (hl)
+                                    157 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:19: pivot_x = (x > 0) ? (sprite->x + (UINT8)(sprite->coll_w - 1u)) : sprite->x;
+    0000009C DD 7E F9         [19]  158 	ld	a, -7 (ix)
+    0000009F B7               [ 4]  159 	or	a, a
+    000000A0 28 0C            [12]  160 	jr	Z, 00143$
+    000000A2 DD 6E EF         [19]  161 	ld	l, -17 (ix)
+    000000A5 DD 66 F0         [19]  162 	ld	h, -16 (ix)
+    000000A8 6E               [ 7]  163 	ld	l, (hl)
+    000000A9 2D               [ 4]  164 	dec	l
+    000000AA 26 00            [ 7]  165 	ld	h, #0x00
+    000000AC 19               [11]  166 	add	hl, de
+    000000AD EB               [ 4]  167 	ex	de, hl
+    000000AE                        168 00143$:
+                                    169 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:22: UINT16 tmp = PX_TO_TILE(pivot_x);
+    000000AE 4B               [ 4]  170 	ld	c, e
+    000000AF 42               [ 4]  171 	ld	b, d
+    000000B0 CB 28            [ 8]  172 	sra	b
+    000000B2 CB 19            [ 8]  173 	rr	c
+    000000B4 CB 28            [ 8]  174 	sra	b
+    000000B6 CB 19            [ 8]  175 	rr	c
+    000000B8 CB 28            [ 8]  176 	sra	b
+    000000BA CB 19            [ 8]  177 	rr	c
+                                    178 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:23: pivot_x += x;
+    000000BC DD 7E F1         [19]  179 	ld	a, -15 (ix)
+    000000BF 83               [ 4]  180 	add	a, e
+    000000C0 5F               [ 4]  181 	ld	e, a
+    000000C1 DD 7E F2         [19]  182 	ld	a, -14 (ix)
+    000000C4 8A               [ 4]  183 	adc	a, d
+    000000C5 57               [ 4]  184 	ld	d, a
+                                    185 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:24: start_tile_x = PX_TO_TILE(pivot_x);
+    000000C6 ED 53r03r00      [20]  186 	ld	(_TranslateSprite_start_tile_x_10000_241), de
+    000000CA FD 21r03r00      [14]  187 	ld	iy, #_TranslateSprite_start_tile_x_10000_241
+    000000CE FD CB 01 2E      [23]  188 	sra	1 (iy)
+    000000D2 FD CB 00 1E      [23]  189 	rr	0 (iy)
+    000000D6 FD CB 01 2E      [23]  190 	sra	1 (iy)
+    000000DA FD CB 00 1E      [23]  191 	rr	0 (iy)
+    000000DE FD CB 01 2E      [23]  192 	sra	1 (iy)
+    000000E2 FD CB 00 1E      [23]  193 	rr	0 (iy)
+                                    194 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:25: if (tmp == start_tile_x) {
+    000000E6 2Ar03r00         [16]  195 	ld	hl, (_TranslateSprite_start_tile_x_10000_241)
+    000000E9 BF               [ 4]  196 	cp	a, a
+    000000EA ED 42            [15]  197 	sbc	hl, bc
+    000000EC CAr93r02         [10]  198 	jp	Z, 00116$
+                                    199 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:30: if ((UINT16)pivot_x >= scroll_w) {
+    000000EF 21r00r00         [10]  200 	ld	hl, #_scroll_w
+    000000F2 7B               [ 4]  201 	ld	a, e
+    000000F3 96               [ 7]  202 	sub	a, (hl)
+    000000F4 23               [ 6]  203 	inc	hl
+    000000F5 7A               [ 4]  204 	ld	a, d
+    000000F6 9E               [ 7]  205 	sbc	a, (hl)
+    000000F7 D2r93r02         [10]  206 	jp	NC, 00116$
+                                    207 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:35: if (sprite->y >= scroll_h) {
+    000000FA DD 6E F3         [19]  208 	ld	l, -13 (ix)
+    000000FD DD 66 F4         [19]  209 	ld	h, -12 (ix)
+    00000100 4E               [ 7]  210 	ld	c, (hl)
+    00000101 23               [ 6]  211 	inc	hl
+    00000102 46               [ 7]  212 	ld	b, (hl)
+                                    213 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:36: start_tile_y = ((INT16)sprite->y < 0) ? 0 : (scroll_tiles_h - 1);
+    00000103 3Ar00r00         [13]  214 	ld	a, (_scroll_tiles_h+0)
+    00000106 C6 FF            [ 7]  215 	add	a, #0xff
+    00000108 DD 77 FA         [19]  216 	ld	-6 (ix), a
+    0000010B 3Ar01r00         [13]  217 	ld	a, (_scroll_tiles_h+1)
+    0000010E CE FF            [ 7]  218 	adc	a, #0xff
+    00000110 DD 77 FB         [19]  219 	ld	-5 (ix), a
+                                    220 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:35: if (sprite->y >= scroll_h) {
+    00000113 21r00r00         [10]  221 	ld	hl, #_scroll_h
+    00000116 79               [ 4]  222 	ld	a, c
+    00000117 96               [ 7]  223 	sub	a, (hl)
+    00000118 23               [ 6]  224 	inc	hl
+    00000119 78               [ 4]  225 	ld	a, b
+    0000011A 9E               [ 7]  226 	sbc	a, (hl)
+    0000011B 38 24            [12]  227 	jr	C, 00106$
+                                    228 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:36: start_tile_y = ((INT16)sprite->y < 0) ? 0 : (scroll_tiles_h - 1);
+    0000011D CB 78            [ 8]  229 	bit	7, b
+    0000011F 28 09            [12]  230 	jr	Z, 00145$
+    00000121 AF               [ 4]  231 	xor	a, a
+    00000122 DD 77 FC         [19]  232 	ld	-4 (ix), a
+    00000125 DD 77 FD         [19]  233 	ld	-3 (ix), a
+    00000128 18 0C            [12]  234 	jr	00146$
+    0000012A                        235 00145$:
+    0000012A DD 7E FA         [19]  236 	ld	a, -6 (ix)
+    0000012D DD 77 FC         [19]  237 	ld	-4 (ix), a
+    00000130 DD 7E FB         [19]  238 	ld	a, -5 (ix)
+    00000133 DD 77 FD         [19]  239 	ld	-3 (ix), a
+    00000136                        240 00146$:
+    00000136 DD 6E FC         [19]  241 	ld	l, -4 (ix)
+    00000139 DD 66 FD         [19]  242 	ld	h, -3 (ix)
+    0000013C 22r07r00         [16]  243 	ld	(_TranslateSprite_start_tile_y_10000_241), hl
+    0000013F 18 20            [12]  244 	jr	00107$
+    00000141                        245 00106$:
+                                    246 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:38: start_tile_y = PX_TO_TILE(sprite->y);
+    00000141 ED 43r07r00      [20]  247 	ld	(_TranslateSprite_start_tile_y_10000_241), bc
+    00000145 FD 21r07r00      [14]  248 	ld	iy, #_TranslateSprite_start_tile_y_10000_241
+    00000149 FD CB 01 3E      [23]  249 	srl	1 (iy)
+    0000014D FD CB 00 1E      [23]  250 	rr	0 (iy)
+    00000151 FD CB 01 3E      [23]  251 	srl	1 (iy)
+    00000155 FD CB 00 1E      [23]  252 	rr	0 (iy)
+    00000159 FD CB 01 3E      [23]  253 	srl	1 (iy)
+    0000015D FD CB 00 1E      [23]  254 	rr	0 (iy)
+    00000161                        255 00107$:
+                                    256 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:42: pivot_y = sprite->y + sprite->coll_h - 1;
+    00000161 DD 6E F3         [19]  257 	ld	l, -13 (ix)
+    00000164 DD 66 F4         [19]  258 	ld	h, -12 (ix)
+    00000167 4E               [ 7]  259 	ld	c, (hl)
+    00000168 23               [ 6]  260 	inc	hl
+    00000169 46               [ 7]  261 	ld	b, (hl)
+    0000016A DD 6E F5         [19]  262 	ld	l, -11 (ix)
+    0000016D DD 66 F6         [19]  263 	ld	h, -10 (ix)
+    00000170 6E               [ 7]  264 	ld	l, (hl)
+    00000171 26 00            [ 7]  265 	ld	h, #0x00
+    00000173 09               [11]  266 	add	hl, bc
+    00000174 7D               [ 4]  267 	ld	a, l
+    00000175 C6 FF            [ 7]  268 	add	a, #0xff
+    00000177 DD 77 FC         [19]  269 	ld	-4 (ix), a
+    0000017A 7C               [ 4]  270 	ld	a, h
+    0000017B CE FF            [ 7]  271 	adc	a, #0xff
+    0000017D DD 77 FD         [19]  272 	ld	-3 (ix), a
+                                    273 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:43: if ((UINT16)pivot_y >= scroll_h) {
+    00000180 DD 4E FC         [19]  274 	ld	c, -4 (ix)
+    00000183 DD 46 FD         [19]  275 	ld	b, -3 (ix)
+    00000186 21r00r00         [10]  276 	ld	hl, #_scroll_h
+    00000189 79               [ 4]  277 	ld	a, c
+    0000018A 96               [ 7]  278 	sub	a, (hl)
+    0000018B 23               [ 6]  279 	inc	hl
+    0000018C 78               [ 4]  280 	ld	a, b
+    0000018D 9E               [ 7]  281 	sbc	a, (hl)
+    0000018E 38 16            [12]  282 	jr	C, 00109$
+                                    283 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:44: end_tile_y = (pivot_y < 0) ? 0 : (scroll_tiles_h - 1);
+    00000190 DD CB FD 7E      [20]  284 	bit	7, -3 (ix)
+    00000194 28 05            [12]  285 	jr	Z, 00147$
+    00000196 21 00 00         [10]  286 	ld	hl, #0x0000
+    00000199 18 06            [12]  287 	jr	00148$
+    0000019B                        288 00147$:
+    0000019B DD 6E FA         [19]  289 	ld	l, -6 (ix)
+    0000019E DD 66 FB         [19]  290 	ld	h, -5 (ix)
+    000001A1                        291 00148$:
+    000001A1 22r09r00         [16]  292 	ld	(_TranslateSprite_end_tile_y_10000_241), hl
+    000001A4 18 28            [12]  293 	jr	00110$
+    000001A6                        294 00109$:
+                                    295 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:46: end_tile_y = PX_TO_TILE(pivot_y);
+    000001A6 DD 7E FC         [19]  296 	ld	a, -4 (ix)
+    000001A9 32r09r00         [13]  297 	ld	(_TranslateSprite_end_tile_y_10000_241+0), a
+    000001AC DD 7E FD         [19]  298 	ld	a, -3 (ix)
+    000001AF 32r0Ar00         [13]  299 	ld	(_TranslateSprite_end_tile_y_10000_241+1), a
+    000001B2 FD 21r09r00      [14]  300 	ld	iy, #_TranslateSprite_end_tile_y_10000_241
+    000001B6 FD CB 01 2E      [23]  301 	sra	1 (iy)
+    000001BA FD CB 00 1E      [23]  302 	rr	0 (iy)
+    000001BE FD CB 01 2E      [23]  303 	sra	1 (iy)
+    000001C2 FD CB 00 1E      [23]  304 	rr	0 (iy)
+    000001C6 FD CB 01 2E      [23]  305 	sra	1 (iy)
+    000001CA FD CB 00 1E      [23]  306 	rr	0 (iy)
+    000001CE                        307 00110$:
+                                    308 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:49: tile_coll = scroll_map + (scroll_tiles_w * start_tile_y + start_tile_x);
+    000001CE ED 5Br07r00      [20]  309 	ld	de, (_TranslateSprite_start_tile_y_10000_241)
+    000001D2 2Ar00r00         [16]  310 	ld	hl, (_scroll_tiles_w)
+    000001D5 CDr00r00         [17]  311 	call	__mulint
+    000001D8 7B               [ 4]  312 	ld	a, e
+    000001D9 21r03r00         [10]  313 	ld	hl, #_TranslateSprite_start_tile_x_10000_241
+    000001DC 86               [ 7]  314 	add	a, (hl)
+    000001DD 23               [ 6]  315 	inc	hl
+    000001DE 4F               [ 4]  316 	ld	c, a
+    000001DF 7A               [ 4]  317 	ld	a, d
+    000001E0 8E               [ 7]  318 	adc	a, (hl)
+    000001E1 5F               [ 4]  319 	ld	e, a
+    000001E2 79               [ 4]  320 	ld	a, c
+    000001E3 21r00r00         [10]  321 	ld	hl, #_scroll_map
+    000001E6 FD 21r01r00      [14]  322 	ld	iy, #_TranslateSprite_tile_coll_10000_241
+    000001EA 86               [ 7]  323 	add	a, (hl)
+    000001EB FD 77 00         [19]  324 	ld	0 (iy), a
+    000001EE 23               [ 6]  325 	inc	hl
+    000001EF 7B               [ 4]  326 	ld	a, e
+    000001F0 8E               [ 7]  327 	adc	a, (hl)
+    000001F1 FD 23            [10]  328 	inc	iy
+    000001F3 FD 77 00         [19]  329 	ld	0 (iy), a
+                                    330 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:50: end_tile_y ++;
+    000001F6 2Ar09r00         [16]  331 	ld	hl, (_TranslateSprite_end_tile_y_10000_241)
+    000001F9 23               [ 6]  332 	inc	hl
+    000001FA 22r09r00         [16]  333 	ld	(_TranslateSprite_end_tile_y_10000_241), hl
+                                    334 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:51: scroll_coll_group = sprite->coll_group;
+    000001FD DD 6E F7         [19]  335 	ld	l, -9 (ix)
+    00000200 DD 66 F8         [19]  336 	ld	h, -8 (ix)
+    00000203 4E               [ 7]  337 	ld	c, (hl)
+                                    338 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:52: for (tmp = start_tile_y; tmp != end_tile_y; tmp ++, tile_coll += scroll_tiles_w) {
+    00000204 ED 5Br07r00      [20]  339 	ld	de, (_TranslateSprite_start_tile_y_10000_241)
+    00000208                        340 00136$:
+    00000208 2Ar09r00         [16]  341 	ld	hl, (_TranslateSprite_end_tile_y_10000_241)
+    0000020B BF               [ 4]  342 	cp	a, a
+    0000020C ED 52            [15]  343 	sbc	hl, de
+    0000020E CAr93r02         [10]  344 	jp	Z, 00116$
+                                    345 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:53: if (scroll_collisions[*tile_coll] & scroll_coll_group) {
+    00000211 2Ar01r00         [16]  346 	ld	hl, (_TranslateSprite_tile_coll_10000_241)
+    00000214 7E               [ 7]  347 	ld	a, (hl)
+    00000215 C6r00            [ 7]  348 	add	a, #<(_scroll_collisions)
+    00000217 6F               [ 4]  349 	ld	l, a
+    00000218 3E 00            [ 7]  350 	ld	a, #0x00
+    0000021A CEs00            [ 7]  351 	adc	a, #>(_scroll_collisions)
+    0000021C 67               [ 4]  352 	ld	h, a
+    0000021D 7E               [ 7]  353 	ld	a, (hl)
+    0000021E A1               [ 4]  354 	and	a, c
+    0000021F 28 5A            [12]  355 	jr	Z, 00137$
+                                    356 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:54: sprite->x = (x > 0) ? (TILE_TO_PX(start_tile_x) - sprite->coll_w) : (TILE_TO_PX(start_tile_x + 1));
+    00000221 DD 7E F9         [19]  357 	ld	a, -7 (ix)
+    00000224 B7               [ 4]  358 	or	a, a
+    00000225 28 39            [12]  359 	jr	Z, 00149$
+    00000227 3Ar03r00         [13]  360 	ld	a, (_TranslateSprite_start_tile_x_10000_241+0)
+    0000022A DD 77 FA         [19]  361 	ld	-6 (ix), a
+    0000022D 3Ar04r00         [13]  362 	ld	a, (_TranslateSprite_start_tile_x_10000_241+1)
+    00000230 DD 77 FB         [19]  363 	ld	-5 (ix), a
+    00000233 06 03            [ 7]  364 	ld	b, #0x03
+    00000235                        365 00339$:
+    00000235 DD CB FA 26      [23]  366 	sla	-6 (ix)
+    00000239 DD CB FB 16      [23]  367 	rl	-5 (ix)
+    0000023D 10 F6            [13]  368 	djnz	00339$
+    0000023F DD 6E EF         [19]  369 	ld	l, -17 (ix)
+    00000242 DD 66 F0         [19]  370 	ld	h, -16 (ix)
+    00000245 7E               [ 7]  371 	ld	a, (hl)
+    00000246 DD 77 FD         [19]  372 	ld	-3 (ix), a
+    00000249 DD 77 FC         [19]  373 	ld	-4 (ix), a
+    0000024C DD 36 FD 00      [19]  374 	ld	-3 (ix), #0x00
+    00000250 DD 7E FA         [19]  375 	ld	a, -6 (ix)
+    00000253 DD 96 FC         [19]  376 	sub	a, -4 (ix)
+    00000256 5F               [ 4]  377 	ld	e, a
+    00000257 DD 7E FB         [19]  378 	ld	a, -5 (ix)
+    0000025A DD 9E FD         [19]  379 	sbc	a, -3 (ix)
+    0000025D 4F               [ 4]  380 	ld	c, a
+    0000025E 18 09            [12]  381 	jr	00150$
+    00000260                        382 00149$:
+    00000260 2Ar03r00         [16]  383 	ld	hl, (_TranslateSprite_start_tile_x_10000_241)
+    00000263 23               [ 6]  384 	inc	hl
+    00000264 29               [11]  385 	add	hl, hl
+    00000265 29               [11]  386 	add	hl, hl
+    00000266 29               [11]  387 	add	hl, hl
+    00000267 5D               [ 4]  388 	ld	e, l
+    00000268 4C               [ 4]  389 	ld	c, h
+    00000269                        390 00150$:
+    00000269 DD 6E ED         [19]  391 	ld	l, -19 (ix)
+    0000026C DD 66 EE         [19]  392 	ld	h, -18 (ix)
+    0000026F 73               [ 7]  393 	ld	(hl), e
+    00000270 23               [ 6]  394 	inc	hl
+    00000271 71               [ 7]  395 	ld	(hl), c
+                                    396 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:55: ret = *tile_coll;
+    00000272 2Ar01r00         [16]  397 	ld	hl, (_TranslateSprite_tile_coll_10000_241)
+    00000275 7E               [ 7]  398 	ld	a, (hl)
+    00000276 DD 77 EC         [19]  399 	ld	-20 (ix), a
+                                    400 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:56: goto done_x;
+    00000279 18 32            [12]  401 	jr	00117$
+    0000027B                        402 00137$:
+                                    403 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:52: for (tmp = start_tile_y; tmp != end_tile_y; tmp ++, tile_coll += scroll_tiles_w) {
+    0000027B 13               [ 6]  404 	inc	de
+    0000027C 21r00r00         [10]  405 	ld	hl, #_scroll_tiles_w
+    0000027F D5               [11]  406 	push	de
+    00000280 FD 21r01r00      [14]  407 	ld	iy, #_TranslateSprite_tile_coll_10000_241
+    00000284 FD E5            [15]  408 	push	iy
+    00000286 D1               [10]  409 	pop	de
+    00000287 1A               [ 7]  410 	ld	a, (de)
+    00000288 86               [ 7]  411 	add	a, (hl)
+    00000289 23               [ 6]  412 	inc	hl
+    0000028A 12               [ 7]  413 	ld	(de), a
+    0000028B 13               [ 6]  414 	inc	de
+    0000028C 1A               [ 7]  415 	ld	a, (de)
+    0000028D 8E               [ 7]  416 	adc	a, (hl)
+    0000028E 12               [ 7]  417 	ld	(de), a
+    0000028F D1               [10]  418 	pop	de
+    00000290 C3r08r02         [10]  419 	jp	00136$
+                                    420 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:61: inc_x:
+    00000293                        421 00116$:
+                                    422 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:62: sprite->x += x;
+    00000293 DD 6E ED         [19]  423 	ld	l, -19 (ix)
+    00000296 DD 66 EE         [19]  424 	ld	h, -18 (ix)
+    00000299 4E               [ 7]  425 	ld	c, (hl)
+    0000029A 23               [ 6]  426 	inc	hl
+    0000029B 46               [ 7]  427 	ld	b, (hl)
+    0000029C DD 6E F1         [19]  428 	ld	l, -15 (ix)
+    0000029F DD 66 F2         [19]  429 	ld	h, -14 (ix)
+    000002A2 09               [11]  430 	add	hl, bc
+    000002A3 EB               [ 4]  431 	ex	de, hl
+    000002A4 DD 6E ED         [19]  432 	ld	l, -19 (ix)
+    000002A7 DD 66 EE         [19]  433 	ld	h, -18 (ix)
+    000002AA 73               [ 7]  434 	ld	(hl), e
+    000002AB 23               [ 6]  435 	inc	hl
+    000002AC 72               [ 7]  436 	ld	(hl), d
+                                    437 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:63: done_x:
+    000002AD                        438 00117$:
+                                    439 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:70: pivot_y += y;
+    000002AD DD 7E 05         [19]  440 	ld	a, 5 (ix)
+    000002B0 DD 77 FB         [19]  441 	ld	-5 (ix), a
+    000002B3 07               [ 4]  442 	rlca
+    000002B4 9F               [ 4]  443 	sbc	a, a
+    000002B5 DD 77 FC         [19]  444 	ld	-4 (ix), a
+                                    445 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:65: if (y) {
+    000002B8 DD 7E 05         [19]  446 	ld	a, 5 (ix)
+    000002BB B7               [ 4]  447 	or	a, a
+    000002BC CArFEr04         [10]  448 	jp	Z, 00133$
+                                    449 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:66: pivot_y = (y > 0) ? (sprite->y + (UINT8)(sprite->coll_h - 1u)) : sprite->y;
+    000002BF AF               [ 4]  450 	xor	a, a
+    000002C0 DD 96 05         [19]  451 	sub	a, 5 (ix)
+    000002C3 E2rC8r02         [10]  452 	jp	PO, 00340$
+    000002C6 EE 80            [ 7]  453 	xor	a, #0x80
+    000002C8                        454 00340$:
+    000002C8 07               [ 4]  455 	rlca
+    000002C9 E6 01            [ 7]  456 	and	a,#0x01
+    000002CB DD 77 FD         [19]  457 	ld	-3 (ix), a
+                                    458 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:35: if (sprite->y >= scroll_h) {
+    000002CE DD 6E F3         [19]  459 	ld	l, -13 (ix)
+    000002D1 DD 66 F4         [19]  460 	ld	h, -12 (ix)
+    000002D4 5E               [ 7]  461 	ld	e, (hl)
+    000002D5 23               [ 6]  462 	inc	hl
+    000002D6 56               [ 7]  463 	ld	d, (hl)
+                                    464 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:66: pivot_y = (y > 0) ? (sprite->y + (UINT8)(sprite->coll_h - 1u)) : sprite->y;
+    000002D7 DD 7E FD         [19]  465 	ld	a, -3 (ix)
+    000002DA B7               [ 4]  466 	or	a, a
+    000002DB 28 0C            [12]  467 	jr	Z, 00151$
+    000002DD DD 6E F5         [19]  468 	ld	l, -11 (ix)
+    000002E0 DD 66 F6         [19]  469 	ld	h, -10 (ix)
+    000002E3 6E               [ 7]  470 	ld	l, (hl)
+    000002E4 2D               [ 4]  471 	dec	l
+    000002E5 26 00            [ 7]  472 	ld	h, #0x00
+    000002E7 19               [11]  473 	add	hl, de
+    000002E8 EB               [ 4]  474 	ex	de, hl
+    000002E9                        475 00151$:
+                                    476 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:69: UINT16 tmp = PX_TO_TILE(pivot_y);
+    000002E9 4B               [ 4]  477 	ld	c, e
+    000002EA 42               [ 4]  478 	ld	b, d
+    000002EB CB 28            [ 8]  479 	sra	b
+    000002ED CB 19            [ 8]  480 	rr	c
+    000002EF CB 28            [ 8]  481 	sra	b
+    000002F1 CB 19            [ 8]  482 	rr	c
+    000002F3 CB 28            [ 8]  483 	sra	b
+    000002F5 CB 19            [ 8]  484 	rr	c
+                                    485 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:70: pivot_y += y;
+    000002F7 DD 7E FB         [19]  486 	ld	a, -5 (ix)
+    000002FA 83               [ 4]  487 	add	a, e
+    000002FB 5F               [ 4]  488 	ld	e, a
+    000002FC DD 7E FC         [19]  489 	ld	a, -4 (ix)
+    000002FF 8A               [ 4]  490 	adc	a, d
+    00000300 57               [ 4]  491 	ld	d, a
+                                    492 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:71: start_tile_y = PX_TO_TILE(pivot_y);
+    00000301 ED 53r07r00      [20]  493 	ld	(_TranslateSprite_start_tile_y_10000_241), de
+    00000305 FD 21r07r00      [14]  494 	ld	iy, #_TranslateSprite_start_tile_y_10000_241
+    00000309 FD CB 01 2E      [23]  495 	sra	1 (iy)
+    0000030D FD CB 00 1E      [23]  496 	rr	0 (iy)
+    00000311 FD CB 01 2E      [23]  497 	sra	1 (iy)
+    00000315 FD CB 00 1E      [23]  498 	rr	0 (iy)
+    00000319 FD CB 01 2E      [23]  499 	sra	1 (iy)
+    0000031D FD CB 00 1E      [23]  500 	rr	0 (iy)
+                                    501 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:72: if (tmp == start_tile_y) {
+    00000321 2Ar07r00         [16]  502 	ld	hl, (_TranslateSprite_start_tile_y_10000_241)
+    00000324 BF               [ 4]  503 	cp	a, a
+    00000325 ED 42            [15]  504 	sbc	hl, bc
+    00000327 CArFEr04         [10]  505 	jp	Z, 00133$
+                                    506 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:77: if ((UINT16)pivot_y >= scroll_h) {
+    0000032A 21r00r00         [10]  507 	ld	hl, #_scroll_h
+    0000032D 7B               [ 4]  508 	ld	a, e
+    0000032E 96               [ 7]  509 	sub	a, (hl)
+    0000032F 23               [ 6]  510 	inc	hl
+    00000330 7A               [ 4]  511 	ld	a, d
+    00000331 9E               [ 7]  512 	sbc	a, (hl)
+    00000332 D2rFEr04         [10]  513 	jp	NC, 00133$
+                                    514 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:82: if (sprite->x >= scroll_w){
+    00000335 DD 6E ED         [19]  515 	ld	l, -19 (ix)
+    00000338 DD 66 EE         [19]  516 	ld	h, -18 (ix)
+    0000033B 4E               [ 7]  517 	ld	c, (hl)
+    0000033C 23               [ 6]  518 	inc	hl
+    0000033D 46               [ 7]  519 	ld	b, (hl)
+                                    520 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:83: start_tile_x = ((INT16)sprite->x < 0) ? 0 : (scroll_tiles_w - 1);
+    0000033E 3Ar00r00         [13]  521 	ld	a, (_scroll_tiles_w+0)
+    00000341 C6 FF            [ 7]  522 	add	a, #0xff
+    00000343 DD 77 F9         [19]  523 	ld	-7 (ix), a
+    00000346 3Ar01r00         [13]  524 	ld	a, (_scroll_tiles_w+1)
+    00000349 CE FF            [ 7]  525 	adc	a, #0xff
+    0000034B DD 77 FA         [19]  526 	ld	-6 (ix), a
+                                    527 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:82: if (sprite->x >= scroll_w){
+    0000034E 21r00r00         [10]  528 	ld	hl, #_scroll_w
+    00000351 79               [ 4]  529 	ld	a, c
+    00000352 96               [ 7]  530 	sub	a, (hl)
+    00000353 23               [ 6]  531 	inc	hl
+    00000354 78               [ 4]  532 	ld	a, b
+    00000355 9E               [ 7]  533 	sbc	a, (hl)
+    00000356 38 15            [12]  534 	jr	C, 00123$
+                                    535 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:83: start_tile_x = ((INT16)sprite->x < 0) ? 0 : (scroll_tiles_w - 1);
+    00000358 CB 78            [ 8]  536 	bit	7, b
+    0000035A 28 05            [12]  537 	jr	Z, 00153$
+    0000035C 01 00 00         [10]  538 	ld	bc, #0x0000
+    0000035F 18 06            [12]  539 	jr	00154$
+    00000361                        540 00153$:
+    00000361 DD 4E F9         [19]  541 	ld	c, -7 (ix)
+    00000364 DD 46 FA         [19]  542 	ld	b, -6 (ix)
+    00000367                        543 00154$:
+    00000367 ED 43r03r00      [20]  544 	ld	(_TranslateSprite_start_tile_x_10000_241), bc
+    0000036B 18 20            [12]  545 	jr	00124$
+    0000036D                        546 00123$:
+                                    547 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:85: start_tile_x = PX_TO_TILE(sprite->x);
+    0000036D ED 43r03r00      [20]  548 	ld	(_TranslateSprite_start_tile_x_10000_241), bc
+    00000371 FD 21r03r00      [14]  549 	ld	iy, #_TranslateSprite_start_tile_x_10000_241
+    00000375 FD CB 01 3E      [23]  550 	srl	1 (iy)
+    00000379 FD CB 00 1E      [23]  551 	rr	0 (iy)
+    0000037D FD CB 01 3E      [23]  552 	srl	1 (iy)
+    00000381 FD CB 00 1E      [23]  553 	rr	0 (iy)
+    00000385 FD CB 01 3E      [23]  554 	srl	1 (iy)
+    00000389 FD CB 00 1E      [23]  555 	rr	0 (iy)
+    0000038D                        556 00124$:
+                                    557 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:89: pivot_x = sprite->x + sprite->coll_w - 1;
+    0000038D DD 6E ED         [19]  558 	ld	l, -19 (ix)
+    00000390 DD 66 EE         [19]  559 	ld	h, -18 (ix)
+    00000393 4E               [ 7]  560 	ld	c, (hl)
+    00000394 23               [ 6]  561 	inc	hl
+    00000395 46               [ 7]  562 	ld	b, (hl)
+    00000396 DD 6E EF         [19]  563 	ld	l, -17 (ix)
+    00000399 DD 66 F0         [19]  564 	ld	h, -16 (ix)
+    0000039C 6E               [ 7]  565 	ld	l, (hl)
+    0000039D 26 00            [ 7]  566 	ld	h, #0x00
+    0000039F 09               [11]  567 	add	hl, bc
+    000003A0 7D               [ 4]  568 	ld	a, l
+    000003A1 C6 FF            [ 7]  569 	add	a, #0xff
+    000003A3 DD 77 F1         [19]  570 	ld	-15 (ix), a
+    000003A6 7C               [ 4]  571 	ld	a, h
+    000003A7 CE FF            [ 7]  572 	adc	a, #0xff
+    000003A9 DD 77 F2         [19]  573 	ld	-14 (ix), a
+                                    574 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:90: if ((UINT16)pivot_x >= scroll_w) {
+    000003AC DD 4E F1         [19]  575 	ld	c, -15 (ix)
+    000003AF DD 46 F2         [19]  576 	ld	b, -14 (ix)
+    000003B2 21r00r00         [10]  577 	ld	hl, #_scroll_w
+    000003B5 79               [ 4]  578 	ld	a, c
+    000003B6 96               [ 7]  579 	sub	a, (hl)
+    000003B7 23               [ 6]  580 	inc	hl
+    000003B8 78               [ 4]  581 	ld	a, b
+    000003B9 9E               [ 7]  582 	sbc	a, (hl)
+    000003BA 38 17            [12]  583 	jr	C, 00126$
+                                    584 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:91: end_tile_x = (pivot_x < 0) ? 0 : (scroll_tiles_w - 1);
+    000003BC DD CB F2 7E      [20]  585 	bit	7, -14 (ix)
+    000003C0 28 05            [12]  586 	jr	Z, 00155$
+    000003C2 11 00 00         [10]  587 	ld	de, #0x0000
+    000003C5 18 06            [12]  588 	jr	00156$
+    000003C7                        589 00155$:
+    000003C7 DD 5E F9         [19]  590 	ld	e, -7 (ix)
+    000003CA DD 56 FA         [19]  591 	ld	d, -6 (ix)
+    000003CD                        592 00156$:
+    000003CD ED 53r05r00      [20]  593 	ld	(_TranslateSprite_end_tile_x_10000_241), de
+    000003D1 18 28            [12]  594 	jr	00127$
+    000003D3                        595 00126$:
+                                    596 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:93: end_tile_x = PX_TO_TILE(pivot_x);
+    000003D3 DD 7E F1         [19]  597 	ld	a, -15 (ix)
+    000003D6 32r05r00         [13]  598 	ld	(_TranslateSprite_end_tile_x_10000_241+0), a
+    000003D9 DD 7E F2         [19]  599 	ld	a, -14 (ix)
+    000003DC 32r06r00         [13]  600 	ld	(_TranslateSprite_end_tile_x_10000_241+1), a
+    000003DF FD 21r05r00      [14]  601 	ld	iy, #_TranslateSprite_end_tile_x_10000_241
+    000003E3 FD CB 01 2E      [23]  602 	sra	1 (iy)
+    000003E7 FD CB 00 1E      [23]  603 	rr	0 (iy)
+    000003EB FD CB 01 2E      [23]  604 	sra	1 (iy)
+    000003EF FD CB 00 1E      [23]  605 	rr	0 (iy)
+    000003F3 FD CB 01 2E      [23]  606 	sra	1 (iy)
+    000003F7 FD CB 00 1E      [23]  607 	rr	0 (iy)
+    000003FB                        608 00127$:
+                                    609 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:96: tile_coll = scroll_map + (scroll_tiles_w * start_tile_y + start_tile_x);
+    000003FB ED 5Br07r00      [20]  610 	ld	de, (_TranslateSprite_start_tile_y_10000_241)
+    000003FF 2Ar00r00         [16]  611 	ld	hl, (_scroll_tiles_w)
+    00000402 CDr00r00         [17]  612 	call	__mulint
+    00000405 7B               [ 4]  613 	ld	a, e
+    00000406 21r03r00         [10]  614 	ld	hl, #_TranslateSprite_start_tile_x_10000_241
+    00000409 86               [ 7]  615 	add	a, (hl)
+    0000040A 23               [ 6]  616 	inc	hl
+    0000040B 4F               [ 4]  617 	ld	c, a
+    0000040C 7A               [ 4]  618 	ld	a, d
+    0000040D 8E               [ 7]  619 	adc	a, (hl)
+    0000040E 47               [ 4]  620 	ld	b, a
+    0000040F 79               [ 4]  621 	ld	a, c
+    00000410 FD 21r00r00      [14]  622 	ld	iy, #_scroll_map
+    00000414 FD 86 00         [19]  623 	add	a, 0 (iy)
+    00000417 32r01r00         [13]  624 	ld	(_TranslateSprite_tile_coll_10000_241+0), a
+    0000041A 78               [ 4]  625 	ld	a, b
+    0000041B FD 8E 01         [19]  626 	adc	a, 1 (iy)
+    0000041E 32r02r00         [13]  627 	ld	(_TranslateSprite_tile_coll_10000_241+1), a
+                                    628 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:97: end_tile_x ++;
+    00000421 2Ar05r00         [16]  629 	ld	hl, (_TranslateSprite_end_tile_x_10000_241)
+    00000424 23               [ 6]  630 	inc	hl
+    00000425 22r05r00         [16]  631 	ld	(_TranslateSprite_end_tile_x_10000_241), hl
+                                    632 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:98: scroll_coll_group = (y < 0) ? sprite->coll_group : sprite->coll_group_down;
+    00000428 DD CB 05 7E      [20]  633 	bit	7, 5 (ix)
+    0000042C 28 09            [12]  634 	jr	Z, 00157$
+    0000042E DD 6E F7         [19]  635 	ld	l, -9 (ix)
+    00000431 DD 66 F8         [19]  636 	ld	h, -8 (ix)
+    00000434 7E               [ 7]  637 	ld	a, (hl)
+    00000435 18 0B            [12]  638 	jr	00158$
+    00000437                        639 00157$:
+    00000437 DD 4E FE         [19]  640 	ld	c, -2 (ix)
+    0000043A DD 46 FF         [19]  641 	ld	b, -1 (ix)
+    0000043D 21 23 00         [10]  642 	ld	hl, #35
+    00000440 09               [11]  643 	add	hl, bc
+    00000441 7E               [ 7]  644 	ld	a, (hl)
+    00000442                        645 00158$:
+    00000442 DD 77 F2         [19]  646 	ld	-14 (ix), a
+                                    647 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:99: for (tmp = start_tile_x; tmp != end_tile_x; tmp ++, tile_coll += 1) {
+    00000445 2Ar03r00         [16]  648 	ld	hl, (_TranslateSprite_start_tile_x_10000_241)
+    00000448 DD 75 F9         [19]  649 	ld	-7 (ix), l
+    0000044B DD 74 FA         [19]  650 	ld	-6 (ix), h
+    0000044E                        651 00139$:
+    0000044E 3Ar05r00         [13]  652 	ld	a, (_TranslateSprite_end_tile_x_10000_241+0)
+    00000451 DD 96 F9         [19]  653 	sub	a, -7 (ix)
+    00000454 20 09            [12]  654 	jr	NZ, 00342$
+    00000456 3Ar06r00         [13]  655 	ld	a, (_TranslateSprite_end_tile_x_10000_241+1)
+    00000459 DD 96 FA         [19]  656 	sub	a, -6 (ix)
+    0000045C CArFEr04         [10]  657 	jp	Z, 00133$
+    0000045F                        658 00342$:
+                                    659 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:100: if (scroll_collisions[*tile_coll] & scroll_coll_group) {
+    0000045F 2Ar01r00         [16]  660 	ld	hl, (_TranslateSprite_tile_coll_10000_241)
+    00000462 DD 75 F7         [19]  661 	ld	-9 (ix), l
+    00000465 DD 74 F8         [19]  662 	ld	-8 (ix), h
+    00000468 7E               [ 7]  663 	ld	a, (hl)
+    00000469 DD 77 F8         [19]  664 	ld	-8 (ix), a
+    0000046C C6r00            [ 7]  665 	add	a, #<(_scroll_collisions)
+    0000046E DD 77 F7         [19]  666 	ld	-9 (ix), a
+    00000471 3E 00            [ 7]  667 	ld	a, #0x00
+    00000473 CEs00            [ 7]  668 	adc	a, #>(_scroll_collisions)
+    00000475 DD 77 F8         [19]  669 	ld	-8 (ix), a
+    00000478 DD 6E F7         [19]  670 	ld	l, -9 (ix)
+    0000047B DD 66 F8         [19]  671 	ld	h, -8 (ix)
+    0000047E 7E               [ 7]  672 	ld	a, (hl)
+    0000047F DD A6 F2         [19]  673 	and	a, -14 (ix)
+    00000482 28 68            [12]  674 	jr	Z, 00140$
+                                    675 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:101: sprite->y = (y > 0) ? (TILE_TO_PX(start_tile_y) - sprite->coll_h) : (TILE_TO_PX(start_tile_y + 1));
+    00000484 DD 7E FD         [19]  676 	ld	a, -3 (ix)
+    00000487 B7               [ 4]  677 	or	a, a
+    00000488 28 3D            [12]  678 	jr	Z, 00159$
+    0000048A 3Ar07r00         [13]  679 	ld	a, (_TranslateSprite_start_tile_y_10000_241+0)
+    0000048D DD 77 FB         [19]  680 	ld	-5 (ix), a
+    00000490 3Ar08r00         [13]  681 	ld	a, (_TranslateSprite_start_tile_y_10000_241+1)
+    00000493 DD 77 FC         [19]  682 	ld	-4 (ix), a
+    00000496 06 03            [ 7]  683 	ld	b, #0x03
+    00000498                        684 00343$:
+    00000498 DD CB FB 26      [23]  685 	sla	-5 (ix)
+    0000049C DD CB FC 16      [23]  686 	rl	-4 (ix)
+    000004A0 10 F6            [13]  687 	djnz	00343$
+    000004A2 DD 6E F5         [19]  688 	ld	l, -11 (ix)
+    000004A5 DD 66 F6         [19]  689 	ld	h, -10 (ix)
+    000004A8 7E               [ 7]  690 	ld	a, (hl)
+    000004A9 DD 77 FD         [19]  691 	ld	-3 (ix), a
+    000004AC DD 77 F9         [19]  692 	ld	-7 (ix), a
+    000004AF DD 36 FA 00      [19]  693 	ld	-6 (ix), #0x00
+    000004B3 DD 7E FB         [19]  694 	ld	a, -5 (ix)
+    000004B6 DD 96 F9         [19]  695 	sub	a, -7 (ix)
+    000004B9 DD 77 F7         [19]  696 	ld	-9 (ix), a
+    000004BC DD 7E FC         [19]  697 	ld	a, -4 (ix)
+    000004BF DD 9E FA         [19]  698 	sbc	a, -6 (ix)
+    000004C2 DD 77 F8         [19]  699 	ld	-8 (ix), a
+    000004C5 18 0D            [12]  700 	jr	00160$
+    000004C7                        701 00159$:
+    000004C7 2Ar07r00         [16]  702 	ld	hl, (_TranslateSprite_start_tile_y_10000_241)
+    000004CA 23               [ 6]  703 	inc	hl
+    000004CB 29               [11]  704 	add	hl, hl
+    000004CC 29               [11]  705 	add	hl, hl
+    000004CD 29               [11]  706 	add	hl, hl
+    000004CE DD 75 F7         [19]  707 	ld	-9 (ix), l
+    000004D1 DD 74 F8         [19]  708 	ld	-8 (ix), h
+    000004D4                        709 00160$:
+    000004D4 DD 6E F3         [19]  710 	ld	l, -13 (ix)
+    000004D7 DD 66 F4         [19]  711 	ld	h, -12 (ix)
+    000004DA DD 7E F7         [19]  712 	ld	a, -9 (ix)
+    000004DD 77               [ 7]  713 	ld	(hl), a
+    000004DE 23               [ 6]  714 	inc	hl
+    000004DF DD 7E F8         [19]  715 	ld	a, -8 (ix)
+    000004E2 77               [ 7]  716 	ld	(hl), a
+                                    717 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:102: ret = *tile_coll;
+    000004E3 2Ar01r00         [16]  718 	ld	hl, (_TranslateSprite_tile_coll_10000_241)
+    000004E6 7E               [ 7]  719 	ld	a, (hl)
+    000004E7 DD 77 EC         [19]  720 	ld	-20 (ix), a
+                                    721 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:103: goto done_y;
+    000004EA 18 2C            [12]  722 	jr	00134$
+    000004EC                        723 00140$:
+                                    724 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:99: for (tmp = start_tile_x; tmp != end_tile_x; tmp ++, tile_coll += 1) {
+    000004EC DD 34 F9         [23]  725 	inc	-7 (ix)
+    000004EF 20 03            [12]  726 	jr	NZ, 00344$
+    000004F1 DD 34 FA         [23]  727 	inc	-6 (ix)
+    000004F4                        728 00344$:
+    000004F4 2Ar01r00         [16]  729 	ld	hl, (_TranslateSprite_tile_coll_10000_241)
+    000004F7 23               [ 6]  730 	inc	hl
+    000004F8 22r01r00         [16]  731 	ld	(_TranslateSprite_tile_coll_10000_241), hl
+    000004FB C3r4Er04         [10]  732 	jp	00139$
+                                    733 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:108: inc_y:
+    000004FE                        734 00133$:
+                                    735 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:109: sprite->y += y;
+    000004FE DD 6E F3         [19]  736 	ld	l, -13 (ix)
+    00000501 DD 66 F4         [19]  737 	ld	h, -12 (ix)
+    00000504 4E               [ 7]  738 	ld	c, (hl)
+    00000505 23               [ 6]  739 	inc	hl
+    00000506 46               [ 7]  740 	ld	b, (hl)
+    00000507 DD 6E FB         [19]  741 	ld	l, -5 (ix)
+    0000050A DD 66 FC         [19]  742 	ld	h, -4 (ix)
+    0000050D 09               [11]  743 	add	hl, bc
+    0000050E EB               [ 4]  744 	ex	de, hl
+    0000050F DD 6E F3         [19]  745 	ld	l, -13 (ix)
+    00000512 DD 66 F4         [19]  746 	ld	h, -12 (ix)
+    00000515 73               [ 7]  747 	ld	(hl), e
+    00000516 23               [ 6]  748 	inc	hl
+    00000517 72               [ 7]  749 	ld	(hl), d
+                                    750 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:110: done_y:
+    00000518                        751 00134$:
+                                    752 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:111: SWITCH_ROM(__save);
+    00000518 3Ar00r00         [13]  753 	ld	a, (_TranslateSprite___save_10000_241+0)
+    0000051B 32 FE FF         [13]  754 	ld	(_MAP_FRAME1+0), a
+                                    755 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:112: return ret;
+    0000051E DD 7E EC         [19]  756 	ld	a, -20 (ix)
+                                    757 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/SpriteTranslateSprite.c:113: }
+    00000521 DD F9            [10]  758 	ld	sp, ix
+    00000523 DD E1            [14]  759 	pop	ix
+    00000525 E1               [10]  760 	pop	hl
+    00000526 C1               [10]  761 	pop	bc
+    00000527 E9               [ 4]  762 	jp	(hl)
+                                    763 	.area _CODE
+                                    764 	.area _INITIALIZER
+                                    765 	.area _CABS (ABS)

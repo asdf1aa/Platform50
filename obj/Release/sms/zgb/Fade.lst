@@ -1,0 +1,452 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module Fade
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _FadeStepColor
+                                     11 	.globl _UpdateColor
+                                     12 	.globl _SyncVBlank
+                                     13 	.globl _set_palette
+                                     14 	.globl _ZGB_Fading_SPal
+                                     15 	.globl _ZGB_Fading_BPal
+                                     16 	.globl b_FadeIn
+                                     17 	.globl _FadeIn
+                                     18 	.globl b_FadeOut
+                                     19 	.globl _FadeOut
+                                     20 ;--------------------------------------------------------
+                                     21 ; special function registers
+                                     22 ;--------------------------------------------------------
+                         00000000    23 _GG_STATE	=	0x0000
+                         00000001    24 _GG_EXT_7BIT	=	0x0001
+                         00000002    25 _GG_EXT_CTL	=	0x0002
+                         00000003    26 _GG_SIO_SEND	=	0x0003
+                         00000004    27 _GG_SIO_RECV	=	0x0004
+                         00000005    28 _GG_SIO_CTL	=	0x0005
+                         00000006    29 _GG_SOUND_PAN	=	0x0006
+                         0000003E    30 _MEMORY_CTL	=	0x003e
+                         0000003F    31 _JOY_CTL	=	0x003f
+                         0000007E    32 _VCOUNTER	=	0x007e
+                         0000007F    33 _PSG	=	0x007f
+                         0000007F    34 _HCOUNTER	=	0x007f
+                         000000BE    35 _VDP_DATA	=	0x00be
+                         000000BF    36 _VDP_CMD	=	0x00bf
+                         000000BF    37 _VDP_STATUS	=	0x00bf
+                         000000DC    38 _JOY_PORT1	=	0x00dc
+                         000000DD    39 _JOY_PORT2	=	0x00dd
+                         000000F0    40 _FMADDRESS	=	0x00f0
+                         000000F1    41 _FMDATA	=	0x00f1
+                         000000F2    42 _AUDIOCTRL	=	0x00f2
+                                     43 ;--------------------------------------------------------
+                                     44 ; ram data
+                                     45 ;--------------------------------------------------------
+                                     46 	.area _DATA
+                         0000FFFC    47 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    48 _GLASSES_3D	=	0xfff8
+                         0000FFFD    49 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    50 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    51 _MAP_FRAME2	=	0xffff
+    00000000                         52 _ZGB_Fading_BPal::
+    00000000                         53 	.ds 16
+    00000010                         54 _ZGB_Fading_SPal::
+    00000010                         55 	.ds 16
+    00000020                         56 _FadeStepColor_palette_10000_252:
+    00000020                         57 	.ds 16
+    00000030                         58 _FadeStepColor_palette_s_10000_252:
+    00000030                         59 	.ds 16
+                                     60 ;--------------------------------------------------------
+                                     61 ; ram data
+                                     62 ;--------------------------------------------------------
+                                     63 	.area _INITIALIZED
+                                     64 ;--------------------------------------------------------
+                                     65 ; absolute external ram data
+                                     66 ;--------------------------------------------------------
+                                     67 	.area _DABS (ABS)
+                                     68 ;--------------------------------------------------------
+                                     69 ; global & static initialisations
+                                     70 ;--------------------------------------------------------
+                                     71 	.area _HOME
+                                     72 	.area _GSINIT
+                                     73 	.area _GSFINAL
+                                     74 	.area _GSINIT
+                                     75 ;--------------------------------------------------------
+                                     76 ; Home
+                                     77 ;--------------------------------------------------------
+                                     78 	.area _HOME
+                                     79 	.area _HOME
+                                     80 ;--------------------------------------------------------
+                                     81 ; code
+                                     82 ;--------------------------------------------------------
+                                     83 	.area _CODE_1
+                                     84 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:11: palette_color_t UpdateColor(UINT8 i, palette_color_t col) {
+                                     85 ;	---------------------------------
+                                     86 ; Function UpdateColor
+                                     87 ; ---------------------------------
+    00000000                         88 _UpdateColor::
+    00000000 DD E5            [15]   89 	push	ix
+    00000002 DD 21 00 00      [14]   90 	ld	ix,#0
+    00000006 DD 39            [15]   91 	add	ix,sp
+    00000008 FD 21 F6 FF      [14]   92 	ld	iy, #-10
+    0000000C FD 39            [15]   93 	add	iy, sp
+    0000000E FD F9            [10]   94 	ld	sp, iy
+    00000010 47               [ 4]   95 	ld	b, a
+    00000011 DD 75 FF         [19]   96 	ld	-1 (ix), l
+                                     97 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:14: tmp = PAL_RED(ZGB_Fading_SPal[0]); 
+    00000014 11r10r00         [10]   98 	ld	de, #_ZGB_Fading_SPal+0
+    00000017 1A               [ 7]   99 	ld	a, (de)
+    00000018 DD 77 FE         [19]  100 	ld	-2 (ix), a
+    0000001B E6 03            [ 7]  101 	and	a, #0x03
+    0000001D 4F               [ 4]  102 	ld	c, a
+                                    103 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:15: INT8 R = PAL_RED(col); 
+    0000001E DD 7E FF         [19]  104 	ld	a, -1 (ix)
+    00000021 E6 03            [ 7]  105 	and	a, #0x03
+                                    106 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:16: R = (R > tmp) ? MAX(tmp, R - i) : MIN(tmp, R + i);
+    00000023 5F               [ 4]  107 	ld	e, a
+    00000024 DD 77 FC         [19]  108 	ld	-4 (ix), a
+    00000027 07               [ 4]  109 	rlca
+    00000028 9F               [ 4]  110 	sbc	a, a
+    00000029 DD 77 FD         [19]  111 	ld	-3 (ix), a
+    0000002C DD 70 F6         [19]  112 	ld	-10 (ix), b
+    0000002F DD 36 F7 00      [19]  113 	ld	-9 (ix), #0x00
+    00000033 79               [ 4]  114 	ld	a, c
+    00000034 6F               [ 4]  115 	ld	l, a
+    00000035 07               [ 4]  116 	rlca
+    00000036 9F               [ 4]  117 	sbc	a, a
+    00000037 67               [ 4]  118 	ld	h, a
+    00000038 DD 70 F8         [19]  119 	ld	-8 (ix), b
+    0000003B 79               [ 4]  120 	ld	a, c
+    0000003C 93               [ 4]  121 	sub	a, e
+    0000003D 30 21            [12]  122 	jr	NC, 00103$
+    0000003F DD 7E FC         [19]  123 	ld	a, -4 (ix)
+    00000042 DD 96 F6         [19]  124 	sub	a, -10 (ix)
+    00000045 47               [ 4]  125 	ld	b, a
+    00000046 9F               [ 4]  126 	sbc	a, a
+    00000047 DD 96 F7         [19]  127 	sub	a, -9 (ix)
+    0000004A 57               [ 4]  128 	ld	d, a
+    0000004B 78               [ 4]  129 	ld	a, b
+    0000004C 95               [ 4]  130 	sub	a, l
+    0000004D 7A               [ 4]  131 	ld	a, d
+    0000004E 9C               [ 4]  132 	sbc	a, h
+    0000004F E2r54r00         [10]  133 	jp	PO, 00184$
+    00000052 EE 80            [ 7]  134 	xor	a, #0x80
+    00000054                        135 00184$:
+    00000054 F2r59r00         [10]  136 	jp	P, 00105$
+    00000057 18 1F            [12]  137 	jr	00104$
+    00000059                        138 00105$:
+    00000059 7B               [ 4]  139 	ld	a, e
+    0000005A DD 96 F8         [19]  140 	sub	a, -8 (ix)
+    0000005D 4F               [ 4]  141 	ld	c, a
+    0000005E 18 18            [12]  142 	jr	00104$
+    00000060                        143 00103$:
+    00000060 DD 7E F6         [19]  144 	ld	a, -10 (ix)
+    00000063 DD 86 FC         [19]  145 	add	a, -4 (ix)
+    00000066 47               [ 4]  146 	ld	b, a
+    00000067 3E 00            [ 7]  147 	ld	a, #0x00
+    00000069 DD 8E FD         [19]  148 	adc	a, -3 (ix)
+    0000006C 57               [ 4]  149 	ld	d, a
+    0000006D 7D               [ 4]  150 	ld	a, l
+    0000006E 90               [ 4]  151 	sub	a, b
+    0000006F 7C               [ 4]  152 	ld	a, h
+    00000070 9A               [ 4]  153 	sbc	a, d
+    00000071 38 05            [12]  154 	jr	C, 00108$
+    00000073 DD 7E F8         [19]  155 	ld	a, -8 (ix)
+    00000076 83               [ 4]  156 	add	a, e
+    00000077 4F               [ 4]  157 	ld	c, a
+    00000078                        158 00108$:
+    00000078                        159 00104$:
+    00000078 DD 71 F9         [19]  160 	ld	-7 (ix), c
+                                    161 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:18: tmp = PAL_GREEN(ZGB_Fading_SPal[0]);
+    0000007B DD 7E FE         [19]  162 	ld	a, -2 (ix)
+    0000007E 0F               [ 4]  163 	rrca
+    0000007F 0F               [ 4]  164 	rrca
+    00000080 E6 03            [ 7]  165 	and	a, #0x3
+    00000082 47               [ 4]  166 	ld	b, a
+                                    167 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:19: INT8 G = PAL_GREEN(col); 
+    00000083 DD 7E FF         [19]  168 	ld	a, -1 (ix)
+    00000086 0F               [ 4]  169 	rrca
+    00000087 0F               [ 4]  170 	rrca
+    00000088 E6 03            [ 7]  171 	and	a, #0x3
+    0000008A 4F               [ 4]  172 	ld	c, a
+                                    173 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:16: R = (R > tmp) ? MAX(tmp, R - i) : MIN(tmp, R + i);
+    0000008B 78               [ 4]  174 	ld	a, b
+    0000008C 5F               [ 4]  175 	ld	e, a
+    0000008D 07               [ 4]  176 	rlca
+    0000008E 9F               [ 4]  177 	sbc	a, a
+    0000008F 57               [ 4]  178 	ld	d, a
+                                    179 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:20: G = (G > tmp) ? MAX(tmp, G - i) : MIN(tmp, G + i);
+    00000090 79               [ 4]  180 	ld	a, c
+    00000091 6F               [ 4]  181 	ld	l, a
+    00000092 07               [ 4]  182 	rlca
+    00000093 9F               [ 4]  183 	sbc	a, a
+    00000094 67               [ 4]  184 	ld	h, a
+    00000095 78               [ 4]  185 	ld	a, b
+    00000096 91               [ 4]  186 	sub	a, c
+    00000097 30 1F            [12]  187 	jr	NC, 00109$
+    00000099 7D               [ 4]  188 	ld	a, l
+    0000009A DD 96 F6         [19]  189 	sub	a, -10 (ix)
+    0000009D 6F               [ 4]  190 	ld	l, a
+    0000009E 9F               [ 4]  191 	sbc	a, a
+    0000009F DD 96 F7         [19]  192 	sub	a, -9 (ix)
+    000000A2 67               [ 4]  193 	ld	h, a
+    000000A3 7D               [ 4]  194 	ld	a, l
+    000000A4 93               [ 4]  195 	sub	a, e
+    000000A5 7C               [ 4]  196 	ld	a, h
+    000000A6 9A               [ 4]  197 	sbc	a, d
+    000000A7 E2rACr00         [10]  198 	jp	PO, 00185$
+    000000AA EE 80            [ 7]  199 	xor	a, #0x80
+    000000AC                        200 00185$:
+    000000AC F2rB1r00         [10]  201 	jp	P, 00111$
+    000000AF 18 1A            [12]  202 	jr	00110$
+    000000B1                        203 00111$:
+    000000B1 79               [ 4]  204 	ld	a, c
+    000000B2 DD 96 F8         [19]  205 	sub	a, -8 (ix)
+    000000B5 47               [ 4]  206 	ld	b, a
+    000000B6 18 13            [12]  207 	jr	00110$
+    000000B8                        208 00109$:
+    000000B8 7D               [ 4]  209 	ld	a, l
+    000000B9 DD 86 F6         [19]  210 	add	a, -10 (ix)
+    000000BC 6F               [ 4]  211 	ld	l, a
+    000000BD 30 01            [12]  212 	jr	NC, 00186$
+    000000BF 24               [ 4]  213 	inc	h
+    000000C0                        214 00186$:
+    000000C0 7B               [ 4]  215 	ld	a, e
+    000000C1 95               [ 4]  216 	sub	a, l
+    000000C2 7A               [ 4]  217 	ld	a, d
+    000000C3 9C               [ 4]  218 	sbc	a, h
+    000000C4 38 05            [12]  219 	jr	C, 00114$
+    000000C6 79               [ 4]  220 	ld	a, c
+    000000C7 DD 86 F8         [19]  221 	add	a, -8 (ix)
+    000000CA 47               [ 4]  222 	ld	b, a
+    000000CB                        223 00114$:
+    000000CB                        224 00110$:
+    000000CB DD 70 FA         [19]  225 	ld	-6 (ix), b
+                                    226 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:22: tmp = PAL_BLUE(ZGB_Fading_SPal[0]);
+    000000CE DD 7E FE         [19]  227 	ld	a, -2 (ix)
+    000000D1 07               [ 4]  228 	rlca
+    000000D2 07               [ 4]  229 	rlca
+    000000D3 07               [ 4]  230 	rlca
+    000000D4 07               [ 4]  231 	rlca
+    000000D5 E6 03            [ 7]  232 	and	a, #0x3
+    000000D7 4F               [ 4]  233 	ld	c, a
+                                    234 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:23: INT8 B = PAL_BLUE(col);
+    000000D8 DD 7E FF         [19]  235 	ld	a, -1 (ix)
+    000000DB 07               [ 4]  236 	rlca
+    000000DC 07               [ 4]  237 	rlca
+    000000DD 07               [ 4]  238 	rlca
+    000000DE 07               [ 4]  239 	rlca
+    000000DF E6 03            [ 7]  240 	and	a, #0x3
+    000000E1 5F               [ 4]  241 	ld	e, a
+                                    242 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:16: R = (R > tmp) ? MAX(tmp, R - i) : MIN(tmp, R + i);
+    000000E2 79               [ 4]  243 	ld	a, c
+    000000E3 DD 77 FB         [19]  244 	ld	-5 (ix), a
+    000000E6 07               [ 4]  245 	rlca
+    000000E7 9F               [ 4]  246 	sbc	a, a
+    000000E8 DD 77 FC         [19]  247 	ld	-4 (ix), a
+                                    248 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:24: B = (B > tmp) ? MAX(tmp, B - i) : MIN(tmp, B + i);
+    000000EB 7B               [ 4]  249 	ld	a, e
+    000000EC DD 77 FD         [19]  250 	ld	-3 (ix), a
+    000000EF 07               [ 4]  251 	rlca
+    000000F0 9F               [ 4]  252 	sbc	a, a
+    000000F1 DD 77 FE         [19]  253 	ld	-2 (ix), a
+    000000F4 79               [ 4]  254 	ld	a, c
+    000000F5 93               [ 4]  255 	sub	a, e
+    000000F6 30 25            [12]  256 	jr	NC, 00115$
+    000000F8 DD 7E FD         [19]  257 	ld	a, -3 (ix)
+    000000FB DD 96 F6         [19]  258 	sub	a, -10 (ix)
+    000000FE 47               [ 4]  259 	ld	b, a
+    000000FF 9F               [ 4]  260 	sbc	a, a
+    00000100 DD 96 F7         [19]  261 	sub	a, -9 (ix)
+    00000103 57               [ 4]  262 	ld	d, a
+    00000104 78               [ 4]  263 	ld	a, b
+    00000105 DD 96 FB         [19]  264 	sub	a, -5 (ix)
+    00000108 7A               [ 4]  265 	ld	a, d
+    00000109 DD 9E FC         [19]  266 	sbc	a, -4 (ix)
+    0000010C E2r11r01         [10]  267 	jp	PO, 00187$
+    0000010F EE 80            [ 7]  268 	xor	a, #0x80
+    00000111                        269 00187$:
+    00000111 F2r16r01         [10]  270 	jp	P, 00117$
+    00000114 18 22            [12]  271 	jr	00116$
+    00000116                        272 00117$:
+    00000116 7B               [ 4]  273 	ld	a, e
+    00000117 DD 96 F8         [19]  274 	sub	a, -8 (ix)
+    0000011A 4F               [ 4]  275 	ld	c, a
+    0000011B 18 1B            [12]  276 	jr	00116$
+    0000011D                        277 00115$:
+    0000011D DD 7E FD         [19]  278 	ld	a, -3 (ix)
+    00000120 DD 86 F6         [19]  279 	add	a, -10 (ix)
+    00000123 47               [ 4]  280 	ld	b, a
+    00000124 3E 00            [ 7]  281 	ld	a, #0x00
+    00000126 DD 8E F7         [19]  282 	adc	a, -9 (ix)
+    00000129 57               [ 4]  283 	ld	d, a
+    0000012A DD 7E FB         [19]  284 	ld	a, -5 (ix)
+    0000012D 90               [ 4]  285 	sub	a, b
+    0000012E 3E 00            [ 7]  286 	ld	a, #0x00
+    00000130 9A               [ 4]  287 	sbc	a, d
+    00000131 38 05            [12]  288 	jr	C, 00120$
+    00000133 7B               [ 4]  289 	ld	a, e
+    00000134 DD 86 F8         [19]  290 	add	a, -8 (ix)
+    00000137 4F               [ 4]  291 	ld	c, a
+    00000138                        292 00120$:
+    00000138                        293 00116$:
+                                    294 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:26: return RGB(R, G, B);
+    00000138 DD 7E FA         [19]  295 	ld	a, -6 (ix)
+    0000013B 87               [ 4]  296 	add	a, a
+    0000013C 87               [ 4]  297 	add	a, a
+    0000013D DD B6 F9         [19]  298 	or	a, -7 (ix)
+    00000140 47               [ 4]  299 	ld	b, a
+    00000141 79               [ 4]  300 	ld	a, c
+    00000142 87               [ 4]  301 	add	a, a
+    00000143 87               [ 4]  302 	add	a, a
+    00000144 87               [ 4]  303 	add	a, a
+    00000145 87               [ 4]  304 	add	a, a
+    00000146 B0               [ 4]  305 	or	a, b
+                                    306 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:27: }
+    00000147 DD F9            [10]  307 	ld	sp, ix
+    00000149 DD E1            [14]  308 	pop	ix
+    0000014B C9               [10]  309 	ret
+                                    310 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:29: void FadeStepColor(UINT8 i) {
+                                    311 ;	---------------------------------
+                                    312 ; Function FadeStepColor
+                                    313 ; ---------------------------------
+    0000014C                        314 _FadeStepColor::
+    0000014C DD E5            [15]  315 	push	ix
+    0000014E DD 21 00 00      [14]  316 	ld	ix,#0
+    00000152 DD 39            [15]  317 	add	ix,sp
+    00000154 3B               [ 6]  318 	dec	sp
+    00000155 DD 77 FF         [19]  319 	ld	-1 (ix), a
+                                    320 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:33: for (palette_color_t *src = ZGB_Fading_BPal, *dest = palette; src < ZGB_Fading_BPal + 16; ) {
+    00000158 01r00r00         [10]  321 	ld	bc, #_ZGB_Fading_BPal
+    0000015B 11r20r00         [10]  322 	ld	de, #_FadeStepColor_palette_10000_252
+    0000015E                        323 00107$:
+    0000015E 79               [ 4]  324 	ld	a, c
+    0000015F D6r10            [ 7]  325 	sub	a, #<((_ZGB_Fading_BPal + 16))
+    00000161 78               [ 4]  326 	ld	a, b
+    00000162 DEs00            [ 7]  327 	sbc	a, #>((_ZGB_Fading_BPal + 16))
+    00000164 30 11            [12]  328 	jr	NC, 00101$
+                                    329 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:34: *dest++ = UpdateColor(i, *src++);
+    00000166 0A               [ 7]  330 	ld	a, (bc)
+    00000167 03               [ 6]  331 	inc	bc
+    00000168 C5               [11]  332 	push	bc
+    00000169 D5               [11]  333 	push	de
+    0000016A 6F               [ 4]  334 	ld	l, a
+    0000016B DD 7E FF         [19]  335 	ld	a, -1 (ix)
+    0000016E CDr00r00         [17]  336 	call	_UpdateColor
+    00000171 D1               [10]  337 	pop	de
+    00000172 C1               [10]  338 	pop	bc
+    00000173 12               [ 7]  339 	ld	(de), a
+    00000174 13               [ 6]  340 	inc	de
+    00000175 18 E7            [12]  341 	jr	00107$
+    00000177                        342 00101$:
+                                    343 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:36: for (palette_color_t *src = ZGB_Fading_SPal, *dest = palette_s; src < ZGB_Fading_SPal + 16; ) {
+    00000177 01r10r00         [10]  344 	ld	bc, #_ZGB_Fading_SPal
+    0000017A 11r30r00         [10]  345 	ld	de, #_FadeStepColor_palette_s_10000_252
+    0000017D                        346 00110$:
+    0000017D 79               [ 4]  347 	ld	a, c
+    0000017E D6r20            [ 7]  348 	sub	a, #<((_ZGB_Fading_SPal + 16))
+    00000180 78               [ 4]  349 	ld	a, b
+    00000181 DEs00            [ 7]  350 	sbc	a, #>((_ZGB_Fading_SPal + 16))
+    00000183 30 11            [12]  351 	jr	NC, 00103$
+                                    352 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:37: *dest++ = UpdateColor(i, *src++);
+    00000185 0A               [ 7]  353 	ld	a, (bc)
+    00000186 03               [ 6]  354 	inc	bc
+    00000187 C5               [11]  355 	push	bc
+    00000188 D5               [11]  356 	push	de
+    00000189 6F               [ 4]  357 	ld	l, a
+    0000018A DD 7E FF         [19]  358 	ld	a, -1 (ix)
+    0000018D CDr00r00         [17]  359 	call	_UpdateColor
+    00000190 D1               [10]  360 	pop	de
+    00000191 C1               [10]  361 	pop	bc
+    00000192 12               [ 7]  362 	ld	(de), a
+    00000193 13               [ 6]  363 	inc	de
+    00000194 18 E7            [12]  364 	jr	00110$
+                                    365 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:40: WAIT_WRITABLE_CRAM;	// avoid snow on screen
+    00000196                        366 00103$:
+    00000196 DB 7E            [11]  367 	in	a, (_VCOUNTER)
+    00000198 D6 D8            [ 7]  368 	sub	a, #0xd8
+    0000019A 38 FA            [12]  369 	jr	C, 00103$
+                                    370 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:42: set_bkg_palette(0, 1, palette);
+    0000019C 21r20r00         [10]  371 	ld	hl, #_FadeStepColor_palette_10000_252
+    0000019F E5               [11]  372 	push	hl
+    000001A0 21 00 01         [10]  373 	ld	hl, #0x100
+    000001A3 E5               [11]  374 	push	hl
+    000001A4 CDr00r00         [17]  375 	call	_set_palette
+                                    376 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:43: set_sprite_palette(0, 1, palette_s);
+    000001A7 21r30r00         [10]  377 	ld	hl, #_FadeStepColor_palette_s_10000_252
+    000001AA E5               [11]  378 	push	hl
+    000001AB 21 01 01         [10]  379 	ld	hl, #0x101
+    000001AE E5               [11]  380 	push	hl
+    000001AF CDr00r00         [17]  381 	call	_set_palette
+                                    382 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:45: DISPLAY_ON;
+    000001B2 3Ar00r00         [13]  383 	ld	a, (_shadow_VDP_R1+0)
+    000001B5 F6 40            [ 7]  384 	or	a, #0x40
+    000001B7 32r00r00         [13]  385 	ld	(_shadow_VDP_R1+0), a
+    000001BA F3               [ 4]  386 	di
+    000001BB 3Ar00r00         [13]  387 	ld	a, (_shadow_VDP_R1+0)
+    000001BE D3 BF            [11]  388 	out	(_VDP_CMD), a
+    000001C0 3E 81            [ 7]  389 	ld	a, #0x81
+    000001C2 D3 BF            [11]  390 	out	(_VDP_CMD), a
+    000001C4 FB               [ 4]  391 	ei
+                                    392 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:46: SyncVBlank();
+    000001C5 CDr00r00         [17]  393 	call	_SyncVBlank
+                                    394 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:47: SyncVBlank();
+    000001C8 CDr00r00         [17]  395 	call	_SyncVBlank
+                                    396 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:48: }
+    000001CB 33               [ 6]  397 	inc	sp
+    000001CC DD E1            [14]  398 	pop	ix
+    000001CE C9               [10]  399 	ret
+                                    400 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:50: void FadeIn(void) BANKED {
+                                    401 ;	---------------------------------
+                                    402 ; Function FadeIn
+                                    403 ; ---------------------------------
+                         00000001   404 	b_FadeIn	= 1
+    000001CF                        405 _FadeIn::
+                                    406 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:51: FadeStepColor(0);
+    000001CF AF               [ 4]  407 	xor	a, a
+    000001D0 CDr4Cr01         [17]  408 	call	_FadeStepColor
+                                    409 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:52: FadeStepColor(1);
+    000001D3 3E 01            [ 7]  410 	ld	a, #0x01
+    000001D5 CDr4Cr01         [17]  411 	call	_FadeStepColor
+                                    412 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:53: FadeStepColor(2);
+    000001D8 3E 02            [ 7]  413 	ld	a, #0x02
+    000001DA CDr4Cr01         [17]  414 	call	_FadeStepColor
+                                    415 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:54: FadeStepColor(3);
+    000001DD 3E 03            [ 7]  416 	ld	a, #0x03
+    000001DF CDr4Cr01         [17]  417 	call	_FadeStepColor
+                                    418 ;c:\users\karas\onedrive\documents\github\gbdk\include\sms\sms.h:254: __WRITE_VDP_REG(VDP_R1, __READ_VDP_REG(VDP_R1) &= (~R1_DISP_ON));
+    000001E2 3Ar00r00         [13]  419 	ld	a, (_shadow_VDP_R1+0)
+    000001E5 E6 BF            [ 7]  420 	and	a, #0xbf
+    000001E7 32r00r00         [13]  421 	ld	(_shadow_VDP_R1+0), a
+    000001EA F3               [ 4]  422 	di
+    000001EB 3Ar00r00         [13]  423 	ld	a, (_shadow_VDP_R1+0)
+    000001EE D3 BF            [11]  424 	out	(_VDP_CMD), a
+    000001F0 3E 81            [ 7]  425 	ld	a, #0x81
+    000001F2 D3 BF            [11]  426 	out	(_VDP_CMD), a
+    000001F4 FB               [ 4]  427 	ei
+                                    428 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:55: DISPLAY_OFF;
+                                    429 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:56: }
+    000001F5 C9               [10]  430 	ret
+                                    431 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:58: void FadeOut(void) BANKED {
+                                    432 ;	---------------------------------
+                                    433 ; Function FadeOut
+                                    434 ; ---------------------------------
+                         00000001   435 	b_FadeOut	= 1
+    000001F6                        436 _FadeOut::
+                                    437 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:59: FadeStepColor(3);
+    000001F6 3E 03            [ 7]  438 	ld	a, #0x03
+    000001F8 CDr4Cr01         [17]  439 	call	_FadeStepColor
+                                    440 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:60: FadeStepColor(2);
+    000001FB 3E 02            [ 7]  441 	ld	a, #0x02
+    000001FD CDr4Cr01         [17]  442 	call	_FadeStepColor
+                                    443 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:61: FadeStepColor(1);
+    00000200 3E 01            [ 7]  444 	ld	a, #0x01
+    00000202 CDr4Cr01         [17]  445 	call	_FadeStepColor
+                                    446 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:62: FadeStepColor(0);
+    00000205 AF               [ 4]  447 	xor	a, a
+                                    448 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/sms/Fade.c:63: }
+    00000206 C3r4Cr01         [10]  449 	jp	_FadeStepColor
+                                    450 	.area _CODE_1
+                                    451 	.area _INITIALIZER
+                                    452 	.area _CABS (ABS)

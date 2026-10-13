@@ -1,0 +1,134 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module SpritePlayer
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _Destroy_SpritePlayer
+                                     11 	.globl _Update_SpritePlayer
+                                     12 	.globl _Start_SpritePlayer
+                                     13 	.globl _TranslateSprite
+                                     14 	.globl ___bank_SpritePlayer
+                                     15 ;--------------------------------------------------------
+                                     16 ; special function registers
+                                     17 ;--------------------------------------------------------
+                         00000000    18 _GG_STATE	=	0x0000
+                         00000001    19 _GG_EXT_7BIT	=	0x0001
+                         00000002    20 _GG_EXT_CTL	=	0x0002
+                         00000003    21 _GG_SIO_SEND	=	0x0003
+                         00000004    22 _GG_SIO_RECV	=	0x0004
+                         00000005    23 _GG_SIO_CTL	=	0x0005
+                         00000006    24 _GG_SOUND_PAN	=	0x0006
+                         0000003E    25 _MEMORY_CTL	=	0x003e
+                         0000003F    26 _JOY_CTL	=	0x003f
+                         0000007E    27 _VCOUNTER	=	0x007e
+                         0000007F    28 _PSG	=	0x007f
+                         0000007F    29 _HCOUNTER	=	0x007f
+                         000000BE    30 _VDP_DATA	=	0x00be
+                         000000BF    31 _VDP_CMD	=	0x00bf
+                         000000BF    32 _VDP_STATUS	=	0x00bf
+                         000000DC    33 _JOY_PORT1	=	0x00dc
+                         000000DD    34 _JOY_PORT2	=	0x00dd
+                         000000F0    35 _FMADDRESS	=	0x00f0
+                         000000F1    36 _FMDATA	=	0x00f1
+                         000000F2    37 _AUDIOCTRL	=	0x00f2
+                                     38 ;--------------------------------------------------------
+                                     39 ; ram data
+                                     40 ;--------------------------------------------------------
+                                     41 	.area _DATA
+                         0000FFFC    42 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    43 _GLASSES_3D	=	0xfff8
+                         0000FFFD    44 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    45 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    46 _MAP_FRAME2	=	0xffff
+                                     47 ;--------------------------------------------------------
+                                     48 ; ram data
+                                     49 ;--------------------------------------------------------
+                                     50 	.area _INITIALIZED
+                                     51 ;--------------------------------------------------------
+                                     52 ; absolute external ram data
+                                     53 ;--------------------------------------------------------
+                                     54 	.area _DABS (ABS)
+                                     55 ;--------------------------------------------------------
+                                     56 ; global & static initialisations
+                                     57 ;--------------------------------------------------------
+                                     58 	.area _HOME
+                                     59 	.area _GSINIT
+                                     60 	.area _GSFINAL
+                                     61 	.area _GSINIT
+                                     62 ;--------------------------------------------------------
+                                     63 ; Home
+                                     64 ;--------------------------------------------------------
+                                     65 	.area _HOME
+                                     66 	.area _HOME
+                                     67 ;--------------------------------------------------------
+                                     68 ; code
+                                     69 ;--------------------------------------------------------
+                                     70 	.area _CODE_255
+                                     71 ;SpritePlayer.c:6: void START() {
+                                     72 ;	---------------------------------
+                                     73 ; Function Start_SpritePlayer
+                                     74 ; ---------------------------------
+    00000000                         75 _Start_SpritePlayer::
+                                     76 ;SpritePlayer.c:7: }
+    00000000 C9               [10]   77 	ret
+                         000000FF    78 ___bank_SpritePlayer	=	0x00ff
+                                     79 ;SpritePlayer.c:9: void UPDATE() {
+                                     80 ;	---------------------------------
+                                     81 ; Function Update_SpritePlayer
+                                     82 ; ---------------------------------
+    00000001                         83 _Update_SpritePlayer::
+                                     84 ;SpritePlayer.c:10: if(KEY_PRESSED(J_UP)) {
+    00000001 3Ar01r00         [13]   85 	ld	a, (#(_joypads + 1) + 0)
+    00000004 0F               [ 4]   86 	rrca
+    00000005 30 0A            [12]   87 	jr	NC, 00102$
+                                     88 ;SpritePlayer.c:11: TranslateSprite(THIS, 0, -1);
+    00000007 21 00 FF         [10]   89 	ld	hl, #0xff00
+    0000000A E5               [11]   90 	push	hl
+    0000000B 2Ar00r00         [16]   91 	ld	hl, (_THIS)
+    0000000E CDr00r00         [17]   92 	call	_TranslateSprite
+    00000011                         93 00102$:
+                                     94 ;SpritePlayer.c:13: if(KEY_PRESSED(J_DOWN)) {
+    00000011 3Ar01r00         [13]   95 	ld	a, (#(_joypads + 1) + 0)
+    00000014 CB 4F            [ 8]   96 	bit	1, a
+    00000016 28 0A            [12]   97 	jr	Z, 00104$
+                                     98 ;SpritePlayer.c:14: TranslateSprite(THIS, 0, 1);
+    00000018 21 00 01         [10]   99 	ld	hl, #0x100
+    0000001B E5               [11]  100 	push	hl
+    0000001C 2Ar00r00         [16]  101 	ld	hl, (_THIS)
+    0000001F CDr00r00         [17]  102 	call	_TranslateSprite
+    00000022                        103 00104$:
+                                    104 ;SpritePlayer.c:16: if(KEY_PRESSED(J_LEFT)) {
+    00000022 3Ar01r00         [13]  105 	ld	a, (#(_joypads + 1) + 0)
+    00000025 CB 57            [ 8]  106 	bit	2, a
+    00000027 28 0A            [12]  107 	jr	Z, 00106$
+                                    108 ;SpritePlayer.c:17: TranslateSprite(THIS, -1, 0);
+    00000029 21 FF 00         [10]  109 	ld	hl, #0xff
+    0000002C E5               [11]  110 	push	hl
+    0000002D 2Ar00r00         [16]  111 	ld	hl, (_THIS)
+    00000030 CDr00r00         [17]  112 	call	_TranslateSprite
+    00000033                        113 00106$:
+                                    114 ;SpritePlayer.c:19: if(KEY_PRESSED(J_RIGHT)) {
+    00000033 3Ar01r00         [13]  115 	ld	a, (#(_joypads + 1) + 0)
+    00000036 CB 5F            [ 8]  116 	bit	3, a
+    00000038 C8               [11]  117 	ret	Z
+                                    118 ;SpritePlayer.c:20: TranslateSprite(THIS, 1, 0);
+    00000039 21 01 00         [10]  119 	ld	hl, #0x01
+    0000003C E5               [11]  120 	push	hl
+    0000003D 2Ar00r00         [16]  121 	ld	hl, (_THIS)
+    00000040 CDr00r00         [17]  122 	call	_TranslateSprite
+                                    123 ;SpritePlayer.c:22: }
+    00000043 C9               [10]  124 	ret
+                                    125 ;SpritePlayer.c:24: void DESTROY() {
+                                    126 ;	---------------------------------
+                                    127 ; Function Destroy_SpritePlayer
+                                    128 ; ---------------------------------
+    00000044                        129 _Destroy_SpritePlayer::
+                                    130 ;SpritePlayer.c:25: }
+    00000044 C9               [10]  131 	ret
+                                    132 	.area _CODE_255
+                                    133 	.area _INITIALIZER
+                                    134 	.area _CABS (ABS)

@@ -1,0 +1,111 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module StateGame
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _Update_StateGame
+                                     11 	.globl _Start_StateGame
+                                     12 	.globl _InitScroll
+                                     13 	.globl _SpriteManagerAddEx
+                                     14 	.globl _collsion_tile
+                                     15 	.globl ___bank_StateGame
+                                     16 ;--------------------------------------------------------
+                                     17 ; special function registers
+                                     18 ;--------------------------------------------------------
+                         00000000    19 _GG_STATE	=	0x0000
+                         00000001    20 _GG_EXT_7BIT	=	0x0001
+                         00000002    21 _GG_EXT_CTL	=	0x0002
+                         00000003    22 _GG_SIO_SEND	=	0x0003
+                         00000004    23 _GG_SIO_RECV	=	0x0004
+                         00000005    24 _GG_SIO_CTL	=	0x0005
+                         00000006    25 _GG_SOUND_PAN	=	0x0006
+                         0000003E    26 _MEMORY_CTL	=	0x003e
+                         0000003F    27 _JOY_CTL	=	0x003f
+                         0000007E    28 _VCOUNTER	=	0x007e
+                         0000007F    29 _PSG	=	0x007f
+                         0000007F    30 _HCOUNTER	=	0x007f
+                         000000BE    31 _VDP_DATA	=	0x00be
+                         000000BF    32 _VDP_CMD	=	0x00bf
+                         000000BF    33 _VDP_STATUS	=	0x00bf
+                         000000DC    34 _JOY_PORT1	=	0x00dc
+                         000000DD    35 _JOY_PORT2	=	0x00dd
+                         000000F0    36 _FMADDRESS	=	0x00f0
+                         000000F1    37 _FMDATA	=	0x00f1
+                         000000F2    38 _AUDIOCTRL	=	0x00f2
+                                     39 ;--------------------------------------------------------
+                                     40 ; ram data
+                                     41 ;--------------------------------------------------------
+                                     42 	.area _DATA
+                         0000FFFC    43 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    44 _GLASSES_3D	=	0xfff8
+                         0000FFFD    45 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    46 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    47 _MAP_FRAME2	=	0xffff
+                                     48 ;--------------------------------------------------------
+                                     49 ; ram data
+                                     50 ;--------------------------------------------------------
+                                     51 	.area _INITIALIZED
+    00000000                         52 _collsion_tile::
+    00000000                         53 	.ds 2
+                                     54 ;--------------------------------------------------------
+                                     55 ; absolute external ram data
+                                     56 ;--------------------------------------------------------
+                                     57 	.area _DABS (ABS)
+                                     58 ;--------------------------------------------------------
+                                     59 ; global & static initialisations
+                                     60 ;--------------------------------------------------------
+                                     61 	.area _HOME
+                                     62 	.area _GSINIT
+                                     63 	.area _GSFINAL
+                                     64 	.area _GSINIT
+                                     65 ;--------------------------------------------------------
+                                     66 ; Home
+                                     67 ;--------------------------------------------------------
+                                     68 	.area _HOME
+                                     69 	.area _HOME
+                                     70 ;--------------------------------------------------------
+                                     71 ; code
+                                     72 ;--------------------------------------------------------
+                                     73 	.area _CODE_255
+                                     74 ;StateGame.c:9: void START(void) {
+                                     75 ;	---------------------------------
+                                     76 ; Function Start_StateGame
+                                     77 ; ---------------------------------
+    00000000                         78 _Start_StateGame::
+                                     79 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/SpriteManager.h:45: return SpriteManagerAddEx(sprite_type, x, y, NULL);
+    00000000 21 00 00         [10]   80 	ld	hl, #0x0000
+    00000003 E5               [11]   81 	push	hl
+    00000004 2E 32            [ 7]   82 	ld	l, #0x32
+    00000006 E5               [11]   83 	push	hl
+    00000007 11 32 00         [10]   84 	ld	de, #0x0032
+    0000000A AF               [ 4]   85 	xor	a, a
+    0000000B CDr00r00         [17]   86 	call	_SpriteManagerAddEx
+                                     87 ;StateGame.c:10: scroll_target = SpriteManagerAdd(SpritePlayer, 50, 50);
+    0000000E ED 53r00r00      [20]   88 	ld	(_scroll_target), de
+                                     89 ;StateGame.c:11: InitScroll(BANK(map), &map, 0, 0);
+    00000012 3Er00            [ 7]   90 	ld	a, #<(___bank_map)
+    00000014 21 00 00         [10]   91 	ld	hl, #0x0000
+    00000017 E5               [11]   92 	push	hl
+    00000018 E5               [11]   93 	push	hl
+    00000019 11r00r00         [10]   94 	ld	de, #_map
+    0000001C CDr00r00         [17]   95 	call	_InitScroll
+                                     96 ;StateGame.c:12: }
+    0000001F C9               [10]   97 	ret
+                         000000FF    98 ___bank_StateGame	=	0x00ff
+                                     99 ;StateGame.c:14: void UPDATE(void) {
+                                    100 ;	---------------------------------
+                                    101 ; Function Update_StateGame
+                                    102 ; ---------------------------------
+    00000020                        103 _Update_StateGame::
+                                    104 ;StateGame.c:15: }
+    00000020 C9               [10]  105 	ret
+                                    106 	.area _CODE_255
+                                    107 	.area _INITIALIZER
+    00000000                        108 __xinit__collsion_tile:
+    00000000 01                     109 	.db #0x01	; 1
+    00000001 00                     110 	.db #0x00	; 0
+                                    111 	.area _CABS (ABS)

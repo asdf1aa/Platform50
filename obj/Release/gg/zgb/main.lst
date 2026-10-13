@@ -1,0 +1,410 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module main
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _main
+                                     11 	.globl b_InitSprites
+                                     12 	.globl _InitSprites
+                                     13 	.globl b_InitStates
+                                     14 	.globl _InitStates
+                                     15 	.globl _InitWindow
+                                     16 	.globl _VBL_isr
+                                     17 	.globl b_SetDefaultColorPalettes
+                                     18 	.globl _SetDefaultColorPalettes
+                                     19 	.globl b_FadeOut
+                                     20 	.globl _FadeOut
+                                     21 	.globl b_FadeIn
+                                     22 	.globl _FadeIn
+                                     23 	.globl _MUSIC_isr
+                                     24 	.globl _sfx_sound_cut_mask
+                                     25 	.globl _SyncVBlank
+                                     26 	.globl _SpriteManagerRenderOnly
+                                     27 	.globl _SpriteManagerRenderPurge
+                                     28 	.globl _SpriteManagerUpdate
+                                     29 	.globl _SpriteManagerReset
+                                     30 	.globl _InitOAMs
+                                     31 	.globl _SwapOAMs
+                                     32 	.globl _joypad_ex
+                                     33 	.globl _joypad_init
+                                     34 	.globl _add_VBL
+                                     35 	.globl _vbl_count
+                                     36 	.globl _fade_mode
+                                     37 	.globl _state_running
+                                     38 	.globl __is_SGB
+                                     39 	.globl _current_state
+                                     40 	.globl _delta_time
+                                     41 	.globl _SetState
+                                     42 ;--------------------------------------------------------
+                                     43 ; special function registers
+                                     44 ;--------------------------------------------------------
+                         00000000    45 _GG_STATE	=	0x0000
+                         00000001    46 _GG_EXT_7BIT	=	0x0001
+                         00000002    47 _GG_EXT_CTL	=	0x0002
+                         00000003    48 _GG_SIO_SEND	=	0x0003
+                         00000004    49 _GG_SIO_RECV	=	0x0004
+                         00000005    50 _GG_SIO_CTL	=	0x0005
+                         00000006    51 _GG_SOUND_PAN	=	0x0006
+                         0000003E    52 _MEMORY_CTL	=	0x003e
+                         0000003F    53 _JOY_CTL	=	0x003f
+                         0000007E    54 _VCOUNTER	=	0x007e
+                         0000007F    55 _PSG	=	0x007f
+                         0000007F    56 _HCOUNTER	=	0x007f
+                         000000BE    57 _VDP_DATA	=	0x00be
+                         000000BF    58 _VDP_CMD	=	0x00bf
+                         000000BF    59 _VDP_STATUS	=	0x00bf
+                         000000DC    60 _JOY_PORT1	=	0x00dc
+                         000000DD    61 _JOY_PORT2	=	0x00dd
+                         000000F0    62 _FMADDRESS	=	0x00f0
+                         000000F1    63 _FMDATA	=	0x00f1
+                         000000F2    64 _AUDIOCTRL	=	0x00f2
+                                     65 ;--------------------------------------------------------
+                                     66 ; ram data
+                                     67 ;--------------------------------------------------------
+                                     68 	.area _DATA
+                         0000FFFC    69 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    70 _GLASSES_3D	=	0xfff8
+                         0000FFFD    71 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    72 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    73 _MAP_FRAME2	=	0xffff
+    00000000                         74 _delta_time::
+    00000000                         75 	.ds 1
+    00000001                         76 _current_state::
+    00000001                         77 	.ds 1
+    00000002                         78 _main_current_update_40001_303:
+    00000002                         79 	.ds 2
+                                     80 ;--------------------------------------------------------
+                                     81 ; ram data
+                                     82 ;--------------------------------------------------------
+                                     83 	.area _INITIALIZED
+    00000000                         84 __is_SGB::
+    00000000                         85 	.ds 1
+    00000001                         86 _state_running::
+    00000001                         87 	.ds 1
+    00000002                         88 _fade_mode::
+    00000002                         89 	.ds 1
+    00000003                         90 _vbl_count::
+    00000003                         91 	.ds 1
+                                     92 ;--------------------------------------------------------
+                                     93 ; absolute external ram data
+                                     94 ;--------------------------------------------------------
+                                     95 	.area _DABS (ABS)
+                                     96 ;--------------------------------------------------------
+                                     97 ; global & static initialisations
+                                     98 ;--------------------------------------------------------
+                                     99 	.area _HOME
+                                    100 	.area _GSINIT
+                                    101 	.area _GSFINAL
+                                    102 	.area _GSINIT
+                                    103 ;--------------------------------------------------------
+                                    104 ; Home
+                                    105 ;--------------------------------------------------------
+                                    106 	.area _HOME
+                                    107 	.area _HOME
+                                    108 ;--------------------------------------------------------
+                                    109 ; code
+                                    110 ;--------------------------------------------------------
+                                    111 	.area _CODE
+                                    112 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:21: static void __force_use_font(void) NAKED { __asm__(".globl _font_recode_table"); }
+                                    113 ;	---------------------------------
+                                    114 ; Function __force_use_font
+                                    115 ; ---------------------------------
+    00000000                        116 ___force_use_font:
+                                    117 	.globl	_font_recode_table
+                                    118 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:33: void SetState(UINT8 state) {
+                                    119 ;	---------------------------------
+                                    120 ; Function SetState
+                                    121 ; ---------------------------------
+    00000000                        122 _SetState::
+    00000000 32r00r00         [13]  123 	ld	(_next_state+0), a
+                                    124 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:34: state_running = FALSE;
+    00000003 AF               [ 4]  125 	xor	a, a
+    00000004 32r01r00         [13]  126 	ld	(_state_running+0), a
+                                    127 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:35: next_state = state;
+                                    128 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:36: }
+    00000007 C9               [10]  129 	ret
+                                    130 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:46: void main(void) {
+                                    131 ;	---------------------------------
+                                    132 ; Function main
+                                    133 ; ---------------------------------
+    00000008                        134 _main::
+                                    135 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Keys.h:20: joypad_init(MAX_JOYPADS, &joypads);
+    00000008 21r00r00         [10]  136 	ld	hl, #_joypads
+    0000000B E5               [11]  137 	push	hl
+    0000000C 3E 02            [ 7]  138 	ld	a, #0x02
+    0000000E F5               [11]  139 	push	af
+    0000000F 33               [ 6]  140 	inc	sp
+    00000010 CDr00r00         [17]  141 	call	_joypad_init
+                                    142 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:63: InitOAMs();
+    00000013 CDr00r00         [17]  143 	call	_InitOAMs
+                                    144 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sound.h:90: sfx_sound_cut_mask(MUTE_MASK_ALL);
+    00000016 3E 0F            [ 7]  145 	ld	a, #0x0f
+    00000018 CDr00r00         [17]  146 	call	_sfx_sound_cut_mask
+                                    147 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Music.h:88: }
+    0000001B CDr00r00         [17]  148 	call	___sdcc_critical_enter
+    0000001E F5               [11]  149 	push	af
+                                    150 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Music.h:86: add_VBL(MUSIC_isr);
+    0000001F 21r00r00         [10]  151 	ld	hl, #_MUSIC_isr
+    00000022 CDr00r00         [17]  152 	call	_add_VBL
+    00000025 F1               [10]  153 	pop	af
+    00000026 E2r2Ar00         [10]  154 	jp	PO, 00203$
+    00000029 FB               [ 4]  155 	ei
+    0000002A                        156 00203$:
+                                    157 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:67: InitStates();
+    0000002A 1Er00            [ 7]  158 	ld	e, #b_InitStates
+    0000002C 21r00r00         [10]  159 	ld	hl, #_InitStates
+    0000002F CDr00r00         [17]  160 	call	___sdcc_bcall_ehl
+                                    161 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:68: InitSprites();
+    00000032 1Er00            [ 7]  162 	ld	e, #b_InitSprites
+    00000034 21r00r00         [10]  163 	ld	hl, #_InitSprites
+    00000037 CDr00r00         [17]  164 	call	___sdcc_bcall_ehl
+                                    165 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:73: }
+    0000003A CDr00r00         [17]  166 	call	___sdcc_critical_enter
+    0000003D F5               [11]  167 	push	af
+                                    168 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:72: add_VBL(VBL_isr);
+    0000003E 21r00r00         [10]  169 	ld	hl, #_VBL_isr
+    00000041 CDr00r00         [17]  170 	call	_add_VBL
+    00000044 F1               [10]  171 	pop	af
+    00000045 E2r49r00         [10]  172 	jp	PO, 00205$
+    00000048 FB               [ 4]  173 	ei
+    00000049                        174 00205$:
+                                    175 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:75: InitWindow();
+    00000049 CDr00r00         [17]  176 	call	_InitWindow
+                                    177 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:80: SPRITES_8x16;
+    0000004C 3Ar00r00         [13]  178 	ld	a, (_shadow_VDP_R1+0)
+    0000004F F6 02            [ 7]  179 	or	a, #0x02
+    00000051 32r00r00         [13]  180 	ld	(_shadow_VDP_R1+0), a
+    00000054 F3               [ 4]  181 	di
+    00000055 3Ar00r00         [13]  182 	ld	a, (_shadow_VDP_R1+0)
+    00000058 D3 BF            [11]  183 	out	(_VDP_CMD), a
+    0000005A 3E 81            [ 7]  184 	ld	a, #0x81
+    0000005C D3 BF            [11]  185 	out	(_VDP_CMD), a
+    0000005E FB               [ 4]  186 	ei
+                                    187 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:82: SHOW_SPRITES; SHOW_BKG;
+    0000005F AF               [ 4]  188 	xor	a, a
+    00000060 32r00r00         [13]  189 	ld	(__sprites_OFF+0), a
+                                    190 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:86: HIDE_LEFT_COLUMN;
+    00000063 3Ar00r00         [13]  191 	ld	a, (_shadow_VDP_R0+0)
+    00000066 F6 20            [ 7]  192 	or	a, #0x20
+    00000068 32r00r00         [13]  193 	ld	(_shadow_VDP_R0+0), a
+    0000006B F3               [ 4]  194 	di
+    0000006C 3Ar00r00         [13]  195 	ld	a, (_shadow_VDP_R0+0)
+    0000006F D3 BF            [11]  196 	out	(_VDP_CMD), a
+    00000071 3E 80            [ 7]  197 	ld	a, #0x80
+    00000073 D3 BF            [11]  198 	out	(_VDP_CMD), a
+    00000075 FB               [ 4]  199 	ei
+                                    200 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:90: SetDefaultColorPalettes();
+    00000076 1Er00            [ 7]  201 	ld	e, #b_SetDefaultColorPalettes
+    00000078 21r00r00         [10]  202 	ld	hl, #_SetDefaultColorPalettes
+    0000007B CDr00r00         [17]  203 	call	___sdcc_bcall_ehl
+                                    204 ;c:\users\karas\onedrive\documents\github\gbdk\include\sms\sms.h:254: __WRITE_VDP_REG(VDP_R1, __READ_VDP_REG(VDP_R1) &= (~R1_DISP_ON));
+    0000007E 3Ar00r00         [13]  205 	ld	a, (_shadow_VDP_R1+0)
+    00000081 E6 BF            [ 7]  206 	and	a, #0xbf
+    00000083 32r00r00         [13]  207 	ld	(_shadow_VDP_R1+0), a
+    00000086 F3               [ 4]  208 	di
+    00000087 3Ar00r00         [13]  209 	ld	a, (_shadow_VDP_R1+0)
+    0000008A D3 BF            [11]  210 	out	(_VDP_CMD), a
+    0000008C 3E 81            [ 7]  211 	ld	a, #0x81
+    0000008E D3 BF            [11]  212 	out	(_VDP_CMD), a
+    00000090 FB               [ 4]  213 	ei
+                                    214 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:94: while(TRUE) {
+    00000091                        215 00117$:
+                                    216 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:104: SpriteManagerReset();                           // reset sprite manager and remove all sprites
+    00000091 CDr00r00         [17]  217 	call	_SpriteManagerReset
+                                    218 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:105: scroll_target = NULL;                           // reset scroll target
+    00000094 21 00 00         [10]  219 	ld	hl, #0x0000
+    00000097 22r00r00         [16]  220 	ld	(_scroll_target), hl
+                                    221 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:107: state_running = TRUE;
+    0000009A FD 21r01r00      [14]  222 	ld	iy, #_state_running
+    0000009E FD 36 00 01      [19]  223 	ld	0 (iy), #0x01
+                                    224 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:108: current_state = next_state;                     // switch to the next scene
+    000000A2 3Ar00r00         [13]  225 	ld	a, (_next_state+0)
+    000000A5 32r01r00         [13]  226 	ld	(_current_state+0), a
+                                    227 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:110: last_tile_loaded = 0;                           // reset tile allocator
+                                    228 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:112: last_bg_pal_loaded = 0;                         // reset palette allocator for CGB/SMS/GG
+    000000A8 AF               [ 4]  229 	xor	a, a
+    000000A9 32r00r00         [13]  230 	ld	(_last_tile_loaded+0), a
+    000000AC 32r00r00         [13]  231 	ld	(_last_bg_pal_loaded+0), a
+                                    232 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:114: scroll_x_vblank = scroll_offset_x = 0;          // reset the scroll position;
+    000000AF AF               [ 4]  233 	xor	a, a
+    000000B0 32r00r00         [13]  234 	ld	(_scroll_offset_x+0), a
+    000000B3 22r00r00         [16]  235 	ld	(_scroll_x_vblank), hl
+                                    236 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:115: scroll_y_vblank = scroll_offset_y = 0;
+    000000B6 AF               [ 4]  237 	xor	a, a
+    000000B7 32r00r00         [13]  238 	ld	(_scroll_offset_y+0), a
+    000000BA 22r00r00         [16]  239 	ld	(_scroll_y_vblank), hl
+                                    240 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:119: SWITCH_ROM(stateBanks[current_state]);          // switch to the current state bank and stay
+    000000BD 01r00r00         [10]  241 	ld	bc, #_stateBanks+0
+    000000C0 3Ar01r00         [13]  242 	ld	a, (_current_state)
+    000000C3 6F               [ 4]  243 	ld	l, a
+    000000C4 26 00            [ 7]  244 	ld	h, #0x00
+    000000C6 09               [11]  245 	add	hl, bc
+    000000C7 7E               [ 7]  246 	ld	a, (hl)
+    000000C8 32 FE FF         [13]  247 	ld	(_MAP_FRAME1+0), a
+                                    248 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:121: startFuncs[current_state]();                    // initialize current state
+    000000CB 01r00r00         [10]  249 	ld	bc, #_startFuncs+0
+    000000CE 3Ar01r00         [13]  250 	ld	a, (_current_state)
+    000000D1 26 00            [ 7]  251 	ld	h, #0x00
+    000000D3 6F               [ 4]  252 	ld	l, a
+    000000D4 29               [11]  253 	add	hl, hl
+    000000D5 09               [11]  254 	add	hl, bc
+    000000D6 4E               [ 7]  255 	ld	c, (hl)
+    000000D7 23               [ 6]  256 	inc	hl
+    000000D8 46               [ 7]  257 	ld	b, (hl)
+    000000D9 69               [ 4]  258 	ld	l, c
+    000000DA 60               [ 4]  259 	ld	h, b
+    000000DB CDr00r00         [17]  260 	call	___sdcc_call_hl
+                                    261 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:123: scroll_x_vblank = scroll_x, scroll_y_vblank = scroll_y;
+    000000DE 2Ar00r00         [16]  262 	ld	hl, (_scroll_x)
+    000000E1 22r00r00         [16]  263 	ld	(_scroll_x_vblank), hl
+    000000E4 2Ar00r00         [16]  264 	ld	hl, (_scroll_y)
+    000000E7 22r00r00         [16]  265 	ld	(_scroll_y_vblank), hl
+                                    266 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:125: if (VECTOR_LEN(sprite_manager_updatables)) {
+    000000EA 3Ar00r00         [13]  267 	ld	a, (#_sprite_manager_updatables + 0)
+    000000ED B7               [ 4]  268 	or	a, a
+    000000EE 28 06            [12]  269 	jr	Z, 00102$
+                                    270 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:126: SpriteManagerUpdate();                  // render sprites on screen if START() of the state spawns any
+    000000F0 CDr00r00         [17]  271 	call	_SpriteManagerUpdate
+                                    272 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:127: SyncVBlank();                           // wait until sprites are actually rendered to OAM
+    000000F3 CDr00r00         [17]  273 	call	_SyncVBlank
+    000000F6                        274 00102$:
+                                    275 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:130: if (state_running) {                            // initialization function may change state in START()
+    000000F6 3Ar01r00         [13]  276 	ld	a, (_state_running+0)
+    000000F9 B7               [ 4]  277 	or	a, a
+    000000FA CArA1r01         [10]  278 	jp	Z, 00115$
+                                    279 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:132: switch (fade_mode) {                    // show screen content
+    000000FD 3Ar02r00         [13]  280 	ld	a, (_fade_mode+0)
+    00000100 3D               [ 4]  281 	dec	a
+    00000101 20 0A            [12]  282 	jr	NZ, 00104$
+                                    283 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:133: case FADE_ON : FadeOut(); break;
+    00000103 1Er00            [ 7]  284 	ld	e, #b_FadeOut
+    00000105 21r00r00         [10]  285 	ld	hl, #_FadeOut
+    00000108 CDr00r00         [17]  286 	call	___sdcc_bcall_ehl
+    0000010B 18 13            [12]  287 	jr	00105$
+                                    288 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:134: default: DISPLAY_ON; break;
+    0000010D                        289 00104$:
+    0000010D 3Ar00r00         [13]  290 	ld	a, (_shadow_VDP_R1+0)
+    00000110 F6 40            [ 7]  291 	or	a, #0x40
+    00000112 32r00r00         [13]  292 	ld	(_shadow_VDP_R1+0), a
+    00000115 F3               [ 4]  293 	di
+    00000116 3Ar00r00         [13]  294 	ld	a, (_shadow_VDP_R1+0)
+    00000119 D3 BF            [11]  295 	out	(_VDP_CMD), a
+    0000011B 3E 81            [ 7]  296 	ld	a, #0x81
+    0000011D D3 BF            [11]  297 	out	(_VDP_CMD), a
+    0000011F FB               [ 4]  298 	ei
+                                    299 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:135: }
+    00000120                        300 00105$:
+                                    301 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:139: current_update = updateFuncs[current_state];
+    00000120 01r00r00         [10]  302 	ld	bc, #_updateFuncs+0
+    00000123 3Ar01r00         [13]  303 	ld	a, (_current_state)
+    00000126 26 00            [ 7]  304 	ld	h, #0x00
+    00000128 6F               [ 4]  305 	ld	l, a
+    00000129 29               [11]  306 	add	hl, hl
+    0000012A 09               [11]  307 	add	hl, bc
+    0000012B 7E               [ 7]  308 	ld	a, (hl)
+    0000012C 23               [ 6]  309 	inc	hl
+    0000012D 32r02r00         [13]  310 	ld	(_main_current_update_40001_303+0), a
+    00000130 7E               [ 7]  311 	ld	a, (hl)
+    00000131 32r03r00         [13]  312 	ld	(_main_current_update_40001_303+1), a
+                                    313 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:141: while (state_running) {
+    00000134                        314 00108$:
+    00000134 3Ar01r00         [13]  315 	ld	a, (_state_running+0)
+    00000137 B7               [ 4]  316 	or	a, a
+    00000138 28 3E            [12]  317 	jr	Z, 00110$
+                                    318 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:142: delta_time = SyncVBlank();      // wait VBlank if not slowdown
+    0000013A CDr00r00         [17]  319 	call	_SyncVBlank
+    0000013D 32r00r00         [13]  320 	ld	(_delta_time+0), a
+                                    321 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Keys.h:24: old_joypads.joy0 = joypads.joy0, old_joypads.joy1 = joypads.joy1;
+    00000140 3Ar01r00         [13]  322 	ld	a, (#_joypads + 1)
+    00000143 21r01r00         [10]  323 	ld	hl, #(_old_joypads + 1)
+    00000146 77               [ 7]  324 	ld	(hl), a
+    00000147 23               [ 6]  325 	inc	hl
+    00000148 3Ar02r00         [13]  326 	ld	a, (#_joypads + 2)
+    0000014B 77               [ 7]  327 	ld	(hl), a
+                                    328 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Keys.h:28: joypad_ex(&joypads);
+    0000014C 21r00r00         [10]  329 	ld	hl, #_joypads
+    0000014F CDr00r00         [17]  330 	call	_joypad_ex
+                                    331 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:146: current_update();               // update current state
+    00000152 2Ar02r00         [16]  332 	ld	hl, (_main_current_update_40001_303)
+    00000155 CDr00r00         [17]  333 	call	___sdcc_call_hl
+                                    334 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:148: if (VECTOR_LEN(sprite_manager_updatables)) {
+    00000158 3Ar00r00         [13]  335 	ld	a, (#_sprite_manager_updatables + 0)
+    0000015B B7               [ 4]  336 	or	a, a
+    0000015C 28 15            [12]  337 	jr	Z, 00107$
+                                    338 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:149: SpriteManagerUpdate();  // update sprites
+    0000015E CDr00r00         [17]  339 	call	_SpriteManagerUpdate
+                                    340 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/SpriteManager.h:61: if (sprite_manager_purge) {
+    00000161 3Ar00r00         [13]  341 	ld	a, (_sprite_manager_purge+0)
+    00000164 B7               [ 4]  342 	or	a, a
+    00000165 28 09            [12]  343 	jr	Z, 00126$
+                                    344 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/SpriteManager.h:62: SpriteManagerRenderPurge(); 
+    00000167 CDr00r00         [17]  345 	call	_SpriteManagerRenderPurge
+                                    346 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/SpriteManager.h:63: sprite_manager_purge = FALSE;
+    0000016A AF               [ 4]  347 	xor	a, a
+    0000016B 32r00r00         [13]  348 	ld	(_sprite_manager_purge+0), a
+    0000016E 18 03            [12]  349 	jr	00107$
+    00000170                        350 00126$:
+                                    351 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/SpriteManager.h:65: SpriteManagerRenderOnly();
+    00000170 CDr00r00         [17]  352 	call	_SpriteManagerRenderOnly
+                                    353 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:150: SpriteManagerRender();  // remove deleted sprites and render sprites on screen
+    00000173                        354 00107$:
+                                    355 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:152: SwapOAMs();                     // swap shadow OAMs and update scroll registers
+    00000173 CDr00r00         [17]  356 	call	_SwapOAMs
+    00000176 18 BC            [12]  357 	jr	00108$
+    00000178                        358 00110$:
+                                    359 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:156: switch (fade_mode) {                    // hide screen content
+    00000178 3Ar02r00         [13]  360 	ld	a, (_fade_mode+0)
+    0000017B B7               [ 4]  361 	or	a, a
+    0000017C 28 10            [12]  362 	jr	Z, 00112$
+    0000017E 3Ar02r00         [13]  363 	ld	a, (_fade_mode+0)
+    00000181 3D               [ 4]  364 	dec	a
+    00000182 20 1D            [12]  365 	jr	NZ, 00115$
+                                    366 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:157: case FADE_ON : FadeIn(); break;
+    00000184 1Er00            [ 7]  367 	ld	e, #b_FadeIn
+    00000186 21r00r00         [10]  368 	ld	hl, #_FadeIn
+    00000189 CDr00r00         [17]  369 	call	___sdcc_bcall_ehl
+    0000018C 18 13            [12]  370 	jr	00115$
+                                    371 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:158: case FADE_OFF: DISPLAY_OFF; break;
+    0000018E                        372 00112$:
+                                    373 ;c:\users\karas\onedrive\documents\github\gbdk\include\sms\sms.h:254: __WRITE_VDP_REG(VDP_R1, __READ_VDP_REG(VDP_R1) &= (~R1_DISP_ON));
+    0000018E 3Ar00r00         [13]  374 	ld	a, (_shadow_VDP_R1+0)
+    00000191 E6 BF            [ 7]  375 	and	a, #0xbf
+    00000193 32r00r00         [13]  376 	ld	(_shadow_VDP_R1+0), a
+    00000196 F3               [ 4]  377 	di
+    00000197 3Ar00r00         [13]  378 	ld	a, (_shadow_VDP_R1+0)
+    0000019A D3 BF            [11]  379 	out	(_VDP_CMD), a
+    0000019C 3E 81            [ 7]  380 	ld	a, #0x81
+    0000019E D3 BF            [11]  381 	out	(_VDP_CMD), a
+    000001A0 FB               [ 4]  382 	ei
+                                    383 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:159: }
+    000001A1                        384 00115$:
+                                    385 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:162: destroyFuncs[current_state]();                  // destroy current state
+    000001A1 01r00r00         [10]  386 	ld	bc, #_destroyFuncs+0
+    000001A4 3Ar01r00         [13]  387 	ld	a, (_current_state)
+    000001A7 26 00            [ 7]  388 	ld	h, #0x00
+    000001A9 6F               [ 4]  389 	ld	l, a
+    000001AA 29               [11]  390 	add	hl, hl
+    000001AB 09               [11]  391 	add	hl, bc
+    000001AC 4E               [ 7]  392 	ld	c, (hl)
+    000001AD 23               [ 6]  393 	inc	hl
+    000001AE 46               [ 7]  394 	ld	b, (hl)
+    000001AF 69               [ 4]  395 	ld	l, c
+    000001B0 60               [ 4]  396 	ld	h, b
+    000001B1 CDr00r00         [17]  397 	call	___sdcc_call_hl
+                                    398 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/main.c:164: }
+    000001B4 C3r91r00         [10]  399 	jp	00117$
+                                    400 	.area _CODE
+                                    401 	.area _INITIALIZER
+    00000000                        402 __xinit___is_SGB:
+    00000000 00                     403 	.db #0x00	; 0
+    00000001                        404 __xinit__state_running:
+    00000001 00                     405 	.db #0x00	; 0
+    00000002                        406 __xinit__fade_mode:
+    00000002 01                     407 	.db #0x01	; 1
+    00000003                        408 __xinit__vbl_count:
+    00000003 00                     409 	.db #0x00	; 0
+                                    410 	.area _CABS (ABS)

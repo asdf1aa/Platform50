@@ -1,0 +1,99 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module DefAnimHandler
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _GetSpriteAnimation
+                                     11 ;--------------------------------------------------------
+                                     12 ; special function registers
+                                     13 ;--------------------------------------------------------
+                         00000000    14 _GG_STATE	=	0x0000
+                         00000001    15 _GG_EXT_7BIT	=	0x0001
+                         00000002    16 _GG_EXT_CTL	=	0x0002
+                         00000003    17 _GG_SIO_SEND	=	0x0003
+                         00000004    18 _GG_SIO_RECV	=	0x0004
+                         00000005    19 _GG_SIO_CTL	=	0x0005
+                         00000006    20 _GG_SOUND_PAN	=	0x0006
+                         0000003E    21 _MEMORY_CTL	=	0x003e
+                         0000003F    22 _JOY_CTL	=	0x003f
+                         0000007E    23 _VCOUNTER	=	0x007e
+                         0000007F    24 _PSG	=	0x007f
+                         0000007F    25 _HCOUNTER	=	0x007f
+                         000000BE    26 _VDP_DATA	=	0x00be
+                         000000BF    27 _VDP_CMD	=	0x00bf
+                         000000BF    28 _VDP_STATUS	=	0x00bf
+                         000000DC    29 _JOY_PORT1	=	0x00dc
+                         000000DD    30 _JOY_PORT2	=	0x00dd
+                         000000F0    31 _FMADDRESS	=	0x00f0
+                         000000F1    32 _FMDATA	=	0x00f1
+                         000000F2    33 _AUDIOCTRL	=	0x00f2
+                                     34 ;--------------------------------------------------------
+                                     35 ; ram data
+                                     36 ;--------------------------------------------------------
+                                     37 	.area _DATA
+                         0000FFFC    38 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    39 _GLASSES_3D	=	0xfff8
+                         0000FFFD    40 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    41 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    42 _MAP_FRAME2	=	0xffff
+                                     43 ;--------------------------------------------------------
+                                     44 ; ram data
+                                     45 ;--------------------------------------------------------
+                                     46 	.area _INITIALIZED
+                                     47 ;--------------------------------------------------------
+                                     48 ; absolute external ram data
+                                     49 ;--------------------------------------------------------
+                                     50 	.area _DABS (ABS)
+                                     51 ;--------------------------------------------------------
+                                     52 ; global & static initialisations
+                                     53 ;--------------------------------------------------------
+                                     54 	.area _HOME
+                                     55 	.area _GSINIT
+                                     56 	.area _GSFINAL
+                                     57 	.area _GSINIT
+                                     58 ;--------------------------------------------------------
+                                     59 ; Home
+                                     60 ;--------------------------------------------------------
+                                     61 	.area _HOME
+                                     62 	.area _HOME
+                                     63 ;--------------------------------------------------------
+                                     64 ; code
+                                     65 ;--------------------------------------------------------
+                                     66 	.area _CODE
+                                     67 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/DefAnimHandler.c:9: const metasprite_t * GetSpriteAnimation(Sprite * sprite, UINT16 anim_idx) NAKED {
+                                     68 ;	---------------------------------
+                                     69 ; Function GetSpriteAnimation
+                                     70 ; ---------------------------------
+    00000000                         71 _GetSpriteAnimation::
+                                     72 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/DefAnimHandler.c:40: __endasm;
+                                     73 	.ez80
+    00000000 EB               [ 1]   74 	ex	de, hl
+    00000001 FD 6B            [ 2]   75 	ld	iyl, e
+    00000003 FD 62            [ 2]   76 	ld	iyh, d
+    00000005 3A FE FF         [ 4]   77 	ld	a, (_MAP_FRAME1)
+    00000008 4F               [ 1]   78 	ld	c, a
+    00000009 FD 7Er00         [ 4]   79 	ld	a, ___offset_Sprite__mt_sprite_bank(iy)
+    0000000C 32 FE FF         [ 4]   80 	ld	(_MAP_FRAME1), a
+    0000000F FD 5Er00         [ 4]   81 	ld	e, ___offset_Sprite__mt_sprite_info+0(iy)
+    00000012 FD 56r01         [ 4]   82 	ld	d, ___offset_Sprite__mt_sprite_info+1(iy)
+    00000015 FD 6B            [ 2]   83 	ld	iyl, e
+    00000017 FD 62            [ 2]   84 	ld	iyh, d
+    00000019 FD 5Er00         [ 4]   85 	ld	e, ___offset_MetaSpriteInfo__metasprites+0(iy)
+    0000001C FD 56r01         [ 4]   86 	ld	d, ___offset_MetaSpriteInfo__metasprites+1(iy)
+    0000001F EB               [ 1]   87 	ex	de, hl
+    00000020 19               [ 1]   88 	add	hl, de
+    00000021 19               [ 1]   89 	add	hl, de
+    00000022 5E               [ 2]   90 	ld	e, (hl)
+    00000023 23               [ 1]   91 	inc	hl
+    00000024 56               [ 2]   92 	ld	d, (hl)
+    00000025 79               [ 1]   93 	ld	a, c
+    00000026 32 FE FF         [ 4]   94 	ld	(_MAP_FRAME1), a
+    00000029 C9               [ 5]   95 	ret
+                                     96 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/DefAnimHandler.c:41: }
+                                     97 	.area _CODE
+                                     98 	.area _INITIALIZER
+                                     99 	.area _CABS (ABS)

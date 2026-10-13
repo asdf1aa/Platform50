@@ -1,0 +1,14 @@
+../obj/Release/gb/res/sprites/enemy.png.o
+../obj/Release/gb/res/sprites/flag.png.o
+../obj/Release/gb/res/sprites/player.png.o
+../obj/Release/gb/res/map.png.o
+../obj/Release/gb/res/tiles.png.o
+../obj/Release/gb/res/font.png.o
+../obj/Release/gb/Flag.o
+../obj/Release/gb/SpriteEnemy.o
+../obj/Release/gb/SpriteEnemyH.o
+../obj/Release/gb/SpriteEnemyStill.o
+../obj/Release/gb/SpritePlayer.o
+../obj/Release/gb/StateGame.o
+../obj/Release/gb/ZGBMain.o
+../obj/Release/gb/ZGBMain_Init.o

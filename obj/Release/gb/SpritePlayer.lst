@@ -1,0 +1,229 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module SpritePlayer
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _Destroy_SpritePlayer
+                                     11 	.globl _Update_SpritePlayer
+                                     12 	.globl _Start_SpritePlayer
+                                     13 	.globl _SetState
+                                     14 	.globl _CheckCollision
+                                     15 	.globl _TranslateSprite
+                                     16 	.globl ___bank_SpritePlayer
+                                     17 ;--------------------------------------------------------
+                                     18 ; special function registers
+                                     19 ;--------------------------------------------------------
+                                     20 	.area _HRAM
+                                     21 ;--------------------------------------------------------
+                                     22 ; ram data
+                                     23 ;--------------------------------------------------------
+                                     24 	.area _DATA
+                                     25 ;--------------------------------------------------------
+                                     26 ; ram data
+                                     27 ;--------------------------------------------------------
+                                     28 	.area _INITIALIZED
+                                     29 ;--------------------------------------------------------
+                                     30 ; absolute external ram data
+                                     31 ;--------------------------------------------------------
+                                     32 	.area _DABS (ABS)
+                                     33 ;--------------------------------------------------------
+                                     34 ; global & static initialisations
+                                     35 ;--------------------------------------------------------
+                                     36 	.area _HOME
+                                     37 	.area _GSINIT
+                                     38 	.area _GSFINAL
+                                     39 	.area _GSINIT
+                                     40 ;--------------------------------------------------------
+                                     41 ; Home
+                                     42 ;--------------------------------------------------------
+                                     43 	.area _HOME
+                                     44 	.area _HOME
+                                     45 ;--------------------------------------------------------
+                                     46 ; code
+                                     47 ;--------------------------------------------------------
+                                     48 	.area _CODE_255
+                                     49 ;SpritePlayer.c:6: void START() {
+                                     50 ;	---------------------------------
+                                     51 ; Function Start_SpritePlayer
+                                     52 ; ---------------------------------
+    00000000                         53 _Start_SpritePlayer::
+                                     54 ;SpritePlayer.c:8: }
+    00000000 C9               [16]   55 	ret
+                         000000FF    56 ___bank_SpritePlayer	=	0x00ff
+                                     57 ;SpritePlayer.c:10: void UPDATE() {
+                                     58 ;	---------------------------------
+                                     59 ; Function Update_SpritePlayer
+                                     60 ; ---------------------------------
+    00000001                         61 _Update_SpritePlayer::
+    00000001 3B               [ 8]   62 	dec	sp
+                                     63 ;SpritePlayer.c:14: if(KEY_PRESSED(J_UP)) {
+    00000002 FAr01r00         [16]   64 	ld	a, (#(_joypads + 1) + 0)
+    00000005 CB 57            [ 8]   65 	bit	2, a
+    00000007 28 0E            [12]   66 	jr	Z, 00102$
+                                     67 ;SpritePlayer.c:15: TranslateSprite(THIS, 0, -1);
+    00000009 3E FF            [ 8]   68 	ld	a, #0xff
+    0000000B F5               [16]   69 	push	af
+    0000000C 33               [ 8]   70 	inc	sp
+    0000000D AF               [ 4]   71 	xor	a, a
+    0000000E 21r00r00         [12]   72 	ld	hl, #_THIS
+    00000011 5E               [ 8]   73 	ld	e, (hl)
+    00000012 23               [ 8]   74 	inc	hl
+    00000013 56               [ 8]   75 	ld	d, (hl)
+    00000014 CDr00r00         [24]   76 	call	_TranslateSprite
+    00000017                         77 00102$:
+                                     78 ;SpritePlayer.c:17: if(KEY_PRESSED(J_DOWN)) {
+    00000017 FAr01r00         [16]   79 	ld	a, (#(_joypads + 1) + 0)
+    0000001A CB 5F            [ 8]   80 	bit	3, a
+    0000001C 28 0E            [12]   81 	jr	Z, 00104$
+                                     82 ;SpritePlayer.c:18: TranslateSprite(THIS, 0, 1);
+    0000001E 3E 01            [ 8]   83 	ld	a, #0x01
+    00000020 F5               [16]   84 	push	af
+    00000021 33               [ 8]   85 	inc	sp
+    00000022 AF               [ 4]   86 	xor	a, a
+    00000023 21r00r00         [12]   87 	ld	hl, #_THIS
+    00000026 5E               [ 8]   88 	ld	e, (hl)
+    00000027 23               [ 8]   89 	inc	hl
+    00000028 56               [ 8]   90 	ld	d, (hl)
+    00000029 CDr00r00         [24]   91 	call	_TranslateSprite
+    0000002C                         92 00104$:
+                                     93 ;SpritePlayer.c:20: if(KEY_PRESSED(J_LEFT)) {
+    0000002C FAr01r00         [16]   94 	ld	a, (#(_joypads + 1) + 0)
+    0000002F CB 4F            [ 8]   95 	bit	1, a
+    00000031 28 0E            [12]   96 	jr	Z, 00106$
+                                     97 ;SpritePlayer.c:21: TranslateSprite(THIS, -1, 0);
+    00000033 AF               [ 4]   98 	xor	a, a
+    00000034 F5               [16]   99 	push	af
+    00000035 33               [ 8]  100 	inc	sp
+    00000036 3E FF            [ 8]  101 	ld	a, #0xff
+    00000038 21r00r00         [12]  102 	ld	hl, #_THIS
+    0000003B 5E               [ 8]  103 	ld	e, (hl)
+    0000003C 23               [ 8]  104 	inc	hl
+    0000003D 56               [ 8]  105 	ld	d, (hl)
+    0000003E CDr00r00         [24]  106 	call	_TranslateSprite
+    00000041                        107 00106$:
+                                    108 ;SpritePlayer.c:23: if(KEY_PRESSED(J_RIGHT)) {
+    00000041 FAr01r00         [16]  109 	ld	a, (#(_joypads + 1) + 0)
+    00000044 0F               [ 4]  110 	rrca
+    00000045 30 0E            [12]  111 	jr	NC, 00108$
+                                    112 ;SpritePlayer.c:24: TranslateSprite(THIS, 1, 0);
+    00000047 AF               [ 4]  113 	xor	a, a
+    00000048 F5               [16]  114 	push	af
+    00000049 33               [ 8]  115 	inc	sp
+    0000004A 3E 01            [ 8]  116 	ld	a, #0x01
+    0000004C 21r00r00         [12]  117 	ld	hl, #_THIS
+    0000004F 5E               [ 8]  118 	ld	e, (hl)
+    00000050 23               [ 8]  119 	inc	hl
+    00000051 56               [ 8]  120 	ld	d, (hl)
+    00000052 CDr00r00         [24]  121 	call	_TranslateSprite
+    00000055                        122 00108$:
+                                    123 ;SpritePlayer.c:26: SPRITEMANAGER_ITERATE(i, spr) {
+    00000055 21r01r00         [12]  124 	ld	hl, #_sprite_manager_updatables + 1
+    00000058 6E               [ 8]  125 	ld	l, (hl)
+    00000059 AF               [ 4]  126 	xor	a, a
+    0000005A 67               [ 4]  127 	ld	h, a
+    0000005B 29               [ 8]  128 	add	hl, hl
+    0000005C 11r00r00         [12]  129 	ld	de, #_sprite_manager_sprites
+    0000005F 19               [ 8]  130 	add	hl, de
+    00000060 2A               [ 8]  131 	ld	a, (hl+)
+    00000061 4F               [ 4]  132 	ld	c, a
+    00000062 46               [ 8]  133 	ld	b, (hl)
+    00000063 F8 00            [12]  134 	ldhl	sp,	#0
+    00000065 36 00            [12]  135 	ld	(hl), #0x00
+    00000067                        136 00121$:
+    00000067 FAr00r00         [16]  137 	ld	a, (#_sprite_manager_updatables + 0)
+    0000006A F8 00            [12]  138 	ldhl	sp,	#0
+    0000006C 96               [ 8]  139 	sub	a, (hl)
+    0000006D 28 64            [12]  140 	jr	Z, 00123$
+                                    141 ;SpritePlayer.c:27: if(spr->type == SpriteEnemy || spr->type == SpriteEnemyStill || spr->type == SpriteEnemyH) {
+    0000006F 21 1D 00         [12]  142 	ld	hl, #0x001d
+    00000072 09               [ 8]  143 	add	hl, bc
+    00000073 5D               [ 4]  144 	ld	e, l
+    00000074 54               [ 4]  145 	ld	d, h
+    00000075 1A               [ 8]  146 	ld	a, (de)
+    00000076 FE 01            [ 8]  147 	cp	a, #0x01
+    00000078 28 08            [12]  148 	jr	Z, 00111$
+    0000007A FE 02            [ 8]  149 	cp	a, #0x02
+    0000007C 28 04            [12]  150 	jr	Z, 00111$
+    0000007E D6 03            [ 8]  151 	sub	a, #0x03
+    00000080 20 1A            [12]  152 	jr	NZ, 00112$
+    00000082                        153 00111$:
+                                    154 ;SpritePlayer.c:28: if(CheckCollision(THIS, spr)) {
+    00000082 C5               [16]  155 	push	bc
+    00000083 D5               [16]  156 	push	de
+    00000084 FAr00r00         [16]  157 	ld	a, (_THIS)
+    00000087 5F               [ 4]  158 	ld	e, a
+    00000088 21r01r00         [12]  159 	ld	hl, #_THIS + 1
+    0000008B 56               [ 8]  160 	ld	d, (hl)
+    0000008C CDr00r00         [24]  161 	call	_CheckCollision
+    0000008F D1               [12]  162 	pop	de
+    00000090 C1               [12]  163 	pop	bc
+    00000091 B7               [ 4]  164 	or	a, a
+    00000092 28 08            [12]  165 	jr	Z, 00112$
+                                    166 ;SpritePlayer.c:29: SetState(StateGame);
+    00000094 C5               [16]  167 	push	bc
+    00000095 D5               [16]  168 	push	de
+    00000096 AF               [ 4]  169 	xor	a, a
+    00000097 CDr00r00         [24]  170 	call	_SetState
+    0000009A D1               [12]  171 	pop	de
+    0000009B C1               [12]  172 	pop	bc
+    0000009C                        173 00112$:
+                                    174 ;SpritePlayer.c:32: if(spr->type == Flag) {
+    0000009C 1A               [ 8]  175 	ld	a, (de)
+    0000009D D6 04            [ 8]  176 	sub	a, #0x04
+    0000009F 20 1A            [12]  177 	jr	NZ, 00122$
+                                    178 ;SpritePlayer.c:33: if(CheckCollision(THIS, spr)){
+    000000A1 FAr00r00         [16]  179 	ld	a, (_THIS)
+    000000A4 5F               [ 4]  180 	ld	e, a
+    000000A5 21r01r00         [12]  181 	ld	hl, #_THIS + 1
+    000000A8 56               [ 8]  182 	ld	d, (hl)
+    000000A9 CDr00r00         [24]  183 	call	_CheckCollision
+    000000AC B7               [ 4]  184 	or	a, a
+    000000AD 28 0C            [12]  185 	jr	Z, 00122$
+                                    186 ;SpritePlayer.c:34: game_score++;
+    000000AF 21r00r00         [12]  187 	ld	hl, #_game_score
+    000000B2 34               [12]  188 	inc	(hl)
+    000000B3 20 02            [12]  189 	jr	NZ, 00214$
+    000000B5 23               [ 8]  190 	inc	hl
+    000000B6 34               [12]  191 	inc	(hl)
+    000000B7                        192 00214$:
+                                    193 ;SpritePlayer.c:35: SetState(StateGame);
+    000000B7 AF               [ 4]  194 	xor	a, a
+    000000B8 CDr00r00         [24]  195 	call	_SetState
+    000000BB                        196 00122$:
+                                    197 ;SpritePlayer.c:26: SPRITEMANAGER_ITERATE(i, spr) {
+    000000BB F8 00            [12]  198 	ldhl	sp,	#0
+    000000BD 34               [12]  199 	inc	(hl)
+    000000BE 4E               [ 8]  200 	ld	c, (hl)
+    000000BF AF               [ 4]  201 	xor	a, a
+    000000C0 47               [ 4]  202 	ld	b, a
+    000000C1 03               [ 8]  203 	inc	bc
+    000000C2 21r00r00         [12]  204 	ld	hl, #_sprite_manager_updatables
+    000000C5 09               [ 8]  205 	add	hl, bc
+    000000C6 6E               [ 8]  206 	ld	l, (hl)
+    000000C7 AF               [ 4]  207 	xor	a, a
+    000000C8 67               [ 4]  208 	ld	h, a
+    000000C9 29               [ 8]  209 	add	hl, hl
+    000000CA 11r00r00         [12]  210 	ld	de, #_sprite_manager_sprites
+    000000CD 19               [ 8]  211 	add	hl, de
+    000000CE 2A               [ 8]  212 	ld	a, (hl+)
+    000000CF 4F               [ 4]  213 	ld	c, a
+    000000D0 46               [ 8]  214 	ld	b, (hl)
+    000000D1 18 94            [12]  215 	jr	00121$
+    000000D3                        216 00123$:
+                                    217 ;SpritePlayer.c:39: }
+    000000D3 33               [ 8]  218 	inc	sp
+    000000D4 C9               [16]  219 	ret
+                                    220 ;SpritePlayer.c:41: void DESTROY() {
+                                    221 ;	---------------------------------
+                                    222 ; Function Destroy_SpritePlayer
+                                    223 ; ---------------------------------
+    000000D5                        224 _Destroy_SpritePlayer::
+                                    225 ;SpritePlayer.c:42: }
+    000000D5 C9               [16]  226 	ret
+                                    227 	.area _CODE_255
+                                    228 	.area _INITIALIZER
+                                    229 	.area _CABS (ABS)

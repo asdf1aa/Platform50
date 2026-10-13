@@ -1,0 +1,166 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module Offsets
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl ___offset_MetaSpriteInfo__metasprites
+                                     11 	.globl ___offset_MetaSpriteInfo__num_sprites
+                                     12 	.globl ___offset_MetaSpriteInfo__palettes
+                                     13 	.globl ___offset_MetaSpriteInfo__num_palettes
+                                     14 	.globl ___offset_MetaSpriteInfo__data
+                                     15 	.globl ___offset_MetaSpriteInfo__num_tiles
+                                     16 	.globl ___offset_MetaSpriteInfo__height
+                                     17 	.globl ___offset_MetaSpriteInfo__width
+                                     18 	.globl ___offset_MapInfo__extra_tiles
+                                     19 	.globl ___offset_MapInfo__extra_tiles_bank
+                                     20 	.globl ___offset_MapInfo__tiles
+                                     21 	.globl ___offset_MapInfo__tiles_bank
+                                     22 	.globl ___offset_MapInfo__attributes
+                                     23 	.globl ___offset_MapInfo__height
+                                     24 	.globl ___offset_MapInfo__width
+                                     25 	.globl ___offset_MapInfo__data
+                                     26 	.globl ___offset_TilesInfo__color_data
+                                     27 	.globl ___offset_TilesInfo__pals
+                                     28 	.globl ___offset_TilesInfo__num_pals
+                                     29 	.globl ___offset_TilesInfo__data
+                                     30 	.globl ___offset_TilesInfo__num_frames
+                                     31 	.globl ___offset_Sprite__custom_data
+                                     32 	.globl ___offset_Sprite__coll_group_down
+                                     33 	.globl ___offset_Sprite__coll_group
+                                     34 	.globl ___offset_Sprite__flags
+                                     35 	.globl ___offset_Sprite__unique_id
+                                     36 	.globl ___offset_Sprite__marked_for_removal
+                                     37 	.globl ___offset_Sprite__type
+                                     38 	.globl ___offset_Sprite__lim_y
+                                     39 	.globl ___offset_Sprite__lim_x
+                                     40 	.globl ___offset_Sprite__ctx
+                                     41 	.globl ___offset_Sprite__mirror
+                                     42 	.globl ___offset_Sprite__mt_sprite
+                                     43 	.globl ___offset_Sprite__anim_frame
+                                     44 	.globl ___offset_Sprite__anim_speed
+                                     45 	.globl ___offset_Sprite__anim_accum_ticks
+                                     46 	.globl ___offset_Sprite__anim_data
+                                     47 	.globl ___offset_Sprite__attr_add
+                                     48 	.globl ___offset_Sprite__first_tile_HV
+                                     49 	.globl ___offset_Sprite__first_tile_V
+                                     50 	.globl ___offset_Sprite__first_tile_H
+                                     51 	.globl ___offset_Sprite__first_tile
+                                     52 	.globl ___offset_Sprite__flips
+                                     53 	.globl ___offset_Sprite__mt_sprite_info
+                                     54 	.globl ___offset_Sprite__mt_sprite_bank
+                                     55 	.globl ___offset_Sprite__coll_h
+                                     56 	.globl ___offset_Sprite__coll_w
+                                     57 	.globl ___offset_Sprite__y
+                                     58 	.globl ___offset_Sprite__x
+                                     59 ;--------------------------------------------------------
+                                     60 ; special function registers
+                                     61 ;--------------------------------------------------------
+                         00000000    62 _GG_STATE	=	0x0000
+                         00000001    63 _GG_EXT_7BIT	=	0x0001
+                         00000002    64 _GG_EXT_CTL	=	0x0002
+                         00000003    65 _GG_SIO_SEND	=	0x0003
+                         00000004    66 _GG_SIO_RECV	=	0x0004
+                         00000005    67 _GG_SIO_CTL	=	0x0005
+                         00000006    68 _GG_SOUND_PAN	=	0x0006
+                         0000003E    69 _MEMORY_CTL	=	0x003e
+                         0000003F    70 _JOY_CTL	=	0x003f
+                         0000007E    71 _VCOUNTER	=	0x007e
+                         0000007F    72 _PSG	=	0x007f
+                         0000007F    73 _HCOUNTER	=	0x007f
+                         000000BE    74 _VDP_DATA	=	0x00be
+                         000000BF    75 _VDP_CMD	=	0x00bf
+                         000000BF    76 _VDP_STATUS	=	0x00bf
+                         000000DC    77 _JOY_PORT1	=	0x00dc
+                         000000DD    78 _JOY_PORT2	=	0x00dd
+                         000000F0    79 _FMADDRESS	=	0x00f0
+                         000000F1    80 _FMDATA	=	0x00f1
+                         000000F2    81 _AUDIOCTRL	=	0x00f2
+                                     82 ;--------------------------------------------------------
+                                     83 ; ram data
+                                     84 ;--------------------------------------------------------
+                                     85 	.area _DATA
+                         0000FFFC    86 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    87 _GLASSES_3D	=	0xfff8
+                         0000FFFD    88 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    89 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    90 _MAP_FRAME2	=	0xffff
+                                     91 ;--------------------------------------------------------
+                                     92 ; ram data
+                                     93 ;--------------------------------------------------------
+                                     94 	.area _INITIALIZED
+                                     95 ;--------------------------------------------------------
+                                     96 ; absolute external ram data
+                                     97 ;--------------------------------------------------------
+                                     98 	.area _DABS (ABS)
+                                     99 ;--------------------------------------------------------
+                                    100 ; global & static initialisations
+                                    101 ;--------------------------------------------------------
+                                    102 	.area _HOME
+                                    103 	.area _GSINIT
+                                    104 	.area _GSFINAL
+                                    105 	.area _GSINIT
+                                    106 ;--------------------------------------------------------
+                                    107 ; Home
+                                    108 ;--------------------------------------------------------
+                                    109 	.area _HOME
+                                    110 	.area _HOME
+                                    111 ;--------------------------------------------------------
+                                    112 ; code
+                                    113 ;--------------------------------------------------------
+                                    114 	.area _CODE
+                                    115 	.area _CODE
+                         00000000   116 ___offset_Sprite__x	=	0x0000
+                         00000002   117 ___offset_Sprite__y	=	0x0002
+                         00000004   118 ___offset_Sprite__coll_w	=	0x0004
+                         00000005   119 ___offset_Sprite__coll_h	=	0x0005
+                         00000006   120 ___offset_Sprite__mt_sprite_bank	=	0x0006
+                         00000007   121 ___offset_Sprite__mt_sprite_info	=	0x0007
+                         00000009   122 ___offset_Sprite__flips	=	0x0009
+                         0000000A   123 ___offset_Sprite__first_tile	=	0x000a
+                         0000000B   124 ___offset_Sprite__first_tile_H	=	0x000b
+                         0000000C   125 ___offset_Sprite__first_tile_V	=	0x000c
+                         0000000D   126 ___offset_Sprite__first_tile_HV	=	0x000d
+                         0000000E   127 ___offset_Sprite__attr_add	=	0x000e
+                         0000000F   128 ___offset_Sprite__anim_data	=	0x000f
+                         00000011   129 ___offset_Sprite__anim_accum_ticks	=	0x0011
+                         00000012   130 ___offset_Sprite__anim_speed	=	0x0012
+                         00000013   131 ___offset_Sprite__anim_frame	=	0x0013
+                         00000014   132 ___offset_Sprite__mt_sprite	=	0x0014
+                         00000016   133 ___offset_Sprite__mirror	=	0x0016
+                         00000017   134 ___offset_Sprite__ctx	=	0x0017
+                         00000019   135 ___offset_Sprite__lim_x	=	0x0019
+                         0000001B   136 ___offset_Sprite__lim_y	=	0x001b
+                         0000001D   137 ___offset_Sprite__type	=	0x001d
+                         0000001E   138 ___offset_Sprite__marked_for_removal	=	0x001e
+                         0000001F   139 ___offset_Sprite__unique_id	=	0x001f
+                         00000021   140 ___offset_Sprite__flags	=	0x0021
+                         00000022   141 ___offset_Sprite__coll_group	=	0x0022
+                         00000023   142 ___offset_Sprite__coll_group_down	=	0x0023
+                         00000024   143 ___offset_Sprite__custom_data	=	0x0024
+                         00000000   144 ___offset_TilesInfo__num_frames	=	0x0000
+                         00000001   145 ___offset_TilesInfo__data	=	0x0001
+                         00000003   146 ___offset_TilesInfo__num_pals	=	0x0003
+                         00000004   147 ___offset_TilesInfo__pals	=	0x0004
+                         00000006   148 ___offset_TilesInfo__color_data	=	0x0006
+                         00000000   149 ___offset_MapInfo__data	=	0x0000
+                         00000002   150 ___offset_MapInfo__width	=	0x0002
+                         00000004   151 ___offset_MapInfo__height	=	0x0004
+                         00000006   152 ___offset_MapInfo__attributes	=	0x0006
+                         00000008   153 ___offset_MapInfo__tiles_bank	=	0x0008
+                         00000009   154 ___offset_MapInfo__tiles	=	0x0009
+                         0000000B   155 ___offset_MapInfo__extra_tiles_bank	=	0x000b
+                         0000000C   156 ___offset_MapInfo__extra_tiles	=	0x000c
+                         00000000   157 ___offset_MetaSpriteInfo__width	=	0x0000
+                         00000001   158 ___offset_MetaSpriteInfo__height	=	0x0001
+                         00000002   159 ___offset_MetaSpriteInfo__num_tiles	=	0x0002
+                         00000003   160 ___offset_MetaSpriteInfo__data	=	0x0003
+                         00000005   161 ___offset_MetaSpriteInfo__num_palettes	=	0x0005
+                         00000006   162 ___offset_MetaSpriteInfo__palettes	=	0x0006
+                         00000008   163 ___offset_MetaSpriteInfo__num_sprites	=	0x0008
+                         00000009   164 ___offset_MetaSpriteInfo__metasprites	=	0x0009
+                                    165 	.area _INITIALIZER
+                                    166 	.area _CABS (ABS)

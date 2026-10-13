@@ -1,0 +1,76 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy)                  Page 1
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =   00002710 L
+    .__.ABS.                                                    =   00000000 G
+    .__.CPU.                                                    =   00000000 L
+    .__.H$L.                                                    =   00000000 L
+    ___offset_MapInfo__attributes                               =   00000006 G
+    ___offset_MapInfo__data                                     =   00000000 G
+    ___offset_MapInfo__extra_tiles                              =   0000000C G
+    ___offset_MapInfo__extra_tiles_bank                         =   0000000B G
+    ___offset_MapInfo__height                                   =   00000004 G
+    ___offset_MapInfo__tiles                                    =   00000009 G
+    ___offset_MapInfo__tiles_bank                               =   00000008 G
+    ___offset_MapInfo__width                                    =   00000002 G
+    ___offset_MetaSpriteInfo__data                              =   00000003 G
+    ___offset_MetaSpriteInfo__height                            =   00000001 G
+    ___offset_MetaSpriteInfo__metasprites                       =   00000009 G
+    ___offset_MetaSpriteInfo__num_palettes                      =   00000005 G
+    ___offset_MetaSpriteInfo__num_sprites                       =   00000008 G
+    ___offset_MetaSpriteInfo__num_tiles                         =   00000002 G
+    ___offset_MetaSpriteInfo__palettes                          =   00000006 G
+    ___offset_MetaSpriteInfo__width                             =   00000000 G
+    ___offset_Sprite__anim_accum_ticks                          =   00000011 G
+    ___offset_Sprite__anim_data                                 =   0000000F G
+    ___offset_Sprite__anim_frame                                =   00000013 G
+    ___offset_Sprite__anim_speed                                =   00000012 G
+    ___offset_Sprite__attr_add                                  =   0000000E G
+    ___offset_Sprite__coll_group                                =   00000022 G
+    ___offset_Sprite__coll_group_down                           =   00000023 G
+    ___offset_Sprite__coll_h                                    =   00000005 G
+    ___offset_Sprite__coll_w                                    =   00000004 G
+    ___offset_Sprite__ctx                                       =   00000017 G
+    ___offset_Sprite__custom_data                               =   00000024 G
+    ___offset_Sprite__first_tile                                =   0000000A G
+    ___offset_Sprite__first_tile_H                              =   0000000B G
+    ___offset_Sprite__first_tile_HV                             =   0000000D G
+    ___offset_Sprite__first_tile_V                              =   0000000C G
+    ___offset_Sprite__flags                                     =   00000021 G
+    ___offset_Sprite__flips                                     =   00000009 G
+    ___offset_Sprite__lim_x                                     =   00000019 G
+    ___offset_Sprite__lim_y                                     =   0000001B G
+    ___offset_Sprite__marked_for_removal                        =   0000001E G
+    ___offset_Sprite__mirror                                    =   00000016 G
+    ___offset_Sprite__mt_sprite                                 =   00000014 G
+    ___offset_Sprite__mt_sprite_bank                            =   00000006 G
+    ___offset_Sprite__mt_sprite_info                            =   00000007 G
+    ___offset_Sprite__type                                      =   0000001D G
+    ___offset_Sprite__unique_id                                 =   0000001F G
+    ___offset_Sprite__x                                         =   00000000 G
+    ___offset_Sprite__y                                         =   00000002 G
+    ___offset_TilesInfo__color_data                             =   00000006 G
+    ___offset_TilesInfo__data                                   =   00000001 G
+    ___offset_TilesInfo__num_frames                             =   00000000 G
+    ___offset_TilesInfo__num_pals                               =   00000003 G
+    ___offset_TilesInfo__pals                                   =   00000004 G
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy)                  Page 2
+Hexadecimal [32-Bits]
+
+Area Table
+
+   0 _CODE                                      size        0   flags    0
+   1 _HRAM                                      size        0   flags    0
+   2 _DATA                                      size        0   flags    0
+   3 _INITIALIZED                               size        0   flags    0
+   4 _DABS                                      size        0   flags    8
+   5 _HOME                                      size        0   flags    0
+   6 _GSINIT                                    size        0   flags    0
+   7 _GSFINAL                                   size        0   flags    0
+   8 _INITIALIZER                               size        0   flags    0
+   9 _CABS                                      size        0   flags    8
+

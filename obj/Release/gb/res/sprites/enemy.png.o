@@ -1,0 +1,54 @@
+XL4
+H B areas 8 global symbols
+M enemy_png
+S .__.ABS. Def00000000
+S ___bank_enemy Def000000FF
+A _CODE size 0 flags 0 addr 0
+A _HRAM size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _CODE_255 size 61 flags 0 addr 0
+S ___func_enemy Def00000000
+S _enemy_metasprite0 Def00000048
+S _enemy_metasprites Def00000054
+S _enemy_tiles Def00000008
+S _enemy Def00000056
+S _enemy_palettes Def00000000
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
+T 00 00 00 00
+R 00 00 08 00
+T 00 00 00 00
+R 00 00 08 00
+T 00 00 00 00 00 00 FF 7F 00 00 00 00
+R 00 00 08 00
+T 08 00 00 00
+R 00 00 08 00
+T 08 00 00 00 FF 00 00 80 00 B8 10 A8 80 38 80 00
+R 00 00 08 00
+T 14 00 00 00 80 00 C0 00 C0 06 C0 0F 84 08 84 10
+R 00 00 08 00
+T 20 00 00 00 80 30 80 00 80 00 80 7F FF 00 00 01
+R 00 00 08 00
+T 2C 00 00 00 00 3D 10 2D 08 35 00 3D 00 01 00 03
+R 00 00 08 00
+T 38 00 00 00 00 03 00 E3 40 31 40 09 01 08 01 00
+R 00 00 08 00
+T 44 00 00 00 01 00 00 FF
+R 00 00 08 00
+T 48 00 00 00
+R 00 00 08 00
+T 48 00 00 00 00 00 00 00 00 08 02 00 80 00 00 00
+R 00 00 08 00
+T 54 00 00 00
+R 00 00 08 00
+T 54 00 00 00 48 00
+R 00 00 08 00 00 04 08 00
+T 56 00 00 00
+R 00 00 08 00
+T 56 00 00 00 10 10 04 08 00 01 00 00 01 54 00
+R 00 00 08 00 00 07 08 00 00 0A 08 00 00 0D 08 00

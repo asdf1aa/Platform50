@@ -1,0 +1,102 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module ZGBMain
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _GetTileReplacement
+                                     11 	.globl _next_state
+                                     12 ;--------------------------------------------------------
+                                     13 ; special function registers
+                                     14 ;--------------------------------------------------------
+                                     15 	.area _HRAM
+                                     16 ;--------------------------------------------------------
+                                     17 ; ram data
+                                     18 ;--------------------------------------------------------
+                                     19 	.area _DATA
+                                     20 ;--------------------------------------------------------
+                                     21 ; ram data
+                                     22 ;--------------------------------------------------------
+                                     23 	.area _INITIALIZED
+    00000000                         24 _next_state::
+    00000000                         25 	.ds 1
+                                     26 ;--------------------------------------------------------
+                                     27 ; absolute external ram data
+                                     28 ;--------------------------------------------------------
+                                     29 	.area _DABS (ABS)
+                                     30 ;--------------------------------------------------------
+                                     31 ; global & static initialisations
+                                     32 ;--------------------------------------------------------
+                                     33 	.area _HOME
+                                     34 	.area _GSINIT
+                                     35 	.area _GSFINAL
+                                     36 	.area _GSINIT
+                                     37 ;--------------------------------------------------------
+                                     38 ; Home
+                                     39 ;--------------------------------------------------------
+                                     40 	.area _HOME
+                                     41 	.area _HOME
+                                     42 ;--------------------------------------------------------
+                                     43 ; code
+                                     44 ;--------------------------------------------------------
+                                     45 	.area _CODE
+                                     46 ;ZGBMain.c:6: UINT8 GetTileReplacement(UINT8* tile_ptr, UINT8* tile) {
+                                     47 ;	---------------------------------
+                                     48 ; Function GetTileReplacement
+                                     49 ; ---------------------------------
+    00000000                         50 _GetTileReplacement::
+                                     51 ;ZGBMain.c:8: if (*tile_ptr == 0xFDu) {
+    00000000 1A               [ 8]   52 	ld	a, (de)
+    00000001 5F               [ 4]   53 	ld	e, a
+                                     54 ;ZGBMain.c:7: if (current_state == StateGame) {
+    00000002 FAr00r00         [16]   55 	ld	a, (#_current_state)
+    00000005 B7               [ 4]   56 	or	a, a
+    00000006 20 1E            [12]   57 	jr	NZ, 00108$
+                                     58 ;ZGBMain.c:8: if (*tile_ptr == 0xFDu) {
+    00000008 7B               [ 4]   59 	ld	a, e
+    00000009 D6 FD            [ 8]   60 	sub	a, #0xfd
+    0000000B 20 05            [12]   61 	jr	NZ, 00102$
+                                     62 ;ZGBMain.c:9: *tile = 0;
+    0000000D AF               [ 4]   63 	xor	a, a
+    0000000E 02               [ 8]   64 	ld	(bc), a
+                                     65 ;ZGBMain.c:10: return SpriteEnemy;
+    0000000F 3E 01            [ 8]   66 	ld	a, #0x01
+    00000011 C9               [16]   67 	ret
+    00000012                         68 00102$:
+                                     69 ;ZGBMain.c:12: if (*tile_ptr == 0xFEu) {
+    00000012 7B               [ 4]   70 	ld	a, e
+    00000013 D6 FE            [ 8]   71 	sub	a, #0xfe
+    00000015 20 05            [12]   72 	jr	NZ, 00104$
+                                     73 ;ZGBMain.c:13: *tile = 0;
+    00000017 AF               [ 4]   74 	xor	a, a
+    00000018 02               [ 8]   75 	ld	(bc), a
+                                     76 ;ZGBMain.c:14: return SpriteEnemyStill;
+    00000019 3E 02            [ 8]   77 	ld	a, #0x02
+    0000001B C9               [16]   78 	ret
+    0000001C                         79 00104$:
+                                     80 ;ZGBMain.c:16: if (*tile_ptr == 0x02u) {
+    0000001C 7B               [ 4]   81 	ld	a, e
+    0000001D D6 02            [ 8]   82 	sub	a, #0x02
+    0000001F 20 05            [12]   83 	jr	NZ, 00108$
+                                     84 ;ZGBMain.c:17: *tile = 0;
+    00000021 AF               [ 4]   85 	xor	a, a
+    00000022 02               [ 8]   86 	ld	(bc), a
+                                     87 ;ZGBMain.c:18: return SpriteEnemyH;
+    00000023 3E 03            [ 8]   88 	ld	a, #0x03
+    00000025 C9               [16]   89 	ret
+    00000026                         90 00108$:
+                                     91 ;ZGBMain.c:21: *tile = *tile_ptr;
+    00000026 7B               [ 4]   92 	ld	a, e
+    00000027 02               [ 8]   93 	ld	(bc), a
+                                     94 ;ZGBMain.c:22: return 255u;
+    00000028 3E FF            [ 8]   95 	ld	a, #0xff
+                                     96 ;ZGBMain.c:23: }
+    0000002A C9               [16]   97 	ret
+                                     98 	.area _CODE
+                                     99 	.area _INITIALIZER
+    00000000                        100 __xinit__next_state:
+    00000000 00                     101 	.db #0x00	; 0
+                                    102 	.area _CABS (ABS)

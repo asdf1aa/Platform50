@@ -1,0 +1,210 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module ScrollUpdateTile
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _UPDATE_TILE
+                                     11 ;--------------------------------------------------------
+                                     12 ; special function registers
+                                     13 ;--------------------------------------------------------
+                         00000000    14 _GG_STATE	=	0x0000
+                         00000001    15 _GG_EXT_7BIT	=	0x0001
+                         00000002    16 _GG_EXT_CTL	=	0x0002
+                         00000003    17 _GG_SIO_SEND	=	0x0003
+                         00000004    18 _GG_SIO_RECV	=	0x0004
+                         00000005    19 _GG_SIO_CTL	=	0x0005
+                         00000006    20 _GG_SOUND_PAN	=	0x0006
+                         0000003E    21 _MEMORY_CTL	=	0x003e
+                         0000003F    22 _JOY_CTL	=	0x003f
+                         0000007E    23 _VCOUNTER	=	0x007e
+                         0000007F    24 _PSG	=	0x007f
+                         0000007F    25 _HCOUNTER	=	0x007f
+                         000000BE    26 _VDP_DATA	=	0x00be
+                         000000BF    27 _VDP_CMD	=	0x00bf
+                         000000BF    28 _VDP_STATUS	=	0x00bf
+                         000000DC    29 _JOY_PORT1	=	0x00dc
+                         000000DD    30 _JOY_PORT2	=	0x00dd
+                         000000F0    31 _FMADDRESS	=	0x00f0
+                         000000F1    32 _FMDATA	=	0x00f1
+                         000000F2    33 _AUDIOCTRL	=	0x00f2
+                                     34 ;--------------------------------------------------------
+                                     35 ; ram data
+                                     36 ;--------------------------------------------------------
+                                     37 	.area _DATA
+                         0000FFFC    38 _RAM_CONTROL	=	0xfffc
+                         0000FFF8    39 _GLASSES_3D	=	0xfff8
+                         0000FFFD    40 _MAP_FRAME0	=	0xfffd
+                         0000FFFE    41 _MAP_FRAME1	=	0xfffe
+                         0000FFFF    42 _MAP_FRAME2	=	0xffff
+    00000000                         43 ___x:
+    00000000                         44 	.ds 2
+    00000002                         45 ___y:
+    00000002                         46 	.ds 2
+    00000004                         47 ___type:
+    00000004                         48 	.ds 1
+    00000005                         49 ___save:
+    00000005                         50 	.ds 1
+    00000006                         51 ___i:
+    00000006                         52 	.ds 1
+                                     53 ;--------------------------------------------------------
+                                     54 ; ram data
+                                     55 ;--------------------------------------------------------
+                                     56 	.area _INITIALIZED
+                                     57 ;--------------------------------------------------------
+                                     58 ; absolute external ram data
+                                     59 ;--------------------------------------------------------
+                                     60 	.area _DABS (ABS)
+                                     61 ;--------------------------------------------------------
+                                     62 ; global & static initialisations
+                                     63 ;--------------------------------------------------------
+                                     64 	.area _HOME
+                                     65 	.area _GSINIT
+                                     66 	.area _GSFINAL
+                                     67 	.area _GSINIT
+                                     68 ;--------------------------------------------------------
+                                     69 ; Home
+                                     70 ;--------------------------------------------------------
+                                     71 	.area _HOME
+                                     72 	.area _HOME
+                                     73 ;--------------------------------------------------------
+                                     74 ; code
+                                     75 ;--------------------------------------------------------
+                                     76 	.area _CODE
+                                     77 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/ScrollUpdateTile.c:20: void UPDATE_TILE(INT16 x, INT16 y) NAKED {
+                                     78 ;	---------------------------------
+                                     79 ; Function UPDATE_TILE
+                                     80 ; ---------------------------------
+    00000000                         81 _UPDATE_TILE::
+                                     82 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/ScrollUpdateTile.c:164: __endasm;
+                                     83 	.ez80
+    00000000 22r00r00         [ 7]   84 	ld	(___x), hl
+    00000003 ED 53r02r00      [ 6]   85 	ld	(___y), de
+    00000007 2Ar00r00         [ 5]   86 	ld	hl, (___x)
+    0000000A ED 5Br00r00      [ 6]   87 	ld	de, (_scroll_tiles_w)
+    0000000E B7               [ 1]   88 	or	a
+    0000000F ED 52            [ 2]   89 	sbc	hl, de
+    00000011 30 0C            [ 3]   90 	jr	nc, 0$
+    00000013 2Ar02r00         [ 5]   91 	ld	hl, (___y)
+    00000016 ED 5Br00r00      [ 6]   92 	ld	de, (_scroll_tiles_h)
+    0000001A B7               [ 1]   93 	or	a
+    0000001B ED 52            [ 2]   94 	sbc	hl, de
+    0000001D 38 08            [ 3]   95 	jr	c, 1$
+    0000001F                         96 0$:
+    0000001F 2Ar00r00         [ 5]   97 	ld	hl, (_dest_ptr)
+    00000022 36 00            [ 3]   98 	ld	(hl), #0
+    00000024 C3rCDr00         [ 4]   99 	jp	2$
+    00000027                        100 1$:
+    00000027 2Ar00r00         [ 5]  101 	ld	hl, (_scroll_ptr)
+    0000002A ED 5Br00r00      [ 6]  102 	ld	de, (_dest_ptr)
+    0000002E 7E               [ 2]  103 	ld	a, (hl)
+    0000002F 12               [ 2]  104 	ld	(de), a
+    00000030 CDr00r00         [ 5]  105 	call	_GetTileReplacement
+    00000033 32r04r00         [ 4]  106 	ld	(___type), a
+    00000036 3C               [ 1]  107 	inc	a
+    00000037 CArCDr00         [ 4]  108 	jp	z, 2$
+    0000003A 01r00r00         [ 3]  109 	ld	bc, #_sprite_manager_updatables
+    0000003D 0A               [ 2]  110 	ld	a, (bc)
+    0000003E B7               [ 1]  111 	or	a
+    0000003F CAr7Dr00         [ 4]  112 	jp	z, 4$
+    00000042 21r06r00         [ 3]  113 	ld	hl, #___i
+    00000045 77               [ 2]  114 	ld	(hl), a
+    00000046                        115 5$:
+    00000046 6F               [ 1]  116 	ld	l, a
+    00000047 26 00            [ 2]  117 	ld	h, #0x00
+    00000049 09               [ 1]  118 	add	hl, bc
+    0000004A 6E               [ 2]  119 	ld	l, (hl)
+    0000004B 26 00            [ 2]  120 	ld	h, #0x00
+    0000004D 29               [ 1]  121 	add	hl, hl
+    0000004E 11r00r00         [ 3]  122 	ld	de, #_sprite_manager_sprites
+    00000051 19               [ 1]  123 	add	hl, de
+    00000052 5E               [ 2]  124 	ld	e, (hl)
+    00000053 23               [ 1]  125 	inc	hl
+    00000054 56               [ 2]  126 	ld	d, (hl)
+    00000055 FD 6B            [ 2]  127 	ld	iyl, e
+    00000057 FD 62            [ 2]  128 	ld	iyh, d
+    00000059 3Ar04r00         [ 4]  129 	ld	a, (___type)
+    0000005C FD BEr00         [ 4]  130 	cp	___offset_Sprite__type(iy)
+    0000005F C2r74r00         [ 4]  131 	jp	nz, 6$
+    00000062 3Ar00r00         [ 4]  132 	ld	a, (_scroll_ptr+0)
+    00000065 FD BEr00         [ 4]  133 	cp	___offset_Sprite__unique_id+0(iy)
+    00000068 C2r74r00         [ 4]  134 	jp	nz, 6$
+    0000006B 3Ar01r00         [ 4]  135 	ld	a, (_scroll_ptr+1)
+    0000006E FD BEr01         [ 4]  136 	cp	___offset_Sprite__unique_id+1(iy)
+    00000071 CArCDr00         [ 4]  137 	jp	z, 2$
+    00000074                        138 6$:
+    00000074 21r06r00         [ 3]  139 	ld	hl, #___i
+    00000077 35               [ 4]  140 	dec	(hl)
+    00000078 7E               [ 2]  141 	ld	a, (hl)
+    00000079 B7               [ 1]  142 	or	a
+    0000007A C2r46r00         [ 4]  143 	jp	nz, 5$
+    0000007D                        144 4$:
+    0000007D 3A FE FF         [ 4]  145 	ld	a, (_MAP_FRAME1)
+    00000080 32r05r00         [ 4]  146 	ld	(___save), a
+    00000083 21r00r00         [ 3]  147 	ld	hl, #_spriteDataBanks
+    00000086 3Ar04r00         [ 4]  148 	ld	a, (___type)
+    00000089 5F               [ 1]  149 	ld	e, a
+    0000008A 16 00            [ 2]  150 	ld	d, #0x00
+    0000008C 19               [ 1]  151 	add	hl, de
+    0000008D 7E               [ 2]  152 	ld	a, (hl)
+    0000008E 32 FE FF         [ 4]  153 	ld	(_MAP_FRAME1), a
+    00000091 2Ar02r00         [ 5]  154 	ld	hl, (___y)
+    00000094 23               [ 1]  155 	inc	hl
+    00000095 29               [ 1]  156 	add	hl, hl
+    00000096 29               [ 1]  157 	add	hl, hl
+    00000097 29               [ 1]  158 	add	hl, hl
+    00000098 EB               [ 1]  159 	ex	de, hl
+    00000099 26 00            [ 2]  160 	ld	h, #0x00
+    0000009B 3Ar04r00         [ 4]  161 	ld	a, (___type)
+    0000009E 6F               [ 1]  162 	ld	l, a
+    0000009F 29               [ 1]  163 	add	hl, hl
+    000000A0 01r00r00         [ 3]  164 	ld	bc, #_spriteDatas
+    000000A3 09               [ 1]  165 	add	hl, bc
+    000000A4 7E               [ 2]  166 	ld	a, (hl)
+    000000A5 23               [ 1]  167 	inc	hl
+    000000A6 66               [ 2]  168 	ld	h, (hl)
+    000000A7 C6r00            [ 2]  169 	add	#___offset_MetaSpriteInfo__height
+    000000A9 6F               [ 1]  170 	ld	l, a
+    000000AA 8C               [ 1]  171 	adc	h
+    000000AB 95               [ 1]  172 	sub	l
+    000000AC 67               [ 1]  173 	ld	h, a
+    000000AD 4E               [ 2]  174 	ld	c, (hl)
+    000000AE 06 00            [ 2]  175 	ld	b, #0x00
+    000000B0 EB               [ 1]  176 	ex	de, hl
+    000000B1 B7               [ 1]  177 	or	a
+    000000B2 ED 42            [ 2]  178 	sbc	hl, bc
+    000000B4 3Ar05r00         [ 4]  179 	ld	a, (___save)
+    000000B7 32 FE FF         [ 4]  180 	ld	(_MAP_FRAME1), a
+    000000BA ED 5Br00r00      [ 6]  181 	ld	de, (_scroll_ptr)
+    000000BE D5               [ 3]  182 	push	de ; scroll_ptr
+    000000BF E5               [ 3]  183 	push	hl ; sprite_y
+    000000C0 2Ar00r00         [ 5]  184 	ld	hl, (___x)
+    000000C3 29               [ 1]  185 	add	hl, hl
+    000000C4 29               [ 1]  186 	add	hl, hl
+    000000C5 29               [ 1]  187 	add	hl, hl
+    000000C6 EB               [ 1]  188 	ex	de, hl ; sprite_x
+    000000C7 3Ar04r00         [ 4]  189 	ld	a, (___type)
+    000000CA CDr00r00         [ 5]  190 	call	_SpriteManagerAddEx
+    000000CD                        191 2$:
+    000000CD 2Ar00r00         [ 5]  192 	ld	hl, (_scroll_cptr)
+    000000D0 7C               [ 1]  193 	ld	a, h
+    000000D1 B5               [ 1]  194 	or	l
+    000000D2 7E               [ 2]  195 	ld	a, (hl)
+    000000D3 C2rE1r00         [ 4]  196 	jp	nz, 3$
+    000000D6 11r00r00         [ 3]  197 	ld	de, #_scroll_tile_info
+    000000D9 2Ar00r00         [ 5]  198 	ld	hl, (_dest_ptr)
+    000000DC 6E               [ 2]  199 	ld	l, (hl)
+    000000DD 26 00            [ 2]  200 	ld	h, #0
+    000000DF 19               [ 1]  201 	add	hl, de
+    000000E0 7E               [ 2]  202 	ld	a, (hl)
+    000000E1                        203 3$:
+    000000E1 ED 4Br00r00      [ 6]  204 	ld	bc, (_dest_cptr)
+    000000E5 02               [ 2]  205 	ld	(bc), a
+    000000E6 C9               [ 5]  206 	ret
+                                    207 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/ScrollUpdateTile.c:165: }
+                                    208 	.area _CODE
+                                    209 	.area _INITIALIZER
+                                    210 	.area _CABS (ABS)

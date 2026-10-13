@@ -1,0 +1,243 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ISO C Compiler
+                                      3 ; Version 4.5.1 #15267 (MINGW64)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module Music
+                                      6 	
+                                      7 ;--------------------------------------------------------
+                                      8 ; Public variables in this module
+                                      9 ;--------------------------------------------------------
+                                     10 	.globl _sfx_play_isr
+                                     11 	.globl _stop_music_on_new_state
+                                     12 	.globl _last_music_bank
+                                     13 	.globl _last_music
+                                     14 	.globl _sfx_priority
+                                     15 	.globl _music_mute_mask
+                                     16 	.globl _music_paused
+                                     17 	.globl _music_skip_interrupts
+                                     18 	.globl _MUSIC_isr
+                                     19 	.globl ___PlayMusic
+                                     20 ;--------------------------------------------------------
+                                     21 ; special function registers
+                                     22 ;--------------------------------------------------------
+                                     23 	.area _HRAM
+                                     24 ;--------------------------------------------------------
+                                     25 ; ram data
+                                     26 ;--------------------------------------------------------
+                                     27 	.area _DATA
+    00000000                         28 _music_skip_interrupts::
+    00000000                         29 	.ds 1
+    00000001                         30 _MUSIC_isr_old_mute_mask_10000_176:
+    00000001                         31 	.ds 1
+    00000002                         32 _MUSIC_isr_skip_interrupts_10000_176:
+    00000002                         33 	.ds 1
+                                     34 ;--------------------------------------------------------
+                                     35 ; ram data
+                                     36 ;--------------------------------------------------------
+                                     37 	.area _INITIALIZED
+    00000000                         38 _music_paused::
+    00000000                         39 	.ds 1
+    00000001                         40 _music_mute_mask::
+    00000001                         41 	.ds 1
+    00000002                         42 _sfx_priority::
+    00000002                         43 	.ds 1
+    00000003                         44 _last_music::
+    00000003                         45 	.ds 2
+    00000005                         46 _last_music_bank::
+    00000005                         47 	.ds 1
+    00000006                         48 _stop_music_on_new_state::
+    00000006                         49 	.ds 1
+                                     50 ;--------------------------------------------------------
+                                     51 ; absolute external ram data
+                                     52 ;--------------------------------------------------------
+                                     53 	.area _DABS (ABS)
+                                     54 ;--------------------------------------------------------
+                                     55 ; global & static initialisations
+                                     56 ;--------------------------------------------------------
+                                     57 	.area _HOME
+                                     58 	.area _GSINIT
+                                     59 	.area _GSFINAL
+                                     60 	.area _GSINIT
+                                     61 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:86: static UINT8 old_mute_mask = ~MUTE_MASK_NONE;
+    00000000 21r01r00         [12]   62 	ld	hl, #_MUSIC_isr_old_mute_mask_10000_176
+    00000003 36 FF            [12]   63 	ld	(hl), #0xff
+                                     64 ;--------------------------------------------------------
+                                     65 ; Home
+                                     66 ;--------------------------------------------------------
+                                     67 	.area _HOME
+                                     68 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:85: void MUSIC_isr(void) NONBANKED {
+                                     69 ;	---------------------------------
+                                     70 ; Function MUSIC_isr
+                                     71 ; ---------------------------------
+    00000000                         72 _MUSIC_isr::
+                                     73 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:96: if (old_mute_mask != music_mute_mask) {
+    00000000 FAr01r00         [16]   74 	ld	a, (#_MUSIC_isr_old_mute_mask_10000_176)
+    00000003 21r01r00         [12]   75 	ld	hl, #_music_mute_mask
+    00000006 96               [ 8]   76 	sub	a, (hl)
+    00000007 28 06            [12]   77 	jr	Z, 00102$
+                                     78 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:98: old_mute_mask = music_mute_mask;
+    00000009 FAr01r00         [16]   79 	ld	a, (#_music_mute_mask)
+    0000000C EAr01r00         [16]   80 	ld	(#_MUSIC_isr_old_mute_mask_10000_176),a
+    0000000F                         81 00102$:
+                                     82 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:101: if (sfx_play_bank != SFX_STOP_BANK) {
+    0000000F FAr00r00         [16]   83 	ld	a, (#_sfx_play_bank)
+    00000012 3C               [ 4]   84 	inc	a
+    00000013 28 45            [12]   85 	jr	Z, 00106$
+                                     86 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:102: if (!sfx_play_isr()) {
+    00000015 CDr00r00         [24]   87 	call	_sfx_play_isr
+    00000018 B7               [ 4]   88 	or	a, a
+    00000019 20 3F            [12]   89 	jr	NZ, 00106$
+                                     90 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:104: sfx_sound_cut_mask(music_mute_mask);
+    0000001B FAr01r00         [16]   91 	ld	a, (_music_mute_mask)
+    0000001E 4F               [ 4]   92 	ld	c, a
+                                     93 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sound.h:73: if (mask & SFX_CH_1) NR12_REG = 0, NR14_REG = SFX_CH_RETRIGGER;
+    0000001F 0F               [ 4]   94 	rrca
+    00000020 30 07            [12]   95 	jr	NC, 00115$
+    00000022 AF               [ 4]   96 	xor	a, a
+    00000023 E0r00            [12]   97 	ldh	(_NR12_REG + 0), a
+    00000025 3E C0            [ 8]   98 	ld	a, #0xc0
+    00000027 E0r00            [12]   99 	ldh	(_NR14_REG + 0), a
+    00000029                        100 00115$:
+                                    101 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sound.h:74: if (mask & SFX_CH_2) NR22_REG = 0, NR24_REG = SFX_CH_RETRIGGER;
+    00000029 CB 49            [ 8]  102 	bit	1, c
+    0000002B 28 07            [12]  103 	jr	Z, 00117$
+    0000002D AF               [ 4]  104 	xor	a, a
+    0000002E E0r00            [12]  105 	ldh	(_NR22_REG + 0), a
+    00000030 3E C0            [ 8]  106 	ld	a, #0xc0
+    00000032 E0r00            [12]  107 	ldh	(_NR24_REG + 0), a
+    00000034                        108 00117$:
+                                    109 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sound.h:75: if (mask & SFX_CH_3) NR32_REG = 0;
+    00000034 CB 51            [ 8]  110 	bit	2, c
+    00000036 28 03            [12]  111 	jr	Z, 00119$
+    00000038 AF               [ 4]  112 	xor	a, a
+    00000039 E0r00            [12]  113 	ldh	(_NR32_REG + 0), a
+    0000003B                        114 00119$:
+                                    115 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sound.h:76: if (mask & SFX_CH_4) NR42_REG = 0, NR44_REG = SFX_CH_RETRIGGER;
+    0000003B CB 59            [ 8]  116 	bit	3, c
+    0000003D 28 07            [12]  117 	jr	Z, 00121$
+    0000003F AF               [ 4]  118 	xor	a, a
+    00000040 E0r00            [12]  119 	ldh	(_NR42_REG + 0), a
+    00000042 3E C0            [ 8]  120 	ld	a, #0xc0
+    00000044 E0r00            [12]  121 	ldh	(_NR44_REG + 0), a
+    00000046                        122 00121$:
+                                    123 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sound.h:77: NR51_REG = 0xFF;
+    00000046 3E FF            [ 8]  124 	ld	a, #0xff
+    00000048 E0r00            [12]  125 	ldh	(_NR51_REG + 0), a
+                                    126 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:107: music_mute_mask = old_mute_mask = MUTE_MASK_NONE;
+    0000004A AF               [ 4]  127 	xor	a, a
+    0000004B EAr01r00         [16]  128 	ld	(#_MUSIC_isr_old_mute_mask_10000_176), a
+    0000004E EAr01r00         [16]  129 	ld	(#_music_mute_mask),a
+                                    130 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:109: sfx_priority = SFX_PRIORITY_MINIMAL;
+    00000051 AF               [ 4]  131 	xor	a, a
+    00000052 EAr02r00         [16]  132 	ld	(#_sfx_priority),a
+                                    133 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:110: sfx_play_bank = SFX_STOP_BANK;
+    00000055 21r00r00         [12]  134 	ld	hl, #_sfx_play_bank
+    00000058 36 FF            [12]  135 	ld	(hl), #0xff
+    0000005A                        136 00106$:
+                                    137 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:114: if (music_paused)
+    0000005A FAr00r00         [16]  138 	ld	a, (#_music_paused)
+    0000005D B7               [ 4]  139 	or	a, a
+                                    140 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:115: return;
+    0000005E C0               [20]  141 	ret	NZ
+                                    142 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:116: if (last_music_bank == SFX_STOP_BANK)
+    0000005F FAr05r00         [16]  143 	ld	a, (#_last_music_bank)
+    00000062 3C               [ 4]  144 	inc	a
+    00000063 C8               [20]  145 	ret	Z
+                                    146 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:117: return;
+                                    147 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:119: if (skip_interrupts) {
+    00000064 21r02r00         [12]  148 	ld	hl, #_MUSIC_isr_skip_interrupts_10000_176
+    00000067 7E               [ 8]  149 	ld	a, (hl)
+    00000068 B7               [ 4]  150 	or	a, a
+    00000069 28 02            [12]  151 	jr	Z, 00112$
+                                    152 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:120: --skip_interrupts;
+    0000006B 35               [12]  153 	dec	(hl)
+                                    154 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:121: return; 
+    0000006C C9               [16]  155 	ret
+    0000006D                        156 00112$:
+                                    157 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:122: } else skip_interrupts = music_skip_interrupts;
+    0000006D FAr00r00         [16]  158 	ld	a, (#_music_skip_interrupts)
+    00000070 EAr02r00         [16]  159 	ld	(#_MUSIC_isr_skip_interrupts_10000_176),a
+                                    160 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:146: }
+    00000073 C9               [16]  161 	ret
+                                    162 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:148: void __PlayMusic(void* music, UINT8 bank, UINT8 loop) NONBANKED {
+                                    163 ;	---------------------------------
+                                    164 ; Function __PlayMusic
+                                    165 ; ---------------------------------
+    00000074                        166 ___PlayMusic::
+    00000074 4F               [ 4]  167 	ld	c, a
+                                    168 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:150: if ((music != last_music) || (last_music_bank != bank)) {
+    00000075 21r03r00         [12]  169 	ld	hl, #_last_music
+    00000078 7E               [ 8]  170 	ld	a, (hl)
+    00000079 93               [ 4]  171 	sub	a, e
+    0000007A 20 0B            [12]  172 	jr	NZ, 00101$
+    0000007C 23               [ 8]  173 	inc	hl
+    0000007D 7E               [ 8]  174 	ld	a, (hl)
+    0000007E 92               [ 4]  175 	sub	a, d
+    0000007F 20 06            [12]  176 	jr	NZ, 00101$
+    00000081 FAr05r00         [16]  177 	ld	a, (#_last_music_bank)
+    00000084 91               [ 4]  178 	sub	a, c
+    00000085 28 30            [12]  179 	jr	Z, 00102$
+    00000087                        180 00101$:
+                                    181 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:152: UBYTE __save = CURRENT_BANK;
+    00000087 F0r00            [12]  182 	ldh	a, (__current_bank + 0)
+    00000089 47               [ 4]  183 	ld	b, a
+                                    184 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sound.h:86: NR12_REG = NR22_REG = NR32_REG = NR42_REG = 0;
+    0000008A AF               [ 4]  185 	xor	a, a
+    0000008B E0r00            [12]  186 	ldh	(_NR42_REG + 0), a
+    0000008D AF               [ 4]  187 	xor	a, a
+    0000008E E0r00            [12]  188 	ldh	(_NR32_REG + 0), a
+    00000090 AF               [ 4]  189 	xor	a, a
+    00000091 E0r00            [12]  190 	ldh	(_NR22_REG + 0), a
+    00000093 AF               [ 4]  191 	xor	a, a
+    00000094 E0r00            [12]  192 	ldh	(_NR12_REG + 0), a
+                                    193 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sound.h:87: NR14_REG = NR24_REG = NR44_REG = SFX_CH_RETRIGGER;
+    00000096 3E C0            [ 8]  194 	ld	a, #0xc0
+    00000098 E0r00            [12]  195 	ldh	(_NR44_REG + 0), a
+    0000009A 3E C0            [ 8]  196 	ld	a, #0xc0
+    0000009C E0r00            [12]  197 	ldh	(_NR24_REG + 0), a
+    0000009E 3E C0            [ 8]  198 	ld	a, #0xc0
+    000000A0 E0r00            [12]  199 	ldh	(_NR14_REG + 0), a
+                                    200 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/include/Sound.h:88: NR51_REG = 0xFF;
+    000000A2 3E FF            [ 8]  201 	ld	a, #0xff
+    000000A4 E0r00            [12]  202 	ldh	(_NR51_REG + 0), a
+                                    203 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:171: SWITCH_ROM(__save);
+    000000A6 78               [ 4]  204 	ld	a, b
+    000000A7 E0r00            [12]  205 	ldh	(__current_bank + 0), a
+    000000A9 21r00r00         [12]  206 	ld	hl, #_rROMB0
+    000000AC 70               [ 8]  207 	ld	(hl), b
+                                    208 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:172: last_music = music;
+    000000AD 21r03r00         [12]  209 	ld	hl, #_last_music
+    000000B0 7B               [ 4]  210 	ld	a, e
+    000000B1 22               [ 8]  211 	ld	(hl+), a
+    000000B2 72               [ 8]  212 	ld	(hl), d
+                                    213 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:173: last_music_bank = bank;
+    000000B3 21r05r00         [12]  214 	ld	hl, #_last_music_bank
+    000000B6 71               [ 8]  215 	ld	(hl), c
+    000000B7                        216 00102$:
+                                    217 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:175: music_paused = 0;
+    000000B7 AF               [ 4]  218 	xor	a, a
+    000000B8 EAr00r00         [16]  219 	ld	(#_music_paused),a
+                                    220 ;C:/Users/karas/OneDrive/Documents/GitHub/CrossZGB/common/src/Music.c:176: }
+    000000BB E1               [12]  221 	pop	hl
+    000000BC 33               [ 8]  222 	inc	sp
+    000000BD E9               [ 4]  223 	jp	(hl)
+                                    224 	.area _HOME
+                                    225 ;--------------------------------------------------------
+                                    226 ; code
+                                    227 ;--------------------------------------------------------
+                                    228 	.area _CODE
+                                    229 	.area _CODE
+                                    230 	.area _INITIALIZER
+    00000000                        231 __xinit__music_paused:
+    00000000 01                     232 	.db #0x01	; 1
+    00000001                        233 __xinit__music_mute_mask:
+    00000001 00                     234 	.db #0x00	; 0
+    00000002                        235 __xinit__sfx_priority:
+    00000002 00                     236 	.db #0x00	; 0
+    00000003                        237 __xinit__last_music:
+    00000003 00 00                  238 	.dw #0x0000
+    00000005                        239 __xinit__last_music_bank:
+    00000005 FF                     240 	.db #0xff	; 255
+    00000006                        241 __xinit__stop_music_on_new_state:
+    00000006 01                     242 	.db #0x01	; 1
+                                    243 	.area _CABS (ABS)

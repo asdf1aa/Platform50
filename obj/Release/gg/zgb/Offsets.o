@@ -1,0 +1,62 @@
+XL4
+H 9 areas 32 global symbols
+M Offsets
+S ___offset_Sprite__anim_accum_ticks Def00000011
+S ___offset_MetaSpriteInfo__height Def00000001
+S ___offset_MetaSpriteInfo__num_sprites Def00000008
+S ___offset_Sprite__flags Def00000021
+S ___offset_Sprite__coll_group_down Def00000023
+S ___offset_MapInfo__data Def00000000
+S ___offset_Sprite__anim_frame Def00000013
+S ___offset_Sprite__ctx Def00000017
+S ___offset_MapInfo__tiles_bank Def00000008
+S ___offset_Sprite__mt_sprite_bank Def00000006
+S ___offset_MapInfo__extra_tiles_bank Def0000000B
+S ___offset_MapInfo__width Def00000002
+S ___offset_Sprite__custom_data Def00000024
+S ___offset_MapInfo__tiles Def00000009
+S ___offset_Sprite__anim_speed Def00000012
+S ___offset_Sprite__mt_sprite Def00000014
+S ___offset_MapInfo__extra_tiles Def0000000C
+S ___offset_Sprite__lim_x Def00000019
+S ___offset_Sprite__lim_y Def0000001B
+S ___offset_Sprite__mirror Def00000016
+S ___offset_Sprite__first_tile_H Def0000000B
+S ___offset_Sprite__flips Def00000009
+S ___offset_Sprite__anim_data Def0000000F
+S ___offset_Sprite__mt_sprite_info Def00000007
+S ___offset_MetaSpriteInfo__num_tiles Def00000002
+S ___offset_MetaSpriteInfo__num_palettes Def00000005
+S .__.ABS. Def00000000
+S ___offset_Sprite__first_tile_V Def0000000C
+S ___offset_MapInfo__height Def00000004
+S ___offset_MetaSpriteInfo__data Def00000003
+S ___offset_TilesInfo__color_data Def00000006
+S ___offset_Sprite__marked_for_removal Def0000001E
+S ___offset_TilesInfo__data Def00000001
+S ___offset_Sprite__coll_h Def00000005
+S ___offset_Sprite__first_tile_HV Def0000000D
+S ___offset_MetaSpriteInfo__width Def00000000
+S ___offset_Sprite__first_tile Def0000000A
+S ___offset_TilesInfo__num_pals Def00000003
+S ___offset_MetaSpriteInfo__palettes Def00000006
+S ___offset_Sprite__coll_group Def00000022
+S ___offset_Sprite__x Def00000000
+S ___offset_Sprite__y Def00000002
+S ___offset_MapInfo__attributes Def00000006
+S ___offset_Sprite__coll_w Def00000004
+S ___offset_Sprite__type Def0000001D
+S ___offset_Sprite__attr_add Def0000000E
+S ___offset_Sprite__unique_id Def0000001F
+S ___offset_TilesInfo__num_frames Def00000000
+S ___offset_MetaSpriteInfo__metasprites Def00000009
+S ___offset_TilesInfo__pals Def00000004
+A _CODE size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _INITIALIZED size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _INITIALIZER size 0 flags 0 addr 0
+A _CABS size 0 flags 8 addr 0
